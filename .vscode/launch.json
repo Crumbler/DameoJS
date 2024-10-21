@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome against localhost",
+      "url": "${workspaceFolder}/src/index.html"
+    }
+  ]
+}
