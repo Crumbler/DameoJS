@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "An implementation of Dame in JavaScript",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Crumbler",
@@ -22,6 +23,7 @@
     ]
   },
   "devDependencies": {
+    "tsup": "^8.3.4",
     "typescript": "^5.6.3"
   }
 }

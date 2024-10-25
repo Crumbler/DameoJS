@@ -1,0 +1,18 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#main-container {
+  height: 100%;
+  /*background-color: aqua;*/
+}
+
+@media (orientation: portrait) {
+  #main-container {
+    max-width: 600px;
+    height: 100%;
+    /*background-color: red;*/
+  }
+}

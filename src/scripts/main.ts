@@ -1,3 +1,7 @@
+import { PageBackground } from "./interface/pageBackground";
 
-const message: string = 'Hello World';
-console.log(message);
+function onLoad() {
+  PageBackground.generateAndSet();
+}
+
+onLoad();
