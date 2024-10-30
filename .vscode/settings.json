@@ -3,7 +3,14 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.exclude": {
     "src/out": true
-  }
+  },
+  "eslint.rules.customizations": [
+    {
+      "rule": "*",
+      "severity": "warn"
+    }
+  ]
 }
