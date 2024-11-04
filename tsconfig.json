@@ -11,10 +11,10 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "src/scripts",
+    "moduleResolution": "Bundler"
   },
-  "include": [
-    "src/scripts"
-  ],
+  "include": ["src/scripts"],
   "$schema": "https://json.schemastore.org/tsconfig"
 }

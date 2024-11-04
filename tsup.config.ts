@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
   target: 'es2017',
@@ -10,5 +10,5 @@ export default defineConfig({
   dts: false,
   platform: 'browser',
   watch: 'src/scripts',
-  outDir: 'src/out'
-})
+  outDir: 'src/out',
+});
