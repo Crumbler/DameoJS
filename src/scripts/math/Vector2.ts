@@ -5,6 +5,10 @@ export class Vector2 extends Array {
     this[1] = y;
   }
 
+  public static fromScalar(x: number): Vector2 {
+    return new Vector2(x, x);
+  }
+
   public get x(): number {
     return this[0];
   }
