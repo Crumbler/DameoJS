@@ -5,7 +5,8 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.exclude": {
-    "src/out": true
+    "src/out": true,
+    "public": true
   },
   "eslint.rules.customizations": [
     {
