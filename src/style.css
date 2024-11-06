@@ -7,16 +7,36 @@ body {
 body {
   background-position: center;
   background-repeat: repeat;
+  background-size: 150px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #main-container {
-  height: 100%;
+  display: block;
+}
+
+#game-header {
+  background-color: antiquewhite;
+
+  height: calc(100% * 1 / 11);
+
+  aspect-ratio: 10;
+}
+
+#game-container {
+  background-color: blueviolet;
+
+  height: calc(100% * 10 / 11);
+
+  aspect-ratio: 1;
 }
 
 @media (orientation: portrait) {
-  #main-container {
-    max-width: 600px;
-    height: 100%;
-    /*background-color: red;*/
+  body {
+    background-size: 100px;
   }
 }

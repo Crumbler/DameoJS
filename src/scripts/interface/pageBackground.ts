@@ -3,7 +3,7 @@ import { InterfaceColors } from 'interface/interfaceColors';
 import { BlobHelper } from 'helpers/blobHelper';
 
 export class PageBackground {
-  private static readonly RhombusWidth = 50;
+  private static readonly RhombusWidth = 100;
 
   private static calculateBounds(): Vector2 {
     const baseWidth = PageBackground.RhombusWidth * 2;
