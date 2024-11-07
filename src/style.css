@@ -41,6 +41,7 @@ body {
   flex-direction: column;
   justify-content: space-around;
 
+  margin-left: 10cqh;
   margin-right: auto;
   padding-left: 15cqh;
   padding-top: 7cqh;
@@ -64,6 +65,8 @@ body {
   aspect-ratio: 1;
 
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
   background-size: contain;
   background-blend-mode: multiply;
 
@@ -71,6 +74,10 @@ body {
   mask-size: contain;
 
   transition: background-color 300ms linear;
+}
+
+.header-button:last-child {
+  margin-right: 20cqh;
 }
 
 .header-button:hover {
