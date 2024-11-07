@@ -79,9 +79,20 @@ body {
 .header-button:last-child {
   margin-right: 20cqh;
 }
+@media (hover: hover) {
+  .header-button:hover {
+    background-color: red;
+  }
+}
 
-.header-button:hover {
-  background-color: red;
+@media (hover: none) {
+  .header-button {
+    transition: background-color 100ms linear;
+  }
+
+  .header-button:active {
+    background-color: red;
+  }
 }
 
 #game-container {
