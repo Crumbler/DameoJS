@@ -15,7 +15,7 @@ export class InterfaceResizer {
       baseWidth = Math.min(baseWidth, 600);
     }
 
-    const aspectRatio = 10 / 11;
+    const aspectRatio = 8 / 9;
 
     const width = Math.min(baseWidth, baseHeight * aspectRatio);
     const height = Math.min(baseHeight, baseWidth / aspectRatio);

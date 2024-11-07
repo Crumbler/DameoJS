@@ -15,28 +15,76 @@ body {
   align-items: center;
 }
 
+::backdrop,
+:fullscreen {
+  background-position: center;
+  background-repeat: repeat;
+  background-size: 150px;
+}
+
 #main-container {
-  display: block;
+  display: grid;
+  grid-template-rows: calc(100% * 1 / 9) calc(100% * 8 / 9);
 }
 
 #game-header {
-  background-color: antiquewhite;
+  background-color: #685227;
 
-  height: calc(100% * 1 / 11);
+  display: flex;
+  justify-content: flex-end;
 
-  aspect-ratio: 10;
+  container-type: size;
+}
+
+#player-time-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  margin-right: auto;
+  padding-left: 15cqh;
+  padding-top: 7cqh;
+  padding-bottom: 7cqh;
+
+  user-select: none;
+}
+
+#player-indicator {
+  font-size: 40cqh;
+  color: white;
+}
+
+#game-time {
+  font-size: 30cqh;
+  color: white;
+}
+
+.header-button {
+  margin: 15cqh;
+  aspect-ratio: 1;
+
+  cursor: pointer;
+  background-size: contain;
+  background-blend-mode: multiply;
+
+  mask-mode: alpha;
+  mask-size: contain;
+
+  transition: background-color 300ms linear;
+}
+
+.header-button:hover {
+  background-color: red;
 }
 
 #game-container {
   background-color: blueviolet;
-
-  height: calc(100% * 10 / 11);
-
-  aspect-ratio: 1;
 }
 
 @media (orientation: portrait) {
-  body {
+  body,
+  ::backdrop,
+  :fullscreen {
     background-size: 100px;
   }
 }

@@ -7,10 +7,22 @@
     <title>Dameo</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
-
+  <style></style>
   <body>
     <div id="main-container">
-      <div id="game-header"></div>
+      <div id="game-header">
+        <div id="player-time-wrapper">
+          <div id="player-indicator">White Player</div>
+          <div id="game-time">3:14</div>
+        </div>
+        <div id="undo-button" class="header-button" title="Undo"></div>
+        <div
+          id="fullscreen-button"
+          class="header-button"
+          title="Toggle fullscreen"
+        ></div>
+        <div id="restart-button" class="header-button" title="Restart"></div>
+      </div>
       <div id="game-container"></div>
     </div>
     <script src="out/main.js" defer></script>

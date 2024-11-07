@@ -34,43 +34,35 @@ export class PageBackground {
     const width = context.canvas.width;
     const height = context.canvas.height;
 
-    context.fillStyle = InterfaceColors.BackgroundColor;
+    context.fillStyle = InterfaceColors.Background;
     context.fillRect(0, 0, width, height);
 
     const rhombusSize = new Vector2(width, height).div(2);
 
-    PageBackground.drawRhombus(
-      context,
-      rhombusSize,
-      InterfaceColors.RhombusColorA,
-    );
+    PageBackground.drawRhombus(context, rhombusSize, InterfaceColors.RhombusA);
 
     context.save();
     context.translate(width / 2, 0);
-    PageBackground.drawRhombus(
-      context,
-      rhombusSize,
-      InterfaceColors.RhombusColorB,
-    );
+    PageBackground.drawRhombus(context, rhombusSize, InterfaceColors.RhombusB);
     context.restore();
 
     context.save();
     context.translate(width / 2, height / 2);
-    PageBackground.drawRhombus(
-      context,
-      rhombusSize,
-      InterfaceColors.RhombusColorA,
-    );
+    PageBackground.drawRhombus(context, rhombusSize, InterfaceColors.RhombusA);
     context.restore();
 
     context.save();
     context.translate(0, height / 2);
-    PageBackground.drawRhombus(
-      context,
-      rhombusSize,
-      InterfaceColors.RhombusColorB,
-    );
+    PageBackground.drawRhombus(context, rhombusSize, InterfaceColors.RhombusB);
     context.restore();
+  }
+
+  private static setFullscreenBackground(url: string) {
+    const style: HTMLStyleElement = document.querySelector('style')!;
+
+    style.textContent += `::backdrop, :fullscreen {
+      background-image: url(${url});
+    }`;
   }
 
   public static async generateAndSet() {
@@ -80,6 +72,8 @@ export class PageBackground {
       bounds,
       PageBackground.drawPattern,
     );
+
+    PageBackground.setFullscreenBackground(imageUrl);
 
     document.body.style.backgroundImage = `url(${imageUrl})`;
   }

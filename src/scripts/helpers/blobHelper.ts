@@ -6,6 +6,7 @@ export class BlobHelper {
   private static generateBackgroundBlob(
     bounds: Vector2,
     drawAction: RenderAction,
+    transparent: boolean,
   ): Promise<Blob> {
     const canvas = document.createElement('canvas');
 
@@ -13,7 +14,7 @@ export class BlobHelper {
     canvas.height = bounds.height;
 
     const context = canvas.getContext('2d', {
-      alpha: false,
+      alpha: transparent,
     });
 
     if (context === null) {
@@ -41,8 +42,13 @@ export class BlobHelper {
   public static async drawToBlobUrl(
     size: Vector2,
     drawAction: RenderAction,
+    transparent = false,
   ): Promise<string> {
-    const imageBlob = await this.generateBackgroundBlob(size, drawAction);
+    const imageBlob = await this.generateBackgroundBlob(
+      size,
+      drawAction,
+      transparent,
+    );
 
     return URL.createObjectURL(imageBlob);
   }

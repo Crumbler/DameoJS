@@ -29,26 +29,26 @@ export class PageIcon {
   private static drawPattern(context: CanvasRenderingContext2D) {
     const size = context.canvas.width;
 
-    context.fillStyle = InterfaceColors.BackgroundColor;
+    context.fillStyle = InterfaceColors.Background;
     context.fillRect(0, 0, size, size);
 
     const rhombusSize = size / 2;
 
-    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusColorA);
+    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusA);
 
     context.save();
     context.translate(rhombusSize, 0);
-    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusColorB);
+    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusB);
     context.restore();
 
     context.save();
     context.translate(rhombusSize, rhombusSize);
-    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusColorA);
+    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusA);
     context.restore();
 
     context.save();
     context.translate(0, rhombusSize);
-    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusColorB);
+    PageIcon.drawRhombus(context, rhombusSize, InterfaceColors.RhombusB);
     context.restore();
   }
 
