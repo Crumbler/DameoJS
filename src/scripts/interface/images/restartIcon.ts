@@ -1,10 +1,10 @@
 import { Vector2 } from 'math/Vector2';
 import { InterfaceConstants } from 'interface/interfaceConstants';
 import { BlobHelper } from 'helpers/blobHelper';
+import { Elements } from 'interface/elements';
 
 export class RestartIcon {
-  private static restartIcon: HTMLElement =
-    document.getElementById('restart-button')!;
+  private static restartIcon: HTMLElement = Elements.findById('restart-button');
 
   private static calculateBounds(): Vector2 {
     return Vector2.fromScalar(InterfaceConstants.HeaderIconSize);

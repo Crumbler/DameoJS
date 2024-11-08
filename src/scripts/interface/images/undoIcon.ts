@@ -1,11 +1,10 @@
 import { Vector2 } from 'math/Vector2';
 import { InterfaceConstants } from 'interface/interfaceConstants';
 import { BlobHelper } from 'helpers/blobHelper';
+import { Elements } from 'interface/elements';
 
 export class UndoIcon {
-  private static undoIcon: HTMLImageElement = document.getElementById(
-    'undo-button',
-  ) as HTMLImageElement;
+  private static undoIcon: HTMLImageElement = Elements.findById('undo-button');
 
   private static calculateBounds(): Vector2 {
     return Vector2.fromScalar(InterfaceConstants.HeaderIconSize);

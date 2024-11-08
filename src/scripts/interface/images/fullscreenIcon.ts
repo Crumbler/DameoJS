@@ -1,10 +1,11 @@
 import { Vector2 } from 'math/Vector2';
 import { InterfaceConstants } from 'interface/interfaceConstants';
 import { BlobHelper } from 'helpers/blobHelper';
+import { Elements } from 'interface/elements';
 
 export class FullscreenIcon {
   private static fullscreenIcon: HTMLElement =
-    document.getElementById('fullscreen-button')!;
+    Elements.findById('fullscreen-button');
 
   private static calculateBounds(): Vector2 {
     return Vector2.fromScalar(InterfaceConstants.HeaderIconSize);
