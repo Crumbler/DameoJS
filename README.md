@@ -1,2 +1,2 @@
 # DameoJS
-An implementation of Dame in JavaScript
+An implementation of Dameo in TypeScript
