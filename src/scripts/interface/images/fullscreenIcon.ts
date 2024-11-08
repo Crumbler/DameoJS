@@ -4,14 +4,17 @@ import { BlobHelper } from 'helpers/blobHelper';
 import { Elements } from 'interface/elements';
 
 export class FullscreenIcon {
-  private static fullscreenIcon: HTMLElement =
+  private static readonly fullscreenIcon =
     Elements.findById('fullscreen-button');
 
   private static calculateBounds(): Vector2 {
     return Vector2.fromScalar(InterfaceConstants.HeaderIconSize);
   }
 
-  private static drawCorner(context: CanvasRenderingContext2D, size: number) {
+  private static drawCorner(
+    context: OffscreenCanvasRenderingContext2D,
+    size: number,
+  ) {
     const width = 0.1;
     const length = 0.3;
 
@@ -19,7 +22,7 @@ export class FullscreenIcon {
     context.fillRect(0, 0, size * length, size * width);
   }
 
-  private static drawPattern(context: CanvasRenderingContext2D) {
+  private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const size = context.canvas.width;
 
     context.fillStyle = 'white';

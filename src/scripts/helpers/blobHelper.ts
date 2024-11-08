@@ -1,6 +1,6 @@
 import { Vector2 } from 'math/Vector2';
 
-export type RenderAction = (context: CanvasRenderingContext2D) => void;
+export type RenderAction = (context: OffscreenCanvasRenderingContext2D) => void;
 
 export class BlobHelper {
   private static generateBackgroundBlob(
@@ -8,10 +8,7 @@ export class BlobHelper {
     drawAction: RenderAction,
     transparent: boolean,
   ): Promise<Blob> {
-    const canvas = document.createElement('canvas');
-
-    canvas.width = bounds.width;
-    canvas.height = bounds.height;
+    const canvas = new OffscreenCanvas(bounds.width, bounds.height);
 
     const context = canvas.getContext('2d', {
       alpha: transparent,
@@ -23,20 +20,7 @@ export class BlobHelper {
 
     drawAction(context);
 
-    const promise = new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((blob: Blob | null) => {
-        canvas.remove();
-
-        if (blob === null) {
-          reject('Failed to create blob');
-          return;
-        }
-
-        resolve(blob);
-      });
-    });
-
-    return promise;
+    return canvas.convertToBlob();
   }
 
   public static async drawToBlobUrl(

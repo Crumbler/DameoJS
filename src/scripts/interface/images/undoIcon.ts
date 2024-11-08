@@ -4,14 +4,15 @@ import { BlobHelper } from 'helpers/blobHelper';
 import { Elements } from 'interface/elements';
 
 export class UndoIcon {
-  private static undoIcon: HTMLImageElement = Elements.findById('undo-button');
+  private static readonly undoIcon =
+    Elements.findById<HTMLImageElement>('undo-button');
 
   private static calculateBounds(): Vector2 {
     return Vector2.fromScalar(InterfaceConstants.HeaderIconSize);
   }
 
   private static drawArrowhead(
-    context: CanvasRenderingContext2D,
+    context: OffscreenCanvasRenderingContext2D,
     size: number,
   ) {
     const height = size * 0.3;
@@ -24,7 +25,7 @@ export class UndoIcon {
     context.fill();
   }
 
-  private static drawPattern(context: CanvasRenderingContext2D) {
+  private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const size = context.canvas.width;
 
     context.fillStyle = 'white';

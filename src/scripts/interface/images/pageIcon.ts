@@ -10,7 +10,7 @@ export class PageIcon {
   }
 
   private static drawRhombus(
-    context: CanvasRenderingContext2D,
+    context: OffscreenCanvasRenderingContext2D,
     size: number,
     color: string,
   ) {
@@ -26,7 +26,7 @@ export class PageIcon {
     context.fill();
   }
 
-  private static drawPattern(context: CanvasRenderingContext2D) {
+  private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const size = context.canvas.width;
 
     context.fillStyle = InterfaceColors.Background;

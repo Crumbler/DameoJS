@@ -14,7 +14,7 @@ export class PageBackground {
   }
 
   private static drawRhombus(
-    context: CanvasRenderingContext2D,
+    context: OffscreenCanvasRenderingContext2D,
     size: Vector2,
     color: string,
   ) {
@@ -30,7 +30,7 @@ export class PageBackground {
     context.fill();
   }
 
-  private static drawPattern(context: CanvasRenderingContext2D) {
+  private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const width = context.canvas.width;
     const height = context.canvas.height;
 
