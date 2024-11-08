@@ -7,6 +7,7 @@ import { UndoIcon } from 'interface/images/undoIcon';
 import { Input } from 'interface/input';
 import { Timer } from 'interface/timer';
 import { BoardImage } from 'interface/images/boardImage';
+import { BoardLines } from 'interface/images/boardLines';
 
 function generateImages() {
   PageBackground.generateAndSet();
@@ -15,6 +16,7 @@ function generateImages() {
   RestartIcon.generateAndSet();
   UndoIcon.generateAndSet();
   BoardImage.generateAndSet();
+  BoardLines.generateAndSet();
 }
 
 function toggleFullscreen() {

@@ -11,8 +11,13 @@ export class InterfaceResizer {
     const baseHeight = window.innerHeight;
     let baseWidth = window.innerWidth;
 
+    const maxWidthRatio = 600 / 1920;
+
     if (baseWidth > baseHeight) {
-      baseWidth = Math.min(baseWidth, 600);
+      baseWidth = Math.min(
+        baseWidth,
+        Math.max(document.body.clientWidth * maxWidthRatio, 600),
+      );
     }
 
     const aspectRatio = 8 / 9;

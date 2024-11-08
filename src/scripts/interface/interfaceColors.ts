@@ -4,5 +4,5 @@ export class InterfaceColors {
   public static readonly RhombusB = '#ca9334';
   public static readonly MenuBackground = '#5b4720';
   public static readonly CellColorA = '#ffeebb';
-  public static readonly CellColorB = '#558822';
+  public static readonly CellColorB = '#566936';
 }

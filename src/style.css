@@ -96,11 +96,19 @@ body {
 }
 
 #game-container {
+  position: relative;
 }
 
-#game-board {
+#game-container > * {
+  position: absolute;
   height: 100%;
   width: 100%;
+}
+
+@media (orientation: landscape) {
+  #main-container {
+    border: 5px solid black;
+  }
 }
 
 @media (orientation: portrait) {
