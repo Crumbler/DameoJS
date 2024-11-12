@@ -6,11 +6,11 @@ import { InterfaceColors } from 'interface/interfaceColors';
 import { GameConstants } from 'domain/gameConstants';
 
 export class BoardImage {
-  private static readonly board =
-    Elements.findById<HTMLImageElement>('game-board');
+  private static readonly board = Elements.findById('game-board');
 
   private static calculateBounds(): Vector2 {
-    return Vector2.fromScalar(InterfaceConstants.BoardSize);
+    const cellSize = InterfaceConstants.BoardSize / GameConstants.CellsPerSide;
+    return Vector2.fromScalar(cellSize * 2);
   }
 
   private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
@@ -22,21 +22,10 @@ export class BoardImage {
 
     context.fillStyle = InterfaceColors.CellColorB;
 
-    const cellsPerSide = GameConstants.CellsPerSide;
+    const cellSize = InterfaceConstants.BoardSize / GameConstants.CellsPerSide;
 
-    const cellSize = size / cellsPerSide;
-
-    for (let i = 0; i < cellsPerSide; ++i) {
-      for (let j = 0; j < cellsPerSide; ++j) {
-        const ind = i + j;
-        const div = ind / 2;
-        if (div === Math.floor(div)) {
-          continue;
-        }
-
-        context.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
-      }
-    }
+    context.fillRect(cellSize, 0, cellSize, cellSize);
+    context.fillRect(0, cellSize, cellSize, cellSize);
   }
 
   public static async generateAndSet() {
@@ -47,6 +36,6 @@ export class BoardImage {
       BoardImage.drawPattern,
     );
 
-    BoardImage.board.src = imageUrl;
+    BoardImage.board.style.backgroundImage = `url(${imageUrl})`;
   }
 }
