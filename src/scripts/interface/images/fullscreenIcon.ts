@@ -54,10 +54,8 @@ export class FullscreenIcon {
     const imageUrl = await BlobHelper.drawToBlobUrl(
       bounds,
       FullscreenIcon.drawPattern,
-      true,
     );
 
-    FullscreenIcon.fullscreenIcon.style.backgroundImage = `url(${imageUrl})`;
     FullscreenIcon.fullscreenIcon.style.maskImage = `url(${imageUrl})`;
   }
 }

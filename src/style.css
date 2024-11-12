@@ -71,11 +71,12 @@ body {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 
-  background-size: contain;
   background-blend-mode: multiply;
 
-  mask-mode: alpha;
+  mask-mode: luminance;
   mask-size: contain;
+
+  background-color: white;
 
   transition: background-color 300ms linear;
 }
@@ -108,6 +109,14 @@ body {
   position: absolute;
   height: 100%;
   width: 100%;
+}
+
+#board-lines {
+  mask-mode: luminance;
+  mask-size: contain;
+
+  background-blend-mode: multiply;
+  background-color: black;
 }
 
 @media (max-aspect-ratio: 8 / 9) {

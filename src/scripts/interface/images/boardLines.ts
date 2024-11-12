@@ -5,8 +5,7 @@ import { InterfaceConstants } from 'interface/interfaceConstants';
 import { GameConstants } from 'domain/gameConstants';
 
 export class BoardLines {
-  private static readonly lines =
-    Elements.findById<HTMLImageElement>('board-lines');
+  private static readonly lines = Elements.findById('board-lines');
 
   private static calculateBounds(): Vector2 {
     return Vector2.fromScalar(InterfaceConstants.BoardSize);
@@ -15,7 +14,7 @@ export class BoardLines {
   private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const size = context.canvas.width;
 
-    context.fillStyle = 'black';
+    context.strokeStyle = 'white';
 
     const cellsPerSide = GameConstants.CellsPerSide;
 
@@ -44,9 +43,8 @@ export class BoardLines {
     const imageUrl = await BlobHelper.drawToBlobUrl(
       bounds,
       BoardLines.drawPattern,
-      true,
     );
 
-    BoardLines.lines.src = imageUrl;
+    BoardLines.lines.style.maskImage = `url(${imageUrl})`;
   }
 }

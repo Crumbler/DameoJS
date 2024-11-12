@@ -58,10 +58,8 @@ export class UndoIcon {
     const imageUrl = await BlobHelper.drawToBlobUrl(
       bounds,
       UndoIcon.drawPattern,
-      true,
     );
 
-    UndoIcon.undoIcon.style.backgroundImage = `url(${imageUrl})`;
     UndoIcon.undoIcon.style.maskImage = `url(${imageUrl})`;
   }
 }

@@ -54,10 +54,8 @@ export class RestartIcon {
     const imageUrl = await BlobHelper.drawToBlobUrl(
       bounds,
       RestartIcon.drawPattern,
-      true,
     );
 
-    RestartIcon.restartIcon.style.backgroundImage = `url(${imageUrl})`;
     RestartIcon.restartIcon.style.maskImage = `url(${imageUrl})`;
   }
 }
