@@ -24,12 +24,12 @@ export class BoardLines {
 
     context.beginPath();
 
-    for (let i = 1; i < cellsPerSide; ++i) {
+    for (let i = 0; i <= cellsPerSide; ++i) {
       context.moveTo(0, i * cellSize);
       context.lineTo(size, i * cellSize);
     }
 
-    for (let j = 1; j < cellsPerSide; ++j) {
+    for (let j = 0; j <= cellsPerSide; ++j) {
       context.moveTo(j * cellSize, 0);
       context.lineTo(j * cellSize, size);
     }
