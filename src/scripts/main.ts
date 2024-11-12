@@ -1,6 +1,5 @@
 import { PageIcon } from 'interface/images/pageIcon';
 import { PageBackground } from 'interface/images/pageBackground';
-import { InterfaceResizer } from 'interface/interfaceResizer';
 import { FullscreenIcon } from 'interface/images/fullscreenIcon';
 import { RestartIcon } from 'interface/images/restartIcon';
 import { UndoIcon } from 'interface/images/undoIcon';
@@ -33,8 +32,6 @@ function toggleFullscreen() {
 
 function onLoad() {
   generateImages();
-
-  InterfaceResizer.register();
 
   Input.registerOnFullscreen(toggleFullscreen);
 

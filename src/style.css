@@ -23,6 +23,10 @@ body {
 }
 
 #main-container {
+  aspect-ratio: 8 / 9;
+  height: calc(max(min(100%, 700px), 80%));
+  border: 5px solid black;
+
   display: grid;
   grid-template-rows: calc(100% * 1 / 9) calc(100% * 8 / 9);
 }
@@ -79,6 +83,7 @@ body {
 .header-button:last-child {
   margin-right: 20cqh;
 }
+
 @media (hover: hover) {
   .header-button:hover {
     background-color: red;
@@ -105,13 +110,14 @@ body {
   width: 100%;
 }
 
-@media (orientation: landscape) {
+@media (max-aspect-ratio: 8 / 9) {
   #main-container {
-    border: 5px solid black;
-  }
-}
+    width: 100%;
+    height: auto;
 
-@media (orientation: portrait) {
+    border: none;
+  }
+
   body,
   ::backdrop,
   :fullscreen {
