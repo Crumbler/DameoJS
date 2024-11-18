@@ -7,6 +7,8 @@ import { Input } from 'interface/input';
 import { Timer } from 'interface/timer';
 import { BoardImage } from 'interface/images/boardImage';
 import { BoardLines } from 'interface/images/boardLines';
+import { GameRenderer } from 'interface/gameRenderer';
+import { Game } from 'domain/game';
 
 function generateImages() {
   PageBackground.generateAndSet();
@@ -30,12 +32,19 @@ function toggleFullscreen() {
   }
 }
 
+let renderer: GameRenderer;
+
 function onLoad() {
   generateImages();
 
   Input.registerOnFullscreen(toggleFullscreen);
 
   Timer.restart();
+
+  const game = new Game();
+
+  renderer = new GameRenderer(game);
+  renderer.render();
 }
 
 onLoad();

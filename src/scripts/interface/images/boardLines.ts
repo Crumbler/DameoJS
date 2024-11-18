@@ -20,7 +20,7 @@ export class BoardLines {
 
     const cellSize = size / cellsPerSide;
 
-    context.lineWidth = cellSize * InterfaceConstants.LineWidthToCellRatio;
+    context.lineWidth = InterfaceConstants.LineWidth;
 
     context.beginPath();
 
