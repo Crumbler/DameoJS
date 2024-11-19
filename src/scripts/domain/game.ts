@@ -1,10 +1,12 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { GameConstants } from 'domain/gameConstants';
 import { Player } from 'domain/player';
-import { GameEvent, GameEventHandler } from 'domain/gameEvent';
+import { GameEvent, GameEventHandler, GameEventSource } from 'domain/gameEvent';
 import { PlayerChangedEvent } from 'domain/events/playerChangedEvent';
+import { GameResetEvent } from 'domain/events/gameResetEvent';
+import { GameInfo } from 'domain/gameInfo';
 
-export class Game {
+export class Game implements GameInfo, GameEventSource {
   // stored from top to bottom
   private _board: Array<Array<Piece | null>> = [];
   private _pieces: Array<Piece> = [];
@@ -101,7 +103,12 @@ export class Game {
     return false;
   }
 
-  public registernEventHandler(handler: GameEventHandler) {
+  public fireInitialEvents() {
+    this.onPlayerChanged();
+    this.onGameReset();
+  }
+
+  public registerEventHandler(handler: GameEventHandler) {
     this._eventHandlers.push(handler);
   }
 
@@ -109,6 +116,10 @@ export class Game {
     for (const handler of this._eventHandlers) {
       handler(event);
     }
+  }
+
+  private onGameReset() {
+    this.raiseEvent(new GameResetEvent());
   }
 
   public onPlayerChanged() {

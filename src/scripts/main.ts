@@ -33,25 +33,27 @@ function toggleFullscreen() {
   }
 }
 
+let renderer: GameRenderer;
+
 function registerEventHandlers(game: Game) {
   PlayerIndicator.registerEventHandler(game);
-}
+  Timer.registerEventHandler(game);
 
-let renderer: GameRenderer;
+  renderer.registerEventHandler(game);
+}
 
 function onLoad() {
   generateImages();
 
   Input.registerOnFullscreen(toggleFullscreen);
 
-  Timer.restart();
-
   const game = new Game();
+
+  renderer = new GameRenderer(game);
 
   registerEventHandlers(game);
 
-  renderer = new GameRenderer(game);
-  renderer.render();
+  game.fireInitialEvents();
 }
 
 onLoad();

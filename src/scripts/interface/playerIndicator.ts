@@ -1,5 +1,4 @@
-import { Game } from 'domain/game';
-import { GameEvent } from 'domain/gameEvent';
+import { GameEvent, GameEventSource } from 'domain/gameEvent';
 import { Player } from 'domain/player';
 import { Elements } from 'interface/elements';
 
@@ -29,7 +28,7 @@ export class PlayerIndicator {
     PlayerIndicator.updateIndicator(event.player);
   }
 
-  public static registerEventHandler(game: Game) {
-    game.registernEventHandler(PlayerIndicator.handleGameEvent);
+  public static registerEventHandler(game: GameEventSource) {
+    game.registerEventHandler(PlayerIndicator.handleGameEvent);
   }
 }

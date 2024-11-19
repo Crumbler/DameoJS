@@ -1,3 +1,4 @@
+import { GameEvent, GameEventSource } from 'domain/gameEvent';
 import { Elements } from 'interface/elements';
 import { Format } from 'misc/format';
 
@@ -33,5 +34,17 @@ export class Timer {
     }
 
     Timer.timerElement.textContent = timeString;
+  }
+
+  private static handleGameEvent(event: GameEvent) {
+    if (!event.isGameResetEvent()) {
+      return;
+    }
+
+    Timer.restart();
+  }
+
+  public static registerEventHandler(game: GameEventSource) {
+    game.registerEventHandler(Timer.handleGameEvent);
   }
 }

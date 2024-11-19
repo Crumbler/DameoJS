@@ -1,10 +1,11 @@
-import { Game } from 'domain/game';
 import { Elements } from 'interface/elements';
 import { InterfaceConstants } from 'interface/interfaceConstants';
 import { InterfaceColors } from 'interface/interfaceColors';
+import { GameInfo } from 'domain/gameInfo';
+import { GameEventSource } from 'domain/gameEvent';
 
 export class GameRenderer {
-  private readonly _game: Game;
+  private readonly _game: GameInfo;
   private readonly _pieceCanvas =
     Elements.findById<HTMLCanvasElement>('piece-canvas');
   private readonly _pieceContext = this._pieceCanvas.getContext('2d')!;
@@ -13,7 +14,7 @@ export class GameRenderer {
   private readonly _whitePieceLowerGradient =
     GameRenderer.createPieceLowerGradient(this._pieceContext, true);
 
-  public constructor(game: Game) {
+  public constructor(game: GameInfo) {
     this._game = game;
   }
 
@@ -157,5 +158,9 @@ export class GameRenderer {
     );
 
     this.renderPieces(context);
+  }
+
+  public registerEventHandler(game: GameEventSource) {
+    game.registerEventHandler(() => this.render());
   }
 }
