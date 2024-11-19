@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsup",
-    "publishPages": "xcopy src\\index.html public\\ /y /q && xcopy src\\style.css public\\ /y /q && xcopy src\\out\\main.js public\\out\\ /y /q",
+    "build": "tsup src/scripts --watch",
+    "publishPages": "tsup src/scripts && xcopy src\\index.html public\\ /y /q && xcopy src\\style.css public\\ /y /q && xcopy src\\out\\main.js public\\out\\ /y /q",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Crumbler",
