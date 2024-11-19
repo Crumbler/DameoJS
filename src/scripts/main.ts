@@ -10,6 +10,7 @@ import { BoardLines } from 'interface/images/boardLines';
 import { GameRenderer } from 'interface/gameRenderer';
 import { Game } from 'domain/game';
 import { PlayerIndicator } from 'interface/playerIndicator';
+import { Fullscreen } from 'interface/fullscreen';
 
 function generateImages() {
   PageBackground.generateAndSet();
@@ -19,18 +20,6 @@ function generateImages() {
   UndoIcon.generateAndSet();
   BoardImage.generateAndSet();
   BoardLines.generateAndSet();
-}
-
-function toggleFullscreen() {
-  if (!document.fullscreenEnabled) {
-    return;
-  }
-
-  if (document.fullscreenElement === null) {
-    document.body.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
 }
 
 let renderer: GameRenderer;
@@ -45,7 +34,7 @@ function registerEventHandlers(game: Game) {
 function onLoad() {
   generateImages();
 
-  Input.registerOnFullscreen(toggleFullscreen);
+  Input.registerOnFullscreen(Fullscreen.toggle);
 
   const game = new Game();
 
