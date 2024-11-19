@@ -9,6 +9,7 @@ import { BoardImage } from 'interface/images/boardImage';
 import { BoardLines } from 'interface/images/boardLines';
 import { GameRenderer } from 'interface/gameRenderer';
 import { Game } from 'domain/game';
+import { PlayerIndicator } from 'interface/playerIndicator';
 
 function generateImages() {
   PageBackground.generateAndSet();
@@ -32,6 +33,10 @@ function toggleFullscreen() {
   }
 }
 
+function registerEventHandlers(game: Game) {
+  PlayerIndicator.registerEventHandler(game);
+}
+
 let renderer: GameRenderer;
 
 function onLoad() {
@@ -42,6 +47,8 @@ function onLoad() {
   Timer.restart();
 
   const game = new Game();
+
+  registerEventHandlers(game);
 
   renderer = new GameRenderer(game);
   renderer.render();

@@ -1,10 +1,15 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { GameConstants } from 'domain/gameConstants';
+import { Player } from 'domain/player';
+import { GameEvent, GameEventHandler } from 'domain/gameEvent';
+import { PlayerChangedEvent } from 'domain/events/playerChangedEvent';
 
 export class Game {
   // stored from top to bottom
   private _board: Array<Array<Piece | null>> = [];
   private _pieces: Array<Piece> = [];
+  private _player: Player;
+  private _eventHandlers: Array<GameEventHandler> = [];
 
   private static fillRow(
     row: Array<Piece | null>,
@@ -72,6 +77,9 @@ export class Game {
   }
 
   public constructor() {
+    this._player = Player.White;
+    this.onPlayerChanged();
+
     this.initializeBoard();
     this.resetBoard();
     this.fillBoard();
@@ -85,7 +93,25 @@ export class Game {
     return this._pieces;
   }
 
+  public get currentPlayer(): Player {
+    return this._player;
+  }
+
   public get canUndo(): boolean {
     return false;
+  }
+
+  public registernEventHandler(handler: GameEventHandler) {
+    this._eventHandlers.push(handler);
+  }
+
+  private raiseEvent(event: GameEvent) {
+    for (const handler of this._eventHandlers) {
+      handler(event);
+    }
+  }
+
+  public onPlayerChanged() {
+    this.raiseEvent(new PlayerChangedEvent(this._player));
   }
 }
