@@ -5,12 +5,14 @@ import { GameEvent, GameEventHandler, GameEventSource } from 'domain/gameEvent';
 import { PlayerChangedEvent } from 'domain/events/playerChangedEvent';
 import { GameResetEvent } from 'domain/events/gameResetEvent';
 import { GameInfo } from 'domain/gameInfo';
+import { Move, PieceMoveInfo } from 'domain/move';
 
 export class Game implements GameInfo, GameEventSource {
   // stored from top to bottom
   private _board: Array<Array<Piece | null>> = [];
   private _pieces: Array<Piece> = [];
   private _player: Player;
+  private _moveInfos: Array<PieceMoveInfo> = [];
   private _eventHandlers: Array<GameEventHandler> = [];
 
   private static fillRow(
@@ -78,13 +80,31 @@ export class Game implements GameInfo, GameEventSource {
     }
   }
 
+  private calculatePieceMoves(piece: Piece) {
+    const moves = [new Move(piece.x, piece.y)];
+    this._moveInfos.push(new PieceMoveInfo(piece, moves));
+  }
+
+  private calculateMoves() {
+    const whitePlayer = this._player === Player.White;
+
+    for (const piece of this._pieces) {
+      if (piece.isWhite !== whitePlayer) {
+        continue;
+      }
+
+      this.calculatePieceMoves(piece);
+    }
+  }
+
   public constructor() {
     this._player = Player.White;
-    this.onPlayerChanged();
 
     this.initializeBoard();
     this.resetBoard();
     this.fillBoard();
+
+    this.calculateMoves();
   }
 
   public get board(): ReadonlyArray<ReadonlyArray<PieceInfo | null>> {
@@ -93,6 +113,10 @@ export class Game implements GameInfo, GameEventSource {
 
   public get pieces(): ReadonlyArray<PieceInfo> {
     return this._pieces;
+  }
+
+  public get moves(): ReadonlyArray<PieceMoveInfo> {
+    return this._moveInfos;
   }
 
   public get currentPlayer(): Player {

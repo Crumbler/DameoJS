@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PageIcon } from 'interface/images/pageIcon';
 import { PageBackground } from 'interface/images/pageBackground';
 import { FullscreenIcon } from 'interface/images/fullscreenIcon';
@@ -7,10 +8,13 @@ import { Input } from 'interface/input';
 import { Timer } from 'interface/timer';
 import { BoardImage } from 'interface/images/boardImage';
 import { BoardLines } from 'interface/images/boardLines';
-import { GameRenderer } from 'interface/gameRenderer';
+import { PieceRenderer } from 'interface/pieceRenderer';
 import { Game } from 'domain/game';
 import { PlayerIndicator } from 'interface/playerIndicator';
 import { Fullscreen } from 'interface/fullscreen';
+import { InputHandler } from 'interface/inputHandler';
+import { CellHighlightRenderer } from 'interface/cellHighlightRenderer';
+import { InputState } from 'interface/inputState';
 
 function generateImages() {
   PageBackground.generateAndSet();
@@ -22,7 +26,9 @@ function generateImages() {
   BoardLines.generateAndSet();
 }
 
-let renderer: GameRenderer;
+let renderer: PieceRenderer;
+let inputHandler: InputHandler;
+let cellHighlightRenderer: CellHighlightRenderer;
 
 function registerEventHandlers(game: Game) {
   PlayerIndicator.registerEventHandler(game);
@@ -38,7 +44,12 @@ function onLoad() {
 
   const game = new Game();
 
-  renderer = new GameRenderer(game);
+  renderer = new PieceRenderer(game);
+  inputHandler = new InputHandler(game);
+
+  const inputState = new InputState();
+
+  cellHighlightRenderer = new CellHighlightRenderer(game, inputState);
 
   registerEventHandlers(game);
 

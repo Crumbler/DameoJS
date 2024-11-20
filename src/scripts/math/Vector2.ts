@@ -1,4 +1,9 @@
-export class Vector2 extends Array {
+export interface RVector2 {
+  readonly x: number;
+  readonly y: number;
+}
+
+export class Vector2 extends Array implements RVector2 {
   constructor(x: number = 0, y: number = 0) {
     super();
     this[0] = x;

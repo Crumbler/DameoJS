@@ -4,15 +4,15 @@ import { InterfaceColors } from 'interface/interfaceColors';
 import { GameInfo } from 'domain/gameInfo';
 import { GameEventSource } from 'domain/gameEvent';
 
-export class GameRenderer {
+export class PieceRenderer {
   private readonly _game: GameInfo;
   private readonly _pieceCanvas =
     Elements.findById<HTMLCanvasElement>('piece-canvas');
   private readonly _pieceContext = this._pieceCanvas.getContext('2d')!;
   private readonly _redPieceLowerGradient =
-    GameRenderer.createPieceLowerGradient(this._pieceContext, false);
+    PieceRenderer.createPieceLowerGradient(this._pieceContext, false);
   private readonly _whitePieceLowerGradient =
-    GameRenderer.createPieceLowerGradient(this._pieceContext, true);
+    PieceRenderer.createPieceLowerGradient(this._pieceContext, true);
 
   public constructor(game: GameInfo) {
     this._game = game;
