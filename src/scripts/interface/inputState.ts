@@ -23,5 +23,6 @@ export class InputState {
 
   public subscribeToPieceChanges(handler: PieceChangeHandler) {
     this._pieceChangeHandlers.push(handler);
+    handler(this._selectedPiece);
   }
 }

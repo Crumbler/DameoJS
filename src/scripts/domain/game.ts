@@ -5,7 +5,7 @@ import { GameEvent, GameEventHandler, GameEventSource } from 'domain/gameEvent';
 import { PlayerChangedEvent } from 'domain/events/playerChangedEvent';
 import { GameResetEvent } from 'domain/events/gameResetEvent';
 import { GameInfo } from 'domain/gameInfo';
-import { Move, PieceMoveInfo } from 'domain/move';
+import { Move, MovesArray, PieceMoveInfo } from 'domain/move';
 
 export class Game implements GameInfo, GameEventSource {
   // stored from top to bottom
@@ -130,6 +130,16 @@ export class Game implements GameInfo, GameEventSource {
   public fireInitialEvents() {
     this.onPlayerChanged();
     this.onGameReset();
+  }
+
+  public findPieceMoves(piece: PieceInfo): MovesArray | null {
+    for (const moveInfo of this._moveInfos) {
+      if (moveInfo.pieceInfo === piece) {
+        return moveInfo.moves;
+      }
+    }
+
+    return null;
   }
 
   public registerEventHandler(handler: GameEventHandler) {

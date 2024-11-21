@@ -44,10 +44,10 @@ function onLoad() {
 
   const game = new Game();
 
-  renderer = new PieceRenderer(game);
-  inputHandler = new InputHandler(game);
-
   const inputState = new InputState();
+
+  renderer = new PieceRenderer(game);
+  inputHandler = new InputHandler(game, inputState);
 
   cellHighlightRenderer = new CellHighlightRenderer(game, inputState);
 

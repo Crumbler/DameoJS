@@ -10,4 +10,5 @@ export class InterfaceColors {
   public static readonly PieceWhiteColorA = 'rgb(60, 60, 60)';
   public static readonly PieceWhiteColorB = 'white';
   public static readonly SelectableCellColor = 'rgb(255, 247, 0)';
+  public static readonly SelectedCellColor = 'rgb(53, 255, 2)';
 }

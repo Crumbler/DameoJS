@@ -1,9 +1,9 @@
 import { Elements } from 'interface/elements';
 import { InputState } from 'interface/inputState';
-import { GameEvent, GameEventSource } from 'domain/gameEvent';
 import { InterfaceConstants } from 'interface/interfaceConstants';
 import { GameInfo } from 'domain/gameInfo';
 import { InterfaceColors } from 'interface/interfaceColors';
+import { PieceInfo } from 'domain/piece';
 
 export class CellHighlightRenderer {
   private readonly _cellCanvas =
@@ -11,14 +11,27 @@ export class CellHighlightRenderer {
   private readonly _cellContext = this._cellCanvas.getContext('2d')!;
   private readonly _game: GameInfo;
 
-  public constructor(game: GameEventSource & GameInfo, inputState: InputState) {
+  public constructor(game: GameInfo, inputState: InputState) {
     this._game = game;
 
-    game.registerEventHandler((event) => this.onGameEvent(event));
-    inputState.subscribeToPieceChanges(() => this.onPieceChanged());
+    inputState.subscribeToPieceChanges((piece) => this.onPieceChanged(piece));
   }
 
-  private render() {
+  private renderSelectedPiece(piece: PieceInfo) {
+    const context = this._cellContext;
+    const cellSize = InterfaceConstants.CellSize;
+
+    context.fillStyle = InterfaceColors.SelectedCellColor;
+
+    context.fillRect(
+      piece.x * cellSize,
+      piece.y * cellSize,
+      cellSize,
+      cellSize,
+    );
+  }
+
+  private render(piece: PieceInfo | null) {
     const context = this._cellContext;
     const boardSize = InterfaceConstants.BoardSize;
     const cellSize = InterfaceConstants.CellSize;
@@ -28,28 +41,25 @@ export class CellHighlightRenderer {
     context.clearRect(0, 0, boardSize, boardSize);
 
     for (const pieceMoves of this._game.moves) {
-      const piece = pieceMoves.pieceInfo;
+      const rPiece = pieceMoves.pieceInfo;
+      if (rPiece === piece) {
+        continue;
+      }
 
       context.fillRect(
-        piece.x * cellSize,
-        piece.y * cellSize,
+        rPiece.x * cellSize,
+        rPiece.y * cellSize,
         cellSize,
         cellSize,
       );
     }
-  }
 
-  private onGameEvent(event: GameEvent) {
-    if (event.isPlayerChangedEvent()) {
-      this.onPlayerChanged();
+    if (piece !== null) {
+      this.renderSelectedPiece(piece);
     }
   }
 
-  private onPlayerChanged() {
-    this.render();
-  }
-
-  private onPieceChanged() {
-    this.render();
+  private onPieceChanged(piece: PieceInfo | null) {
+    this.render(piece);
   }
 }
