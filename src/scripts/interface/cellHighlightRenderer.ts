@@ -29,6 +29,22 @@ export class CellHighlightRenderer {
       cellSize,
       cellSize,
     );
+
+    context.fillStyle = InterfaceColors.ReachableCell;
+
+    const moves = this._game.findPieceMoves(piece);
+    if (moves === null) {
+      return;
+    }
+
+    for (const move of moves) {
+      context.fillRect(
+        move.endCell.x * cellSize,
+        move.endCell.y * cellSize,
+        cellSize,
+        cellSize,
+      );
+    }
   }
 
   private render(piece: PieceInfo | null) {

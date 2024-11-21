@@ -18,7 +18,7 @@ export class InputHandler {
   }
 
   private handleCellClick(cellX: number, cellY: number) {
-    const piece = this._game.board[cellY][cellX];
+    const piece = this._game.board.dataView[cellY][cellX];
 
     const isWhite = this._game.currentPlayer === Player.White;
 
