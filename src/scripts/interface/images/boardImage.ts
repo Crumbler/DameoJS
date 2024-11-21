@@ -16,11 +16,11 @@ export class BoardImage {
   private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const size = context.canvas.width;
 
-    context.fillStyle = InterfaceColors.CellColorA;
+    context.fillStyle = InterfaceColors.CellA;
 
     context.fillRect(0, 0, size, size);
 
-    context.fillStyle = InterfaceColors.CellColorB;
+    context.fillStyle = InterfaceColors.CellB;
 
     const cellSize = InterfaceConstants.BoardSize / GameConstants.CellsPerSide;
 

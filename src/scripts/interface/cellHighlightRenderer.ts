@@ -21,7 +21,7 @@ export class CellHighlightRenderer {
     const context = this._cellContext;
     const cellSize = InterfaceConstants.CellSize;
 
-    context.fillStyle = InterfaceColors.SelectedCellColor;
+    context.fillStyle = InterfaceColors.SelectedCell;
 
     context.fillRect(
       piece.x * cellSize,
@@ -36,7 +36,7 @@ export class CellHighlightRenderer {
     const boardSize = InterfaceConstants.BoardSize;
     const cellSize = InterfaceConstants.CellSize;
 
-    context.fillStyle = InterfaceColors.SelectableCellColor;
+    context.fillStyle = InterfaceColors.SelectableCell;
 
     context.clearRect(0, 0, boardSize, boardSize);
 

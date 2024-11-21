@@ -33,11 +33,11 @@ export class PieceRenderer {
 
     gradient.addColorStop(
       0,
-      white ? InterfaceColors.PieceWhiteColorA : InterfaceColors.PieceRedColorA,
+      white ? InterfaceColors.WhitePieceA : InterfaceColors.RedPieceA,
     );
     gradient.addColorStop(
       1,
-      white ? InterfaceColors.PieceWhiteColorB : InterfaceColors.PieceRedColorB,
+      white ? InterfaceColors.WhitePieceB : InterfaceColors.RedPieceB,
     );
 
     return gradient;
@@ -55,8 +55,8 @@ export class PieceRenderer {
       : this._redPieceLowerGradient;
 
     const rightColor = white
-      ? InterfaceColors.PieceWhiteColorB
-      : InterfaceColors.PieceRedColorB;
+      ? InterfaceColors.WhitePieceB
+      : InterfaceColors.RedPieceB;
 
     context.fillStyle = gradient;
     context.strokeStyle = 'black';
