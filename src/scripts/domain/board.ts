@@ -1,13 +1,14 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { GameConstants } from 'domain/gameConstants';
+import { Matrix, ReadonlyMatrix } from 'misc/arrayTypes';
 
 export interface BoardInfo {
-  readonly dataView: ReadonlyArray<ReadonlyArray<PieceInfo | null>>;
+  readonly dataView: ReadonlyMatrix<PieceInfo | null>;
 }
 
 export class Board implements BoardInfo {
   // stored from top to bottom
-  private _board: Array<Array<Piece | null>>;
+  private _board: Matrix<Piece | null>;
 
   public constructor() {
     this._board = [];
@@ -65,11 +66,11 @@ export class Board implements BoardInfo {
     }
   }
 
-  public get data(): Array<Array<Piece | null>> {
+  public get data(): Matrix<Piece | null> {
     return this._board;
   }
 
-  public get dataView(): ReadonlyArray<ReadonlyArray<PieceInfo | null>> {
+  public get dataView(): ReadonlyMatrix<PieceInfo | null> {
     return this._board;
   }
 }
