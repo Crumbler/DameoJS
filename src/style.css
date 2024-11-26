@@ -111,6 +111,7 @@ body,
 
 #game-container {
   position: relative;
+
   > * {
     position: absolute;
     height: 100%;
@@ -119,14 +120,24 @@ body,
 }
 
 #game-board {
-  background-repeat: repeat;
-  background-size: 25%;
+  background-image: repeating-conic-gradient(#566936 0% 25%, #ffeebb 25% 50%);
+  background-size: calc(100% / 8 * 2) calc(100% / 8 * 2);
 }
 
 #board-lines {
-  mask-mode: luminance;
-  mask-size: contain;
-
-  background-blend-mode: multiply;
-  background-color: black;
+  --line-width: 3%;
+  background-image: linear-gradient(
+      to right,
+      black 0% var(--line-width),
+      transparent var(--line-width) calc(100% - var(--line-width)),
+      black calc(100% - var(--line-width))
+    ),
+    linear-gradient(
+      to bottom,
+      black 0% var(--line-width),
+      transparent var(--line-width) calc(100% - var(--line-width)),
+      black calc(100% - var(--line-width))
+    );
+  background-size: calc(100% / 8) calc(100% / 8);
+  background-repeat: repeat;
 }
