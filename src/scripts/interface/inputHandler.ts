@@ -2,7 +2,6 @@ import { GameInfo } from 'domain/gameInfo';
 import { Elements } from 'interface/elements';
 import { InputState } from 'interface/inputState';
 import { GameConstants } from 'domain/gameConstants';
-import { Player } from 'domain/player';
 
 export class InputHandler {
   private readonly _game: GameInfo;
@@ -20,22 +19,20 @@ export class InputHandler {
   private handleCellClick(cellX: number, cellY: number) {
     const piece = this._game.board.dataView[cellY][cellX];
 
-    const isWhite = this._game.currentPlayer === Player.White;
-
     const currentPiece = this._inputState.selectedPiece;
 
-    if (currentPiece === null && piece === null) {
+    // If the selection is the same, do nothing
+    if (currentPiece === piece) {
       return;
     }
 
-    if (currentPiece !== piece) {
-      if (piece !== null && piece.isWhite !== isWhite) {
-        this._inputState.selectedPiece = null;
-        return;
-      }
-
-      this._inputState.selectedPiece = piece;
+    // If clicked on other player's piece or own piece without moves, deselect
+    if (piece !== null && this._game.findPieceMoves(piece) === null) {
+      this._inputState.selectedPiece = null;
+      return;
     }
+
+    this._inputState.selectedPiece = piece;
   }
 
   private handleClick(event: MouseEvent) {

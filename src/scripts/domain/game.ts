@@ -8,6 +8,7 @@ import { MovesArray, PieceMoveInfo } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
+import { BoardView } from 'domain/boardView';
 
 export class Game implements GameInfo, GameEventSource {
   // stored from top to bottom
@@ -17,22 +18,23 @@ export class Game implements GameInfo, GameEventSource {
   private _moveInfos: Array<PieceMoveInfo> = [];
   private _eventSubject = new Subject<GameEvent>();
 
-  private calculatePieceMoves(piece: Piece) {
-    const moves = MoveCalculator.calculateMoves(this._board, piece);
+  private calculatePieceMoves(boardView: BoardView, piece: Piece) {
+    const moves = MoveCalculator.calculateMoves(boardView, piece);
     if (moves !== null) {
       this._moveInfos.push(new PieceMoveInfo(piece, moves));
     }
   }
 
   private calculateMoves() {
-    const whitePlayer = this._player === Player.White;
+    const isWhite = this._player === Player.White;
+    const boardView = new BoardView(this._board);
 
     for (const piece of this._pieces) {
-      if (piece.isWhite !== whitePlayer) {
+      if (piece.isWhite !== isWhite) {
         continue;
       }
 
-      this.calculatePieceMoves(piece);
+      this.calculatePieceMoves(boardView, piece);
     }
   }
 

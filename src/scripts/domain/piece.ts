@@ -1,3 +1,5 @@
+import { GameConstants } from 'domain/gameConstants';
+
 export interface PieceInfo {
   readonly x: number;
   readonly y: number;
@@ -5,28 +7,30 @@ export interface PieceInfo {
   readonly isWhite: boolean;
 }
 
+export type Wall = -1;
+export const WallCell = -1;
+
 export class Piece implements PieceInfo {
   private readonly _isWhite: boolean;
   private _isPromoted: boolean;
   private _x: number;
   private _y: number;
 
+  private static checkCoordinate(coord: number, coordName: 'X' | 'Y') {
+    if (coord !== (coord | 0)) {
+      throw new Error(`${coordName} value ${coord} is not an integer`);
+    }
+
+    if (coord < 0 || coord >= GameConstants.CellsPerSide) {
+      throw new Error(
+        `${coordName} coordinate must be in range [0, ${GameConstants.CellsPerSide - 1}]`,
+      );
+    }
+  }
+
   public constructor(isWhite: boolean, x: number, y: number) {
-    if (x !== (x | 0)) {
-      throw new Error(`X value ${x} is not an integer`);
-    }
-
-    if (x < 0 || x > 7) {
-      throw new Error('Piece X coordinate must be in range [0, 7]');
-    }
-
-    if (y !== (y | 0)) {
-      throw new Error(`Y value ${y} is not an integer`);
-    }
-
-    if (y < 0 || y > 7) {
-      throw new Error('Piece Y coordinate must be in range [0, 7]');
-    }
+    Piece.checkCoordinate(x, 'X');
+    Piece.checkCoordinate(y, 'Y');
 
     this._isWhite = isWhite;
     this._isPromoted = false;
@@ -52,21 +56,8 @@ export class Piece implements PieceInfo {
   }
 
   public moveTo(x: number, y: number) {
-    if (x !== (x | 0)) {
-      throw new Error(`X value ${x} is not an integer`);
-    }
-
-    if (x < 0 || x > 7) {
-      throw new Error('Piece X coordinate must be in range [0, 7]');
-    }
-
-    if (y !== (y | 0)) {
-      throw new Error(`Y value ${y} is not an integer`);
-    }
-
-    if (y < 0 || y > 7) {
-      throw new Error('Piece Y coordinate must be in range [0, 7]');
-    }
+    Piece.checkCoordinate(x, 'X');
+    Piece.checkCoordinate(y, 'Y');
 
     this._x = x;
     this._y = y;
