@@ -1,10 +1,9 @@
 import { PieceInfo } from 'domain/piece';
-
-type PieceChangeHandler = (() => void) | ((piece: PieceInfo | null) => void);
+import { EventHandler, Subject } from 'misc/subject';
 
 export class InputState {
   private _selectedPiece: PieceInfo | null = null;
-  private _pieceChangeHandlers: Array<PieceChangeHandler> = [];
+  private _pieceChangeSubject = new Subject<PieceInfo | null>();
 
   public get selectedPiece(): PieceInfo | null {
     return this._selectedPiece;
@@ -16,13 +15,10 @@ export class InputState {
   }
 
   private raisePieceChange() {
-    for (const handler of this._pieceChangeHandlers) {
-      handler(this._selectedPiece);
-    }
+    this._pieceChangeSubject.raise(this.selectedPiece);
   }
 
-  public subscribeToPieceChanges(handler: PieceChangeHandler) {
-    this._pieceChangeHandlers.push(handler);
-    handler(this._selectedPiece);
+  public subscribeToPieceChanges(handler: EventHandler<PieceInfo | null>) {
+    this._pieceChangeSubject.subscribe(handler);
   }
 }

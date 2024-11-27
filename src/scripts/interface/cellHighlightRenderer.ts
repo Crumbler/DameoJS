@@ -15,6 +15,8 @@ export class CellHighlightRenderer {
     this._game = game;
 
     inputState.subscribeToPieceChanges((piece) => this.onPieceChanged(piece));
+
+    this.render(null);
   }
 
   private renderSelectedPiece(piece: PieceInfo) {

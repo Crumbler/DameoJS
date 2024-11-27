@@ -7,6 +7,7 @@ import { GameInfo } from 'domain/gameInfo';
 import { MovesArray, PieceMoveInfo } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
+import { Subject } from 'misc/subject';
 
 export class Game implements GameInfo, GameEventSource {
   // stored from top to bottom
@@ -14,7 +15,7 @@ export class Game implements GameInfo, GameEventSource {
   private _pieces: Array<Piece> = [];
   private _player: Player;
   private _moveInfos: Array<PieceMoveInfo> = [];
-  private _eventHandlers: Array<GameEventHandler> = [];
+  private _eventSubject = new Subject<GameEvent>();
 
   private calculatePieceMoves(piece: Piece) {
     const moves = MoveCalculator.calculateMoves(this._board, piece);
@@ -95,13 +96,11 @@ export class Game implements GameInfo, GameEventSource {
   }
 
   public registerEventHandler(handler: GameEventHandler) {
-    this._eventHandlers.push(handler);
+    this._eventSubject.subscribe(handler);
   }
 
   private raiseEvent(event: GameEvent) {
-    for (const handler of this._eventHandlers) {
-      handler(event);
-    }
+    this._eventSubject.raise(event);
   }
 
   private onGameReset() {

@@ -1,12 +1,13 @@
 import { PlayerChangedEvent } from 'domain/events/playerChangedEvent';
 import { GameResetEvent } from 'domain/events/gameResetEvent';
+import { EventHandler } from 'misc/subject';
 
 export enum GameEventType {
   PlayerChanged,
   GameReset,
 }
 
-export type GameEventHandler = (event: GameEvent) => void;
+export type GameEventHandler = EventHandler<GameEvent>;
 
 export interface GameEventSource {
   registerEventHandler(handler: GameEventHandler): void;
