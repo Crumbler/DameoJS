@@ -1,0 +1,21 @@
+{
+  "start_url": "/DameoJS/",
+  "scope": "/DameoJS/",
+  "name": "Dameo",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "theme_color": "#CA9334",
+  "background_color": "#362918",
+  "icons": [
+    {
+      "src": "icon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}
