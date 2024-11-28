@@ -14,12 +14,39 @@ body {
 body,
 ::backdrop,
 :fullscreen {
-  background-position: center;
-  background-repeat: repeat;
-  background-size: 150px;
+  --baseSize: 220px;
+
+  --size: var(--baseSize);
+
+  --c1: #774f38;
+  --c2: #d6bc9a;
+
+  --g: radial-gradient(
+    #0000 60%,
+    var(--c1) 61% 63%,
+    #0000 64% 77%,
+    var(--c1) 78% 80%,
+    #0000 81%
+  );
+
+  --c: #0000 75%, var(--c2) 0;
+
+  background:
+    conic-gradient(at 12% 20%, var(--c)) calc(var(--size) * 0.44)
+      calc(0.9 * var(--size)),
+    conic-gradient(at 12% 20%, var(--c)) calc(var(--size) * -0.06)
+      calc(0.4 * var(--size)),
+    conic-gradient(at 20% 12%, var(--c)) calc(0.9 * var(--size))
+      calc(var(--size) * 0.44),
+    conic-gradient(at 20% 12%, var(--c)) calc(0.4 * var(--size))
+      calc(var(--size) * -0.06),
+    var(--g),
+    var(--g) calc(var(--size) / 2) calc(var(--size) / 2) var(--c2);
+
+  background-size: var(--size) var(--size);
 
   @media (max-aspect-ratio: 8 / 9) {
-    background-size: 100px;
+    --size: calc(var(--baseSize) / 2);
   }
 }
 
