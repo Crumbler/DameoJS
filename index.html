@@ -5,11 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Dameo</title>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <script type="module" crossorigin src="./index.js"></script>
+    <link rel="stylesheet" crossorigin href="./index.css">
   </head>
-
+  <style></style>
   <body>
-    <div id="main-container">Stuff</div>
-    <script src="out/main.js" defer></script>
+    <div id="main-container">
+      <div id="game-header">
+        <div id="player-time-wrapper">
+          <div id="player-indicator"></div>
+          <div id="game-time">0:00</div>
+        </div>
+        <div id="undo-button" class="header-button" title="Undo"></div>
+        <div
+          id="fullscreen-button"
+          class="header-button always-clickable"
+          title="Toggle fullscreen"
+        ></div>
+        <div id="restart-button" class="header-button" title="Restart"></div>
+      </div>
+      <div id="game-container">
+        <div id="game-board"></div>
+        <canvas id="cell-canvas" width="600" height="600"></canvas>
+        <div id="board-lines"></div>
+        <canvas id="piece-canvas" width="600" height="600"></canvas>
+      </div>
+    </div>
   </body>
 </html>
