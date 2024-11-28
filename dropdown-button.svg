@@ -1,0 +1,8 @@
+<svg id="main"
+  fill="currentColor"
+  viewBox="0 0 100 100"
+  xmlns="http://www.w3.org/2000/svg">
+  <circle cx="17.5" cy="50" r="12" />
+  <circle cx="50" cy="50" r="12" />
+  <circle cx="82.5" cy="50" r="12" />
+</svg>
