@@ -1,10 +1,10 @@
 import { Move } from 'domain/move';
 import { PieceInfo, WallCell } from 'domain/piece';
-import { BoardView } from 'domain/boardView';
+import { BoardInfo } from 'domain/board';
 
 export class MoveCalculator {
   private static getSimpleMove(
-    board: BoardView,
+    board: BoardInfo,
     piece: PieceInfo,
     dX: number,
     dY: number,
@@ -33,7 +33,7 @@ export class MoveCalculator {
   }
 
   private static addSimpleMoves(
-    board: BoardView,
+    board: BoardInfo,
     moves: Move[],
     piece: PieceInfo,
   ) {
@@ -48,7 +48,7 @@ export class MoveCalculator {
   }
 
   public static calculateMoves(
-    board: BoardView,
+    board: BoardInfo,
     piece: PieceInfo,
   ): Move[] | null {
     const moves: Move[] = [];

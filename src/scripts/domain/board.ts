@@ -1,9 +1,10 @@
-import { Piece, PieceInfo } from 'domain/piece';
+import { Piece, PieceInfo, Wall, WallCell } from 'domain/piece';
 import { GameConstants } from 'domain/gameConstants';
 import { Matrix, ReadonlyMatrix } from 'misc/arrayTypes';
 
 export interface BoardInfo {
   readonly dataView: ReadonlyMatrix<PieceInfo | null>;
+  getCell(x: number, y: number): PieceInfo | Wall | null
 }
 
 export class Board implements BoardInfo {
@@ -64,6 +65,16 @@ export class Board implements BoardInfo {
         row[j] = null;
       }
     }
+  }
+
+  public getCell(x: number, y: number): PieceInfo | Wall | null {
+    const cellsPerSide = GameConstants.CellsPerSide;
+
+    if (x < 0 || x >= cellsPerSide || y < 0 || y >= cellsPerSide) {
+      return WallCell;
+    }
+
+    return this._board[y][x];
   }
 
   public get data(): Matrix<Piece | null> {

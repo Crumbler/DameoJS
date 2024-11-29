@@ -8,7 +8,7 @@ export interface PieceInfo {
 }
 
 export type Wall = -1;
-export const WallCell = -1;
+export const WallCell: Wall = -1;
 
 export class Piece implements PieceInfo {
   private readonly _isWhite: boolean;
