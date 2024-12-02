@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PageIcon } from 'interface/images/pageIcon';
 import { FullscreenIcon } from 'interface/images/fullscreenIcon';
 import { RestartIcon } from 'interface/images/restartIcon';
 import { UndoIcon } from 'interface/images/undoIcon';
@@ -14,7 +13,6 @@ import { CellHighlightRenderer } from 'interface/cellHighlightRenderer';
 import { InputState } from 'interface/inputState';
 
 function generateImages() {
-  PageIcon.generateAndSet();
   FullscreenIcon.generateAndSet();
   RestartIcon.generateAndSet();
   UndoIcon.generateAndSet();

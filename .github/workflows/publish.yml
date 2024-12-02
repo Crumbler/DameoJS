@@ -30,7 +30,7 @@ jobs:
         run: |
           git fetch origin gh-pages
           git worktree add ../pb gh-pages
-          cp src/index.html src/style.css ../pb/
+          cp src/index.html src/style.css src/favicon.png ../pb/
           cp src/out/main.js ../pb/out/
 
       - name: Setup credentials
