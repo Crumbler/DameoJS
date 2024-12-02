@@ -3,6 +3,9 @@ import { InterfaceConstants } from 'interface/interfaceConstants';
 import { BlobHelper } from 'helpers/blobHelper';
 import { Elements } from 'interface/elements';
 
+/**
+ * Renders the restart icon
+ */
 export class RestartIcon {
   private static readonly restartIcon = Elements.findById('restart-button');
 

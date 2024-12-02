@@ -4,13 +4,22 @@ import { InterfaceColors } from 'interface/interfaceColors';
 import { GameInfo } from 'domain/gameInfo';
 import { GameEventSource } from 'domain/gameEvent';
 
+/**
+ * Renders and animates the board pieces using canvas
+ */
 export class PieceRenderer {
   private readonly _game: GameInfo;
-  private readonly _pieceCanvas =
-    Elements.findById<HTMLCanvasElement>('piece-canvas');
-  private readonly _pieceContext = this._pieceCanvas.getContext('2d')!;
+  private readonly _pieceContext = Elements.findById<HTMLCanvasElement>('piece-canvas').getContext('2d')!;
+
+  /**
+   * Gradient for the lower piece part
+   */
   private readonly _redPieceLowerGradient =
     PieceRenderer.createPieceLowerGradient(this._pieceContext, false);
+
+  /**
+   * Gradient for the upper piece part
+   */
   private readonly _whitePieceLowerGradient =
     PieceRenderer.createPieceLowerGradient(this._pieceContext, true);
 

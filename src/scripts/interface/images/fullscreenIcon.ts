@@ -3,6 +3,9 @@ import { InterfaceConstants } from 'interface/interfaceConstants';
 import { BlobHelper } from 'helpers/blobHelper';
 import { Elements } from 'interface/elements';
 
+/**
+ * Renders the toggle fullscreen icon
+ */
 export class FullscreenIcon {
   private static readonly fullscreenIcon =
     Elements.findById('fullscreen-button');

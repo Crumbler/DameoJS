@@ -8,17 +8,23 @@ import { MovesArray, PieceMoveInfo } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
-import { BoardView } from 'domain/boardView';
 
 export class Game implements GameInfo, GameEventSource {
-  // stored from top to bottom
+  /**
+   * The game board, pieces are stored from top to bottom
+   */
   private _board: Board;
+
+  /**
+   * An array with all of the pieces on the board
+   */
   private _pieces: Array<Piece> = [];
-  private _player: Player;
+
+  private _currentPlayer: Player;
   private _moveInfos: Array<PieceMoveInfo> = [];
   private _eventSubject = new Subject<GameEvent>();
 
-  private calculatePieceMoves(boardView: BoardView, piece: Piece) {
+  private calculatePieceMoves(boardView: BoardInfo, piece: Piece) {
     const moves = MoveCalculator.calculateMoves(boardView, piece);
     if (moves !== null) {
       this._moveInfos.push(new PieceMoveInfo(piece, moves));
@@ -26,18 +32,20 @@ export class Game implements GameInfo, GameEventSource {
   }
 
   private calculateMoves() {
-    const isWhite = this._player === Player.White;
-    const boardView = new BoardView(this._board);
+    const isWhite = this._currentPlayer === Player.White;
 
     for (const piece of this._pieces) {
       if (piece.isWhite !== isWhite) {
         continue;
       }
 
-      this.calculatePieceMoves(boardView, piece);
+      this.calculatePieceMoves(this._board, piece);
     }
   }
 
+  /**
+   * Resets the pieces array and fills it from the board
+   */
   private resetPieces() {
     this._pieces.length = 0;
 
@@ -53,7 +61,7 @@ export class Game implements GameInfo, GameEventSource {
   }
 
   public constructor() {
-    this._player = Player.White;
+    this._currentPlayer = Player.White;
 
     this._board = new Board();
 
@@ -75,7 +83,7 @@ export class Game implements GameInfo, GameEventSource {
   }
 
   public get currentPlayer(): Player {
-    return this._player;
+    return this._currentPlayer;
   }
 
   public get canUndo(): boolean {
@@ -110,6 +118,6 @@ export class Game implements GameInfo, GameEventSource {
   }
 
   public onPlayerChanged() {
-    this.raiseEvent(new PlayerChangedEvent(this._player));
+    this.raiseEvent(new PlayerChangedEvent(this._currentPlayer));
   }
 }

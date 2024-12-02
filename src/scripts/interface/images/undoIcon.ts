@@ -3,6 +3,9 @@ import { InterfaceConstants } from 'interface/interfaceConstants';
 import { BlobHelper } from 'helpers/blobHelper';
 import { Elements } from 'interface/elements';
 
+/**
+ * Renders the undo icon
+ */
 export class UndoIcon {
   private static readonly undoIcon =
     Elements.findById<HTMLImageElement>('undo-button');

@@ -7,7 +7,13 @@ export interface PieceInfo {
   readonly isWhite: boolean;
 }
 
+/**
+ * Indicates a cell that is not on the field
+ */
 export type Wall = -1;
+/**
+ * Indicates a cell that is not on the field
+ */
 export const WallCell: Wall = -1;
 
 export class Piece implements PieceInfo {

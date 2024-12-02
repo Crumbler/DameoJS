@@ -2,6 +2,9 @@ import { BlobHelper } from 'helpers/blobHelper';
 import { Vector2 } from 'math/Vector2';
 import { InterfaceColors } from 'interface/interfaceColors';
 
+/**
+ * Renders the page icon
+ */
 export class PageIcon {
   private static readonly RhombusSize = 16;
 

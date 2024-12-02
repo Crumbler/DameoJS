@@ -1,3 +1,6 @@
+/**
+ * Input helper class
+ */
 export class Input {
   private static fullscreenIcon: HTMLElement =
     document.getElementById('fullscreen-button')!;

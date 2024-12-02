@@ -5,10 +5,11 @@ import { GameInfo } from 'domain/gameInfo';
 import { InterfaceColors } from 'interface/interfaceColors';
 import { PieceInfo } from 'domain/piece';
 
+/**
+ * Renders cell highlights
+ */
 export class CellHighlightRenderer {
-  private readonly _cellCanvas =
-    Elements.findById<HTMLCanvasElement>('cell-canvas');
-  private readonly _cellContext = this._cellCanvas.getContext('2d')!;
+  private readonly _cellContext = Elements.findById<HTMLCanvasElement>('cell-canvas').getContext('2d')!;
   private readonly _game: GameInfo;
 
   public constructor(game: GameInfo, inputState: InputState) {

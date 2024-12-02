@@ -1,3 +1,7 @@
+/**
+ * Read-only Vector2
+ * @see {@link Vector2}
+ */
 export interface RVector2 {
   readonly x: number;
   readonly y: number;

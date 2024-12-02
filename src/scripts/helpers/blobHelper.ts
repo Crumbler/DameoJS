@@ -23,6 +23,13 @@ export class BlobHelper {
     return canvas.convertToBlob();
   }
 
+  /**
+   * Draws to a context, converts to blob and returns the blob's url
+   * @param size Canvas bounds
+   * @param drawAction Function that draws to the context
+   * @param transparent True if 2d context should support transparency
+   * @returns URL to resource
+   */
   public static async drawToBlobUrl(
     size: Vector2,
     drawAction: RenderAction,

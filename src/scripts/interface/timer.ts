@@ -2,11 +2,17 @@ import { GameEvent, GameEventSource } from 'domain/gameEvent';
 import { Elements } from 'interface/elements';
 import { Format } from 'misc/format';
 
+/**
+ * Timer class for setting the game time
+ */
 export class Timer {
   private static timerElement = Elements.findById('game-time');
   private static start: number;
   private static interval: number | null = null;
 
+  /**
+   * Restarts the timer
+   */
   public static restart() {
     if (Timer.interval !== null) {
       clearInterval(Timer.interval);

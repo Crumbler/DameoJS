@@ -47,6 +47,10 @@ export class MoveCalculator {
     }
   }
 
+  /**
+   * Calculates all the possible moves for a given piece
+   * @returns Move array if there are any available moves, otherwise null
+   */
   public static calculateMoves(
     board: BoardInfo,
     piece: PieceInfo,

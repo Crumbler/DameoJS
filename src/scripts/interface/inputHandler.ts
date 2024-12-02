@@ -3,6 +3,9 @@ import { Elements } from 'interface/elements';
 import { InputState } from 'interface/inputState';
 import { GameConstants } from 'domain/gameConstants';
 
+/**
+ * Handles user input
+ */
 export class InputHandler {
   private readonly _game: GameInfo;
   private readonly _inputState: InputState;

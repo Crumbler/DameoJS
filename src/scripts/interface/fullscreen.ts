@@ -1,3 +1,6 @@
+/**
+ * Toggles fullscreen
+ */
 export class Fullscreen {
   public static toggle() {
     if (!document.fullscreenEnabled) {
