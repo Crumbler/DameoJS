@@ -1,15 +1,17 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { Player } from 'domain/player';
-import { GameEvent, GameEventHandler, GameEventSource } from 'domain/gameEvent';
-import { PlayerChangedEvent } from 'domain/events/playerChangedEvent';
-import { GameResetEvent } from 'domain/events/gameResetEvent';
+import { GameEvent, GameEventHandler, GameEventSource, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
 import { GameInfo } from 'domain/gameInfo';
-import { MovesArray, PieceMoveInfo } from 'domain/move';
+import { Move, PieceMoves } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
 
-export class Game implements GameInfo, GameEventSource {
+export interface GameMovable {
+  performMove(pieceToMove: PieceInfo, move: Move): void;
+}
+
+export class Game implements GameInfo, GameEventSource, GameMovable {
   /**
    * The game board, pieces are stored from top to bottom
    */
@@ -21,17 +23,19 @@ export class Game implements GameInfo, GameEventSource {
   private _pieces: Array<Piece> = [];
 
   private _currentPlayer: Player;
-  private _moveInfos: Array<PieceMoveInfo> = [];
+  private _moveInfos: Array<PieceMoves> = [];
   private _eventSubject = new Subject<GameEvent>();
 
   private calculatePieceMoves(boardView: BoardInfo, piece: Piece) {
     const moves = MoveCalculator.calculateMoves(boardView, piece);
     if (moves !== null) {
-      this._moveInfos.push(new PieceMoveInfo(piece, moves));
+      this._moveInfos.push(new PieceMoves(piece, moves));
     }
   }
 
   private calculateMoves() {
+    this._moveInfos.length = 0;
+
     const isWhite = this._currentPlayer === Player.White;
 
     for (const piece of this._pieces) {
@@ -60,6 +64,11 @@ export class Game implements GameInfo, GameEventSource {
     }
   }
 
+  private swapPlayer() {
+    this._currentPlayer = this._currentPlayer === Player.Red ? Player.White : Player.Red;
+    this.onPlayerChanged();
+  }
+
   public constructor() {
     this._currentPlayer = Player.White;
 
@@ -78,7 +87,7 @@ export class Game implements GameInfo, GameEventSource {
     return this._pieces;
   }
 
-  public get moves(): ReadonlyArray<PieceMoveInfo> {
+  public get moves(): ReadonlyArray<PieceMoves> {
     return this._moveInfos;
   }
 
@@ -95,14 +104,34 @@ export class Game implements GameInfo, GameEventSource {
     this.onGameReset();
   }
 
-  public findPieceMoves(piece: PieceInfo): MovesArray | null {
+  public findPieceMoves(piece: PieceInfo): ReadonlyArray<Move> | null {
     for (const moveInfo of this._moveInfos) {
-      if (moveInfo.pieceInfo === piece) {
+      if (moveInfo.piece === piece) {
         return moveInfo.moves;
       }
     }
 
     return null;
+  }
+
+  public performMove(pieceToMove: PieceInfo, move: Move) {
+    const pieceMoveInfo = this._moveInfos.find((mi) => mi.piece === pieceToMove);
+    if (!pieceMoveInfo) {
+      throw new Error('Unable to find moves for piece ' + pieceToMove);
+    }
+
+    const hasMove = pieceMoveInfo.moves.includes(move);
+    if (!hasMove) {
+      throw new Error(`The piece ${pieceToMove} does not have the move ${move}`);
+    }
+
+    this._board.movePiece(pieceToMove.x, pieceToMove.y, move.endCell.x, move.endCell.y);
+
+    this.swapPlayer();
+
+    this.onPiecesChanged();
+
+    this.calculateMoves();
   }
 
   public registerEventHandler(handler: GameEventHandler) {
@@ -113,11 +142,15 @@ export class Game implements GameInfo, GameEventSource {
     this._eventSubject.raise(event);
   }
 
+  private onPiecesChanged() {
+    this.raiseEvent(new PiecesChangedEvent());
+  }
+
   private onGameReset() {
     this.raiseEvent(new GameResetEvent());
   }
 
-  public onPlayerChanged() {
+  private onPlayerChanged() {
     this.raiseEvent(new PlayerChangedEvent(this._currentPlayer));
   }
 }

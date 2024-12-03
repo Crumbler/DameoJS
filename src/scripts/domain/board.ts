@@ -77,6 +77,25 @@ export class Board implements BoardInfo {
     return this._board[y][x];
   }
 
+  public movePiece(fromX: number, fromY: number, toX: number, toY: number) {
+    const piece = this._board[fromY][fromX];
+
+    if (piece === null) {
+      throw new Error(`Piece at ${fromX} ${fromY} not present`);
+    }
+
+    const newCell = this._board[toY][toX];
+
+    if (newCell !== null) {
+      throw new Error(`Cell at ${toX} ${toY} not empty`);
+    }
+
+    this._board[toY][toX] = piece;
+    this._board[fromY][fromX] = null;
+
+    piece.moveTo(toX, toY);
+  }
+
   public get data(): Matrix<Piece | null> {
     return this._board;
   }

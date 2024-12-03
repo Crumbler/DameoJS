@@ -1,7 +1,5 @@
 import { RVector2, Vector2 } from 'math/Vector2';
-import { PieceInfo } from 'domain/piece';
-
-export type MovesArray = ReadonlyArray<Move>;
+import { Piece, PieceInfo } from 'domain/piece';
 
 export class Move {
   public readonly endCell: RVector2;
@@ -11,9 +9,14 @@ export class Move {
   }
 }
 
-export class PieceMoveInfo {
+export interface PieceMovesInfo {
+  readonly piece: PieceInfo;
+  readonly moves: ReadonlyArray<Move>;
+}
+
+export class PieceMoves implements PieceMovesInfo {
   public constructor(
-    public readonly pieceInfo: PieceInfo,
-    public readonly moves: MovesArray,
-  ) {}
+    public readonly piece: Piece,
+    public readonly moves: ReadonlyArray<Move>,
+  ) { }
 }

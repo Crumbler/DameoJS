@@ -1,13 +1,15 @@
-import { GameInfo } from 'domain/gameInfo';
 import { Elements } from 'interface/elements';
 import { InputState } from 'interface/inputState';
 import { GameConstants } from 'domain/gameConstants';
+import { PieceInfo } from 'domain/piece';
+import { GameMovable } from 'domain/game';
+import { GameInfo } from 'domain/gameInfo';
 
 /**
  * Handles user input
  */
 export class InputHandler {
-  private readonly _game: GameInfo;
+  private readonly _game: GameInfo & GameMovable;
   private readonly _inputState: InputState;
   private readonly _container = Elements.findById('game-container');
 
@@ -17,6 +19,24 @@ export class InputHandler {
       (event) => this.handleClick(event),
       true,
     );
+  }
+
+  private tryMoveToCell(piece: PieceInfo, cellX: number, cellY: number): boolean {
+    const moves = this._game.findPieceMoves(piece);
+
+    if (moves === null) {
+      return false;
+    }
+
+    const move = moves.find(mv => mv.endCell.x === cellX && mv.endCell.y === cellY);
+
+    if (!move) {
+      return false;
+    }
+
+    this._game.performMove(piece, move);
+
+    return true;
   }
 
   private handleCellClick(cellX: number, cellY: number) {
@@ -31,6 +51,13 @@ export class InputHandler {
 
     // If clicked on other player's piece or own piece without moves, deselect
     if (piece !== null && this._game.findPieceMoves(piece) === null) {
+      this._inputState.selectedPiece = null;
+      return;
+    }
+
+    if (piece === null &&
+      this._inputState.selectedPiece !== null &&
+      this.tryMoveToCell(this._inputState.selectedPiece, cellX, cellY)) {
       this._inputState.selectedPiece = null;
       return;
     }
@@ -52,7 +79,7 @@ export class InputHandler {
     this.handleCellClick(cellX, cellY);
   }
 
-  public constructor(game: GameInfo, inputState: InputState) {
+  public constructor(game: GameInfo & GameMovable, inputState: InputState) {
     this._game = game;
 
     this._inputState = inputState;

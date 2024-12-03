@@ -19,8 +19,8 @@ export const WallCell: Wall = -1;
 export class Piece implements PieceInfo {
   private readonly _isWhite: boolean;
   private _isPromoted: boolean;
-  private _x: number;
-  private _y: number;
+  public x: number;
+  public y: number;
 
   private static checkCoordinate(coord: number, coordName: 'X' | 'Y') {
     if (coord !== (coord | 0)) {
@@ -41,8 +41,8 @@ export class Piece implements PieceInfo {
     this._isWhite = isWhite;
     this._isPromoted = false;
 
-    this._x = x;
-    this._y = y;
+    this.x = x;
+    this.y = y;
   }
 
   public get isPromoted() {
@@ -53,20 +53,12 @@ export class Piece implements PieceInfo {
     return this._isWhite;
   }
 
-  public get x() {
-    return this._x;
-  }
-
-  public get y() {
-    return this._y;
-  }
-
   public moveTo(x: number, y: number) {
     Piece.checkCoordinate(x, 'X');
     Piece.checkCoordinate(y, 'Y');
 
-    this._x = x;
-    this._y = y;
+    this.x = x;
+    this.y = y;
   }
 
   public promote() {

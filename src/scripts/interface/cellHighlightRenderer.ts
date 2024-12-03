@@ -60,7 +60,7 @@ export class CellHighlightRenderer {
     context.clearRect(0, 0, boardSize, boardSize);
 
     for (const pieceMoves of this._game.moves) {
-      const rPiece = pieceMoves.pieceInfo;
+      const rPiece = pieceMoves.piece;
       if (rPiece === piece) {
         continue;
       }
