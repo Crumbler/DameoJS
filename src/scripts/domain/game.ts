@@ -7,11 +7,12 @@ import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
 
-export interface GameMovable {
+export interface GameInteractable {
   performMove(pieceToMove: PieceInfo, move: Move): void;
+  reset(): void;
 }
 
-export class Game implements GameInfo, GameEventSource, GameMovable {
+export class Game implements GameInfo, GameEventSource, GameInteractable {
   /**
    * The game board, pieces are stored from top to bottom
    */
@@ -132,6 +133,17 @@ export class Game implements GameInfo, GameEventSource, GameMovable {
     this.onPiecesChanged();
 
     this.calculateMoves();
+  }
+
+  public reset() {
+    this._currentPlayer = Player.White;
+
+    this._board.reset();
+    this.resetPieces();
+    this.calculateMoves();
+
+    this.onPlayerChanged();
+    this.onGameReset();
   }
 
   public registerEventHandler(handler: GameEventHandler) {

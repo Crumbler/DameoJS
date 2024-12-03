@@ -19,7 +19,7 @@ export class Board implements BoardInfo {
       this._board[i] = new Array(GameConstants.CellsPerSide);
     }
 
-    this.resetBoard();
+    this.clearBoard();
     this.fillBoard();
   }
 
@@ -58,13 +58,18 @@ export class Board implements BoardInfo {
     }
   }
 
-  public resetBoard() {
+  public clearBoard() {
     for (let i = 0; i < this._board.length; ++i) {
       const row = this._board[i];
       for (let j = 0; j < row.length; ++j) {
         row[j] = null;
       }
     }
+  }
+
+  public reset() {
+    this.clearBoard();
+    this.fillBoard();
   }
 
   public getCell(x: number, y: number): PieceInfo | Wall | null {

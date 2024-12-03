@@ -2,22 +2,28 @@ import { Elements } from 'interface/elements';
 import { InputState } from 'interface/inputState';
 import { GameConstants } from 'domain/gameConstants';
 import { PieceInfo } from 'domain/piece';
-import { GameMovable } from 'domain/game';
+import { GameInteractable } from 'domain/game';
 import { GameInfo } from 'domain/gameInfo';
 
 /**
  * Handles user input
  */
 export class InputHandler {
-  private readonly _game: GameInfo & GameMovable;
+  private readonly _game: GameInfo & GameInteractable;
   private readonly _inputState: InputState;
   private readonly _container = Elements.findById('game-container');
+  private readonly _restartButton = Elements.findById('restart-button');
 
   private registerHandlers() {
     this._container.addEventListener(
       'click',
       (event) => this.handleClick(event),
       true,
+    );
+
+    this._restartButton.addEventListener(
+      'click',
+      () => this.handleResetClick()
     );
   }
 
@@ -79,7 +85,12 @@ export class InputHandler {
     this.handleCellClick(cellX, cellY);
   }
 
-  public constructor(game: GameInfo & GameMovable, inputState: InputState) {
+  private handleResetClick() {
+    this._game.reset();
+    this._inputState.selectedPiece = null;
+  }
+
+  public constructor(game: GameInfo & GameInteractable, inputState: InputState) {
     this._game = game;
 
     this._inputState = inputState;
