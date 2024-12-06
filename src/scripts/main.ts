@@ -11,6 +11,7 @@ import { Fullscreen } from 'interface/fullscreen';
 import { InputHandler } from 'interface/inputHandler';
 import { CellHighlightRenderer } from 'interface/cellHighlightRenderer';
 import { InputState } from 'interface/inputState';
+import { Wake } from 'interface/wake';
 
 function generateImages() {
   FullscreenIcon.generateAndSet();
@@ -28,6 +29,8 @@ function registerEventHandlers(game: Game) {
 }
 
 function onLoad() {
+  Wake.tryStayAwake();
+
   generateImages();
 
   Input.registerOnFullscreen(Fullscreen.toggle);
