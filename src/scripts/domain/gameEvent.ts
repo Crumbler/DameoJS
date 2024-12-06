@@ -9,10 +9,6 @@ export enum GameEventType {
 
 export type GameEventHandler = EventHandler<GameEvent>;
 
-export interface GameEventSource {
-  registerEventHandler(handler: GameEventHandler): void;
-}
-
 export abstract class GameEvent {
   private _type: GameEventType;
 

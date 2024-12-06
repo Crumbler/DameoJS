@@ -1,6 +1,7 @@
 import { Move } from 'domain/move';
 import { PieceInfo, WallCell } from 'domain/piece';
 import { BoardInfo } from 'domain/board';
+import { MathUtil } from 'math/mathUtil';
 
 export class MoveCalculator {
   private static getSimpleMove(
@@ -64,5 +65,9 @@ export class MoveCalculator {
     }
 
     return moves;
+  }
+
+  public static calculateMoveLength(piece: PieceInfo, move: Move): number {
+    return MathUtil.calculateLength(piece.x, piece.y, move.x, move.y);
   }
 }

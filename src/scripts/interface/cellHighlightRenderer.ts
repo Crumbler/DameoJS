@@ -1,9 +1,9 @@
 import { Elements } from 'interface/elements';
 import { InputState } from 'interface/inputState';
 import { InterfaceConstants } from 'interface/interfaceConstants';
-import { GameInfo } from 'domain/gameInfo';
 import { InterfaceColors } from 'interface/interfaceColors';
 import { PieceInfo } from 'domain/piece';
+import { GameInfo } from 'domain/game';
 
 /**
  * Renders cell highlights
@@ -15,7 +15,7 @@ export class CellHighlightRenderer {
   public constructor(game: GameInfo, inputState: InputState) {
     this._game = game;
 
-    inputState.subscribeToPieceChanges((piece) => this.onPieceChanged(piece));
+    inputState.subscribeToSelectedPieceChanges((piece) => this.onPieceChanged(piece));
 
     this.render(null);
   }
@@ -42,8 +42,8 @@ export class CellHighlightRenderer {
 
     for (const move of moves) {
       context.fillRect(
-        move.endCell.x * cellSize,
-        move.endCell.y * cellSize,
+        move.x * cellSize,
+        move.y * cellSize,
         cellSize,
         cellSize,
       );

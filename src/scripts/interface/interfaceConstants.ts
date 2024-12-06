@@ -10,4 +10,8 @@ export class InterfaceConstants {
   public static readonly PieceWidth = this.CellSize * 0.75;
   public static readonly PieceHeight = this.CellSize * 0.2;
   public static readonly PieceLineWidth = this.CellSize * 0.03;
+  /**
+   * Milliseconds per cell for animation
+   */
+  public static readonly MsPerCell = 250;
 }

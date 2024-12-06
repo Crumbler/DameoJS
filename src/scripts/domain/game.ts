@@ -1,7 +1,6 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { Player } from 'domain/player';
-import { GameEvent, GameEventHandler, GameEventSource, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
-import { GameInfo } from 'domain/gameInfo';
+import { GameEvent, GameEventHandler, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
 import { Move, PieceMoves } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
@@ -12,7 +11,16 @@ export interface GameInteractable {
   reset(): void;
 }
 
-export class Game implements GameInfo, GameEventSource, GameInteractable {
+export interface GameInfo {
+  readonly board: BoardInfo;
+  readonly pieces: ReadonlyArray<PieceInfo>;
+  readonly currentPlayer: Player;
+  readonly moves: ReadonlyArray<PieceMoves>;
+  findPieceMoves(piece: PieceInfo): ReadonlyArray<Move> | null;
+  registerEventHandler(handler: GameEventHandler): void;
+}
+
+export class Game implements GameInfo, GameInteractable {
   /**
    * The game board, pieces are stored from top to bottom
    */
@@ -103,6 +111,7 @@ export class Game implements GameInfo, GameEventSource, GameInteractable {
   public fireInitialEvents() {
     this.onPlayerChanged();
     this.onGameReset();
+    this.onPiecesChanged();
   }
 
   public findPieceMoves(piece: PieceInfo): ReadonlyArray<Move> | null {
@@ -126,7 +135,7 @@ export class Game implements GameInfo, GameEventSource, GameInteractable {
       throw new Error(`The piece ${pieceToMove} does not have the move ${move}`);
     }
 
-    this._board.movePiece(pieceToMove.x, pieceToMove.y, move.endCell.x, move.endCell.y);
+    this._board.movePiece(pieceToMove.x, pieceToMove.y, move.x, move.y);
 
     this.swapPlayer();
 
@@ -144,6 +153,7 @@ export class Game implements GameInfo, GameEventSource, GameInteractable {
 
     this.onPlayerChanged();
     this.onGameReset();
+    this.onPiecesChanged();
   }
 
   public registerEventHandler(handler: GameEventHandler) {
@@ -155,14 +165,17 @@ export class Game implements GameInfo, GameEventSource, GameInteractable {
   }
 
   private onPiecesChanged() {
+    console.log('Raised pieces changed event');
     this.raiseEvent(new PiecesChangedEvent());
   }
 
   private onGameReset() {
+    console.log('Raised game reset event');
     this.raiseEvent(new GameResetEvent());
   }
 
   private onPlayerChanged() {
+    console.log('Raised player changed event');
     this.raiseEvent(new PlayerChangedEvent(this._currentPlayer));
   }
 }

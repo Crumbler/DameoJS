@@ -1,4 +1,5 @@
-import { GameEvent, GameEventSource } from 'domain/gameEvent';
+import { GameInfo } from 'domain/game';
+import { GameEvent } from 'domain/gameEvent';
 import { Elements } from 'interface/elements';
 import { Format } from 'misc/format';
 
@@ -50,7 +51,7 @@ export class Timer {
     Timer.restart();
   }
 
-  public static registerEventHandler(game: GameEventSource) {
+  public static registerEventHandler(game: GameInfo) {
     game.registerEventHandler(Timer.handleGameEvent);
   }
 }

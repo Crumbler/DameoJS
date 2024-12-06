@@ -18,15 +18,13 @@ function generateImages() {
   UndoIcon.generateAndSet();
 }
 
-let renderer: PieceRenderer;
+let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
 let cellHighlightRenderer: CellHighlightRenderer;
 
 function registerEventHandlers(game: Game) {
   PlayerIndicator.registerEventHandler(game);
   Timer.registerEventHandler(game);
-
-  renderer.registerEventHandler(game);
 }
 
 function onLoad() {
@@ -38,7 +36,7 @@ function onLoad() {
 
   const inputState = new InputState();
 
-  renderer = new PieceRenderer(game);
+  pieceRenderer = new PieceRenderer(game, inputState);
   inputHandler = new InputHandler(game, inputState);
 
   cellHighlightRenderer = new CellHighlightRenderer(game, inputState);
