@@ -82,6 +82,7 @@ export class Game implements GameInfo, GameInteractable {
     this._currentPlayer = Player.White;
 
     this._board = new Board();
+    this._board.fillBoard();
 
     this.resetPieces();
 

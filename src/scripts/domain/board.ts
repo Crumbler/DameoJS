@@ -20,7 +20,6 @@ export class Board implements BoardInfo {
     }
 
     this.clearBoard();
-    this.fillBoard();
   }
 
   private static fillRow(
@@ -41,7 +40,7 @@ export class Board implements BoardInfo {
     }
   }
 
-  private fillBoard() {
+  public fillBoard() {
     const board = this._board;
 
     for (let i = 0; i < 3; ++i) {
