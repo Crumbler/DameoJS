@@ -1,4 +1,4 @@
-import { GameConstants } from 'domain/gameConstants';
+import { GameConstants } from '@/domain/gameConstants';
 
 export interface PieceInfo {
   readonly x: number;

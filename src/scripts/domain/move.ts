@@ -1,4 +1,4 @@
-import { Piece, PieceInfo } from 'domain/piece';
+import { Piece, PieceInfo } from '@/domain/piece';
 
 export class Move {
   public constructor(public readonly x: number, public readonly y: number) { }

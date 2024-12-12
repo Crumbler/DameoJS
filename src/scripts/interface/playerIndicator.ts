@@ -1,7 +1,7 @@
-import { GameInfo } from 'domain/game';
-import { GameEvent } from 'domain/gameEvent';
-import { Player } from 'domain/player';
-import { Elements } from 'interface/elements';
+import { GameInfo } from '@/domain/game';
+import { GameEvent } from '@/domain/gameEvent';
+import { Player } from '@/domain/player';
+import { Elements } from '@/interface/elements';
 
 /**
  * Handles setting the indicator for the current player

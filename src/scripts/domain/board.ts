@@ -1,6 +1,6 @@
-import { Piece, PieceInfo, Wall, WallCell } from 'domain/piece';
-import { GameConstants } from 'domain/gameConstants';
-import { Matrix, ReadonlyMatrix } from 'misc/arrayTypes';
+import { Piece, PieceInfo, Wall, WallCell } from '@/domain/piece';
+import { GameConstants } from '@/domain/gameConstants';
+import { Matrix, ReadonlyMatrix } from '@/misc/arrayTypes';
 
 export interface BoardInfo {
   readonly dataView: ReadonlyMatrix<PieceInfo | null>;

@@ -24,14 +24,14 @@ jobs:
         run: npm ci --omit=dev
 
       - name: Build
-        run: npm run build-ci
+        run: npm run build
 
       - name: Create worktree and copy files
         run: |
           git fetch origin gh-pages
           git worktree add ../pb gh-pages
-          cp src/index.html src/style.css src/favicon.png ../pb/
-          cp src/out/main.js ../pb/out/
+          rm -r ../pb/*
+          cp -a src/dist/. ../pb/
 
       - name: Setup credentials
         uses: oleksiyrudenko/gha-git-credentials@v2-latest

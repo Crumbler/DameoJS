@@ -1,4 +1,4 @@
-import { GameConstants } from 'domain/gameConstants';
+import { GameConstants } from '@/domain/gameConstants';
 
 export class InterfaceConstants {
   public static readonly HeaderIconSize = 70;

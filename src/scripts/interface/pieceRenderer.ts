@@ -1,13 +1,13 @@
-import { Elements } from 'interface/elements';
-import { InterfaceConstants } from 'interface/interfaceConstants';
-import { InterfaceColors } from 'interface/interfaceColors';
-import { PieceInfo } from 'domain/piece';
-import { GameInfo } from 'domain/game';
-import { Move } from 'domain/move';
-import { GameEvent } from 'domain/gameEvent';
-import { InputState } from 'interface/inputState';
-import { MoveCalculator } from 'domain/moveCalculator';
-import { MathUtil } from 'math/mathUtil';
+import { Elements } from '@/interface/elements';
+import { InterfaceConstants } from '@/interface/interfaceConstants';
+import { InterfaceColors } from '@/interface/interfaceColors';
+import { PieceInfo } from '@/domain/piece';
+import { GameInfo } from '@/domain/game';
+import { Move } from '@/domain/move';
+import { GameEvent } from '@/domain/gameEvent';
+import { InputState } from '@/interface/inputState';
+import { MoveCalculator } from '@/domain/moveCalculator';
+import { MathUtil } from '@/math/mathUtil';
 
 /**
  * Renders and animates the board pieces using canvas

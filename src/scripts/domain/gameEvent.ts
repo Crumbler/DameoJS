@@ -1,5 +1,5 @@
-import { EventHandler } from 'misc/subject';
-import { Player } from 'domain/player';
+import { EventHandler } from '@/misc/subject';
+import { Player } from '@/domain/player';
 
 export enum GameEventType {
   PlayerChanged,
