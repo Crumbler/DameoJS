@@ -17,6 +17,7 @@
     "vite.config.ts"
   ],
   "exclude": [
-    "src/scripts/tests"
+    "src/scripts/tests",
+    "out"
   ]
 }

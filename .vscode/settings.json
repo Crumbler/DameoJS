@@ -12,5 +12,6 @@
       "rule": "*",
       "severity": "warn"
     }
-  ]
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

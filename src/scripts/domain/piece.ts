@@ -22,7 +22,7 @@ export class Piece implements PieceInfo {
   public x: number;
   public y: number;
 
-  private static checkCoordinate(coord: number, coordName: 'X' | 'Y') {
+  public static checkCoordinate(coord: number, coordName: 'X' | 'Y') {
     if (coord !== (coord | 0)) {
       throw new Error(`${coordName} value ${coord} is not an integer`);
     }
