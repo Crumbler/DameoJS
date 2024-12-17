@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "ESNext",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "isolatedModules": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+    "moduleResolution": "Bundler",
+    "types": [],
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "composite": true
+  },
+  "$schema": "https://json.schemastore.org/tsconfig"
+}

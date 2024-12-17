@@ -1,10 +1,10 @@
-import { Piece, PieceInfo } from '@/domain/piece';
-import { Player } from '@/domain/player';
-import { GameEvent, GameEventHandler, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from '@/domain/gameEvent';
-import { Move, PieceMoves } from '@/domain/move';
-import { MoveCalculator } from '@/domain/moveCalculator';
-import { Board, BoardInfo } from '@/domain/board';
-import { Subject } from '@/misc/subject';
+import { Piece, PieceInfo } from 'domain/piece';
+import { Player } from 'domain/player';
+import { GameEvent, GameEventHandler, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
+import { Move, PieceMoves } from 'domain/move';
+import { MoveCalculator } from 'domain/moveCalculator';
+import { Board, BoardInfo } from 'domain/board';
+import { Subject } from 'misc/subject';
 
 export interface GameInteractable {
   performMove(pieceToMove: PieceInfo, move: Move): void;

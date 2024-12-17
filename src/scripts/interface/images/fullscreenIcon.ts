@@ -1,7 +1,7 @@
-import { Vector2 } from '@/math/Vector2';
-import { InterfaceConstants } from '@/interface/interfaceConstants';
-import { BlobHelper } from '@/helpers/blobHelper';
-import { Elements } from '@/interface/elements';
+import { Vector2 } from 'math/Vector2';
+import { InterfaceConstants } from 'interface/interfaceConstants';
+import { BlobHelper } from 'helpers/blobHelper';
+import { Elements } from 'interface/elements';
 
 /**
  * Renders the toggle fullscreen icon

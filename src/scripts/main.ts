@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FullscreenIcon } from '@/interface/images/fullscreenIcon';
-import { RestartIcon } from '@/interface/images/restartIcon';
-import { UndoIcon } from '@/interface/images/undoIcon';
-import { Input } from '@/interface/input';
-import { Timer } from '@/interface/timer';
-import { PieceRenderer } from '@/interface/pieceRenderer';
-import { Game } from '@/domain/game';
-import { PlayerIndicator } from '@/interface/playerIndicator';
-import { Fullscreen } from '@/interface/fullscreen';
-import { InputHandler } from '@/interface/inputHandler';
-import { CellHighlightRenderer } from '@/interface/cellHighlightRenderer';
-import { InputState } from '@/interface/inputState';
-import { Wake } from '@/interface/wake';
+import { FullscreenIcon } from 'interface/images/fullscreenIcon';
+import { RestartIcon } from 'interface/images/restartIcon';
+import { UndoIcon } from 'interface/images/undoIcon';
+import { Input } from 'interface/input';
+import { Timer } from 'interface/timer';
+import { PieceRenderer } from 'interface/pieceRenderer';
+import { Game } from 'domain/game';
+import { PlayerIndicator } from 'interface/playerIndicator';
+import { Fullscreen } from 'interface/fullscreen';
+import { InputHandler } from 'interface/inputHandler';
+import { CellHighlightRenderer } from 'interface/cellHighlightRenderer';
+import { InputState } from 'interface/inputState';
+import { Wake } from 'interface/wake';
 
 function generateImages() {
   FullscreenIcon.generateAndSet();

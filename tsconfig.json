@@ -1,34 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "es2017",
-    "module": "ESNext",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "alwaysStrict": true,
-    "sourceMap": true,
-    "isolatedModules": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "skipLibCheck": true,
-    "useDefineForClassFields": true,
-
-    "moduleResolution": "Bundler",
-
-    "types": ["vite/client"],
-
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "composite": true,
-
-    "paths": {
-      "@/*": ["./src/scripts/*"]
+  "files": [],
+  "references": [
+    {
+      "path": "tsconfig.src.json"
+    },
+    {
+      "path": "src/scripts/tests/tsconfig.tests.json"
     }
-  },
-  "include": ["src"],
-  "$schema": "https://json.schemastore.org/tsconfig"
+  ],
+  "compilerOptions": {
+    "noEmit": true
+  }
 }

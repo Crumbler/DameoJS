@@ -1,9 +1,9 @@
-import { Elements } from '@/interface/elements';
-import { InputState } from '@/interface/inputState';
-import { InterfaceConstants } from '@/interface/interfaceConstants';
-import { InterfaceColors } from '@/interface/interfaceColors';
-import { PieceInfo } from '@/domain/piece';
-import { GameInfo } from '@/domain/game';
+import { Elements } from 'interface/elements';
+import { InputState } from 'interface/inputState';
+import { InterfaceConstants } from 'interface/interfaceConstants';
+import { InterfaceColors } from 'interface/interfaceColors';
+import { PieceInfo } from 'domain/piece';
+import { GameInfo } from 'domain/game';
 
 /**
  * Renders cell highlights

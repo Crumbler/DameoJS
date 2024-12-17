@@ -1,24 +1,17 @@
 import { defineConfig } from 'vite';
-import path from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   root: 'src',
   base: '',
-  resolve: {
-    alias: [
-      {
-        find: '@',
-        replacement: path.resolve(__dirname, "src/scripts")
-      }
-    ]
-  },
+  plugins: [tsconfigPaths()],
   build: {
     assetsDir: '',
     rollupOptions: {
       output: {
         format: 'es',
-        assetFileNames: "[name][extname]",
-        chunkFileNames: "[name][extname]",
+        assetFileNames: '[name][extname]',
+        chunkFileNames: '[name][extname]',
         entryFileNames: '[name].js',
         strict: true
       }

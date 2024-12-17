@@ -1,10 +1,10 @@
-import { Elements } from '@/interface/elements';
-import { InputState } from '@/interface/inputState';
-import { GameConstants } from '@/domain/gameConstants';
-import { PieceInfo } from '@/domain/piece';
-import { GameInfo, GameInteractable } from '@/domain/game';
-import { Move } from '@/domain/move';
-import { GameEvent } from '@/domain/gameEvent';
+import { Elements } from 'interface/elements';
+import { InputState } from 'interface/inputState';
+import { GameConstants } from 'domain/gameConstants';
+import { PieceInfo } from 'domain/piece';
+import { GameInfo, GameInteractable } from 'domain/game';
+import { Move } from 'domain/move';
+import { GameEvent } from 'domain/gameEvent';
 
 /**
  * Handles user input

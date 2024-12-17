@@ -1,7 +1,7 @@
-import { GameInfo } from '@/domain/game';
-import { GameEvent } from '@/domain/gameEvent';
-import { Elements } from '@/interface/elements';
-import { Format } from '@/misc/format';
+import { GameInfo } from 'domain/game';
+import { GameEvent } from 'domain/gameEvent';
+import { Elements } from 'interface/elements';
+import { Format } from 'misc/format';
 
 /**
  * Timer class for setting the game time
@@ -20,7 +20,7 @@ export class Timer {
     }
 
     Timer.start = (Date.now() / 1000) | 0;
-    Timer.interval = setInterval(Timer.update, 1000);
+    Timer.interval = window.setInterval(Timer.update, 1000);
 
     Timer.update();
   }

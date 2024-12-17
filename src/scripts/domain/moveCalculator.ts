@@ -1,7 +1,7 @@
-import { Move } from '@/domain/move';
-import { PieceInfo, WallCell } from '@/domain/piece';
-import { BoardInfo } from '@/domain/board';
-import { MathUtil } from '@/math/mathUtil';
+import { Move } from 'domain/move';
+import { PieceInfo, WallCell } from 'domain/piece';
+import { BoardInfo } from 'domain/board';
+import { MathUtil } from 'math/mathUtil';
 
 export class MoveCalculator {
   private static getSimpleMove(

@@ -1,0 +1,20 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "references": [
+    {
+      "path": "../../../tsconfig.src.json"
+    }
+  ],
+  "compilerOptions": {
+    "types": [
+      "vitest",
+      "vitest/globals"
+    ],
+    "outDir": "out",
+    "baseUrl": ".."
+  },
+  "include": [
+    ".",
+    "../../../vite.config.ts"
+  ]
+}
