@@ -40,7 +40,23 @@ export class Board implements BoardInfo {
     }
   }
 
+  private isClear(): boolean {
+    for (const row of this._board) {
+      for (const cell of row) {
+        if (cell !== null) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
   public fillBoard() {
+    if (!this.isClear()) {
+      throw new Error('Board is not clear');
+    }
+
     const board = this._board;
 
     for (let i = 0; i < 3; ++i) {
@@ -57,7 +73,7 @@ export class Board implements BoardInfo {
     }
   }
 
-  public clearBoard() {
+  private clearBoard() {
     for (let i = 0; i < this._board.length; ++i) {
       const row = this._board[i];
       for (let j = 0; j < row.length; ++j) {
@@ -82,6 +98,11 @@ export class Board implements BoardInfo {
   }
 
   public movePiece(fromX: number, fromY: number, toX: number, toY: number) {
+    Piece.checkCoordinate(fromX, 'fromX');
+    Piece.checkCoordinate(fromY, 'fromY');
+    Piece.checkCoordinate(toX, 'toX');
+    Piece.checkCoordinate(toY, 'toY');
+
     const piece = this._board[fromY][fromX];
 
     if (piece === null) {
