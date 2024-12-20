@@ -1,6 +1,6 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { Player } from 'domain/player';
-import { GameEvent, GameEventHandler, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
+import { CanUndoChangedEvent, GameEvent, GameEventHandler, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
 import { Move, PieceMoves } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
@@ -16,6 +16,7 @@ export interface GameInfo {
   readonly pieces: ReadonlyArray<PieceInfo>;
   readonly currentPlayer: Player;
   readonly moves: ReadonlyArray<PieceMoves>;
+  readonly canUndo: boolean;
   findPieceMoves(piece: PieceInfo): ReadonlyArray<Move> | null;
   registerEventHandler(handler: GameEventHandler): void;
 }
@@ -30,6 +31,8 @@ export class Game implements GameInfo, GameInteractable {
    * An array with all of the pieces on the board
    */
   private _pieces: Array<Piece> = [];
+
+  private _canUndo = false;
 
   private _currentPlayer: Player;
   private _moveInfos: Array<PieceMoves> = [];
@@ -113,6 +116,7 @@ export class Game implements GameInfo, GameInteractable {
     this.onPlayerChanged();
     this.onGameReset();
     this.onPiecesChanged();
+    this.onCanUndoChanged();
   }
 
   public findPieceMoves(piece: PieceInfo): ReadonlyArray<Move> | null {
@@ -143,10 +147,14 @@ export class Game implements GameInfo, GameInteractable {
     this.onPiecesChanged();
 
     this.calculateMoves();
+
+    this._canUndo = true;
+    this.onCanUndoChanged();
   }
 
   public reset() {
     this._currentPlayer = Player.White;
+    this._canUndo = false;
 
     this._board.reset();
     this.resetPieces();
@@ -155,6 +163,7 @@ export class Game implements GameInfo, GameInteractable {
     this.onPlayerChanged();
     this.onGameReset();
     this.onPiecesChanged();
+    this.onCanUndoChanged();
   }
 
   public registerEventHandler(handler: GameEventHandler) {
@@ -178,5 +187,9 @@ export class Game implements GameInfo, GameInteractable {
   private onPlayerChanged() {
     console.log('Raised player changed event');
     this.raiseEvent(new PlayerChangedEvent(this._currentPlayer));
+  }
+
+  private onCanUndoChanged() {
+    this.raiseEvent(new CanUndoChangedEvent(this._canUndo));
   }
 }

@@ -73,30 +73,30 @@ body,
   justify-content: flex-end;
 
   container-type: size;
-}
 
-#player-time-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  #player-time-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 
-  margin-left: 10cqh;
-  margin-right: auto;
-  padding-left: 15cqh;
-  padding-top: 7cqh;
-  padding-bottom: 7cqh;
+    margin-left: 10cqh;
+    margin-right: auto;
+    padding-left: 15cqh;
+    padding-top: 7cqh;
+    padding-bottom: 7cqh;
 
-  user-select: none;
-}
+    user-select: none;
+  }
 
-#player-indicator {
-  font-size: 40cqh;
-  color: white;
-}
+  #player-indicator {
+    font-size: 40cqh;
+    color: white;
+  }
 
-#game-time {
-  font-size: 30cqh;
-  color: white;
+  #game-time {
+    font-size: 30cqh;
+    color: white;
+  }
 }
 
 .header-button {
@@ -114,10 +114,16 @@ body,
   background-color: white;
 
   transition: background-color 300ms linear;
-}
 
-.header-button:last-child {
-  margin-right: 20cqh;
+  &:last-child {
+    margin-right: 20cqh;
+  }
+
+  &:not(.always-clickable):is(:not(.can-undo), .moving) {
+    background-color: rgb(150, 150, 150);
+    cursor: auto;
+    pointer-events: none;
+  }
 }
 
 @media (hover: hover) {

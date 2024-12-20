@@ -4,7 +4,8 @@ import { Player } from 'domain/player';
 export enum GameEventType {
   PlayerChanged,
   GameReset,
-  PiecesChanged
+  PiecesChanged,
+  CanUndoChanged
 }
 
 export type GameEventHandler = EventHandler<GameEvent>;
@@ -26,6 +27,10 @@ export abstract class GameEvent {
 
   public isPiecesChangedEvent(): this is PiecesChangedEvent {
     return this._type === GameEventType.PiecesChanged;
+  }
+
+  public isCanUndoEvent(): this is CanUndoChangedEvent {
+    return this._type === GameEventType.CanUndoChanged;
   }
 }
 
@@ -50,5 +55,11 @@ export class PlayerChangedEvent extends GameEvent {
 export class PiecesChangedEvent extends GameEvent {
   public constructor() {
     super(GameEventType.PiecesChanged);
+  }
+}
+
+export class CanUndoChangedEvent extends GameEvent {
+  public constructor(public readonly canUndo: boolean) {
+    super(GameEventType.CanUndoChanged);
   }
 }

@@ -58,7 +58,11 @@ export class MoveCalculator {
   ): Move[] | null {
     const moves: Move[] = [];
 
-    this.addSimpleMoves(board, moves, piece);
+    if (piece.isPromoted) {
+      // TBD
+    } else {
+      this.addSimpleMoves(board, moves, piece);
+    }
 
     if (moves.length === 0) {
       return null;

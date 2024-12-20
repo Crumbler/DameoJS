@@ -13,6 +13,7 @@ export class InputHandler {
   private readonly _game: GameInfo & GameInteractable;
   private readonly _inputState: InputState;
   private readonly _container = Elements.findById('game-container');
+  private readonly _undoButton = Elements.findById('undo-button');
   private readonly _restartButton = Elements.findById('restart-button');
   private _pieceToMove: PieceInfo | null = null;
   private _moveToPerform: Move | null = null;
@@ -22,6 +23,10 @@ export class InputHandler {
       'click', (event) => this.handleClick(event),
       true,
     );
+
+    this._undoButton.addEventListener(
+      'click', () => this.handleUndoClick()
+    )
 
     this._restartButton.addEventListener(
       'click', () => this.handleResetClick()
@@ -131,6 +136,12 @@ export class InputHandler {
     const cellY = y | 0;
 
     this.handleCellClick(cellX, cellY);
+  }
+
+  private handleUndoClick() {
+    if (!this._inputState.acceptingInput) {
+      return;
+    }
   }
 
   private handleResetClick() {

@@ -6,6 +6,6 @@ export class Input {
     document.getElementById('fullscreen-button')!;
 
   public static registerOnFullscreen(action: () => void) {
-    Input.fullscreenIcon.onclick = action;
+    this.fullscreenIcon.addEventListener('click', action);
   }
 }

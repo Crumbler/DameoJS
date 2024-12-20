@@ -12,6 +12,8 @@ import { InputHandler } from 'interface/inputHandler';
 import { CellHighlightRenderer } from 'interface/cellHighlightRenderer';
 import { InputState } from 'interface/inputState';
 import { Wake } from 'interface/wake';
+import { HeaderManager } from 'interface/headerManager';
+import { VisibilityMonitor } from 'interface/visibilityMonitor';
 
 function generateImages() {
   FullscreenIcon.generateAndSet();
@@ -21,6 +23,7 @@ function generateImages() {
 
 let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
+let headerManager: HeaderManager;
 let cellHighlightRenderer: CellHighlightRenderer;
 
 function registerEventHandlers(game: Game) {
@@ -29,6 +32,7 @@ function registerEventHandlers(game: Game) {
 }
 
 function onLoad() {
+  VisibilityMonitor.register();
   Wake.tryStayAwake();
 
   generateImages();
@@ -41,6 +45,7 @@ function onLoad() {
 
   pieceRenderer = new PieceRenderer(game, inputState);
   inputHandler = new InputHandler(game, inputState);
+  headerManager = new HeaderManager(game, inputState);
 
   cellHighlightRenderer = new CellHighlightRenderer(game, inputState);
 
