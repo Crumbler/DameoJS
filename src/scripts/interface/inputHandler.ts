@@ -5,6 +5,7 @@ import { PieceInfo } from 'domain/piece';
 import { GameInfo, GameInteractable } from 'domain/game';
 import { Move } from 'domain/move';
 import { GameEvent } from 'domain/gameEvent';
+import { DialogManager } from 'interface/dialogManager';
 
 /**
  * Handles user input
@@ -144,13 +145,17 @@ export class InputHandler {
     }
   }
 
-  private handleResetClick() {
+  private async handleResetClick() {
     if (!this._inputState.acceptingInput) {
       return;
     }
 
-    this._game.reset();
-    this._inputState.selectedPiece = null;
+    const restart = await DialogManager.openRestartDialog();
+
+    if (restart) {
+      this._game.reset();
+      this._inputState.selectedPiece = null;
+    }
   }
 
   private handleGameEvent(event: GameEvent) {
