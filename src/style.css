@@ -9,16 +9,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
 
-body,
-button {
-  font-family: Verdana, sans-serif;
-}
-
-body,
-body::backdrop,
-:fullscreen {
   --baseSize: 220px;
 
   --size: var(--baseSize);
@@ -53,6 +44,11 @@ body::backdrop,
   @media (max-aspect-ratio: 8 / 9) {
     --size: calc(var(--baseSize) / 2);
   }
+}
+
+body,
+button {
+  font-family: Verdana, sans-serif;
 }
 
 #main-container {
