@@ -1,5 +1,6 @@
 import { Board, BoardInfo } from 'domain/board';
 import { GameConstants } from 'domain/gameConstants';
+import { Vector2 } from 'math/Vector2';
 
 function testBoardClear(board: BoardInfo) {
   const data = board.dataView;
@@ -86,7 +87,7 @@ describe('Board tests', () => {
       const board = new Board();
       board.fillBoard();
 
-      board.movePiece(0, 0, 0, 1);
+      board.movePiece(Vector2.fromScalar(0), new Vector2(0, 1));
     });
 
     const invalidMoveSet = [
@@ -104,7 +105,7 @@ describe('Board tests', () => {
       const board = new Board();
 
       assert.throws(() => {
-        board.movePiece(fromX, fromY, toX, toY);
+        board.movePiece(new Vector2(fromX, fromY), new Vector2(toX, toY));
       });
     });
 
@@ -112,7 +113,7 @@ describe('Board tests', () => {
       const board = new Board();
 
       assert.throws(() => {
-        board.movePiece(0, 0, 1, 1);
+        board.movePiece(Vector2.fromScalar(0), Vector2.fromScalar(1));
       });
     });
 
@@ -121,7 +122,7 @@ describe('Board tests', () => {
       board.fillBoard();
 
       assert.throws(() => {
-        board.movePiece(0, 0, 1, 0);
+        board.movePiece(Vector2.fromScalar(0), Vector2.fromScalar(1));
       });
     });
 
@@ -130,7 +131,7 @@ describe('Board tests', () => {
       board.fillBoard();
 
       assert.throws(() => {
-        board.movePiece(0, 0, 0, 0);
+        board.movePiece(Vector2.fromScalar(0), Vector2.fromScalar(0));
       });
     });
   });
