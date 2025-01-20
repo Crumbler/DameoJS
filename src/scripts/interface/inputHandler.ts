@@ -81,7 +81,11 @@ export class InputHandler {
       return false;
     }
 
-    const move = moves.find(mv => mv.x === cellX && mv.y === cellY);
+    const move = moves.find(mv => {
+      const lastPoint = mv.lastPoint;
+
+      return lastPoint.x === cellX && lastPoint.y === cellY;
+    });
 
     if (!move) {
       return false;

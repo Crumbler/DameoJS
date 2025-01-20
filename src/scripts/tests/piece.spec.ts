@@ -1,5 +1,6 @@
 import { GameConstants } from 'domain/gameConstants';
 import { Piece } from 'domain/piece';
+import { Vector2 } from 'math/Vector2';
 
 describe('Piece tests', () => {
   test('Piece normal creation', () => {
@@ -33,13 +34,13 @@ describe('Piece tests', () => {
   test('Moving', () => {
     const piece = new Piece(false, 0, 0);
 
-    piece.moveTo(1, 1);
+    piece.moveTo(Vector2.fromScalar(1));
   });
 
   test.for(invalidCoordSet)('Moving to invalid coords: %i %i', ([x, y]) => {
     const piece = new Piece(false, 0, 0);
 
-    assert.throws(() => piece.moveTo(x, y));
+    assert.throws(() => piece.moveTo(new Vector2(x, y)));
   });
 
   test('Initially not promoted', () => {

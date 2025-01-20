@@ -1,10 +1,11 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { Player } from 'domain/player';
 import { CanUndoChangedEvent, GameEvent, GameEventHandler, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
-import { Move, PieceMoves } from 'domain/move';
+import { Move, PieceMovesInfo } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
+import { Vector2 } from 'math/Vector2';
 
 export interface GameInteractable {
   performMove(pieceToMove: PieceInfo, move: Move): void;
@@ -15,7 +16,7 @@ export interface GameInfo {
   readonly board: BoardInfo;
   readonly pieces: ReadonlyArray<PieceInfo>;
   readonly currentPlayer: Player;
-  readonly moves: ReadonlyArray<PieceMoves>;
+  readonly moves: ReadonlyArray<PieceMovesInfo>;
   readonly canUndo: boolean;
   findPieceMoves(piece: PieceInfo): ReadonlyArray<Move> | null;
   registerEventHandler(handler: GameEventHandler): void;
@@ -35,13 +36,13 @@ export class Game implements GameInfo, GameInteractable {
   private _canUndo = false;
 
   private _currentPlayer: Player;
-  private _moveInfos: Array<PieceMoves> = [];
+  private _moveInfos: Array<PieceMovesInfo> = [];
   private _eventSubject = new Subject<GameEvent>();
 
   private calculatePieceMoves(boardView: BoardInfo, piece: Piece) {
     const moves = MoveCalculator.calculateMoves(boardView, piece);
     if (moves !== null) {
-      this._moveInfos.push(new PieceMoves(piece, moves));
+      this._moveInfos.push(new PieceMovesInfo(piece, moves));
     }
   }
 
@@ -100,7 +101,7 @@ export class Game implements GameInfo, GameInteractable {
     return this._pieces;
   }
 
-  public get moves(): ReadonlyArray<PieceMoves> {
+  public get moves(): ReadonlyArray<PieceMovesInfo> {
     return this._moveInfos;
   }
 
@@ -140,7 +141,7 @@ export class Game implements GameInfo, GameInteractable {
       throw new Error(`The piece ${pieceToMove} does not have the move ${move}`);
     }
 
-    this._board.movePiece(pieceToMove.x, pieceToMove.y, move.x, move.y);
+    this._board.movePiece(new Vector2(pieceToMove.x, pieceToMove.y), move.lastPoint);
 
     this.swapPlayer();
 

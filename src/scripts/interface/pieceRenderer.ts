@@ -6,8 +6,8 @@ import { GameInfo } from 'domain/game';
 import { Move } from 'domain/move';
 import { GameEvent } from 'domain/gameEvent';
 import { InputState } from 'interface/inputState';
-import { MoveCalculator } from 'domain/moveCalculator';
 import { MathUtil } from 'math/mathUtil';
+import { Vector2 } from 'math/Vector2';
 
 /**
  * Renders and animates the board pieces using canvas
@@ -19,7 +19,7 @@ export class PieceRenderer {
   private _animationStart: number | null = null;
   private _animationEnd: number | null = null;
   private _animatedPiece: PieceInfo | null = null;
-  private _animetedMove: Move | null = null;
+  private _animatedMove: Move | null = null;
 
   /**
    * Gradient for the lower piece part
@@ -164,7 +164,7 @@ export class PieceRenderer {
     this._animationStart = null;
     this._animationEnd = null;
     this._animatedPiece = null;
-    this._animetedMove = null;
+    this._animatedMove = null;
 
     this._inputState.acceptingInput = true;
   }
@@ -173,7 +173,7 @@ export class PieceRenderer {
     if (this._animationStart === null ||
       this._animationEnd === null ||
       this._animatedPiece === null ||
-      this._animetedMove === null) {
+      this._animatedMove === null) {
       throw new Error('Animation info is not supposed to be null');
     }
 
@@ -193,6 +193,10 @@ export class PieceRenderer {
     window.requestAnimationFrame(this.onAnimation);
   }
 
+  /**
+      * Renders the animated piece.
+      * @param progress Value from 0 to 1 indicating animation progress.
+      */
   private renderAnimatedPiece(progress: number) {
     const cellSize = InterfaceConstants.CellSize;
     const context = this._pieceContext;
@@ -200,13 +204,37 @@ export class PieceRenderer {
     // By the point this function is called
     // these parameters have already been validated
     const piece = this._animatedPiece as PieceInfo;
-    const move = this._animetedMove as Move;
+    const move = this._animatedMove as Move;
 
-    const dX = move.x - piece.x;
-    const dY = move.y - piece.y;
+    // path length
+    const totalLength = move.length;
 
-    const x = piece.x + dX * progress;
-    const y = piece.y + dY * progress;
+    const path = move.path;
+
+    let currentProgress = 0;
+    let segmentStart = path[0];
+    let segmentEnd = path[1];
+    let segmentProgress = 0;
+
+    for (let i = 0; i < path.length - 1; ++i) {
+      const segmentLength = path[i].distanceTo(path[i + 1]);
+      segmentProgress = segmentLength / totalLength;
+
+      if (currentProgress + segmentProgress >= progress) {
+        segmentStart = path[i];
+        segmentEnd = path[i + 1];
+        segmentProgress = (progress - currentProgress) / segmentProgress;
+
+        break;
+      }
+
+      currentProgress += segmentProgress;
+    }
+
+    const segmentDiff = Vector2.sub(segmentEnd, segmentStart);
+
+    const x = segmentStart.x + segmentDiff.x * segmentProgress;
+    const y = segmentStart.y + segmentDiff.y * segmentProgress;
 
     context.save();
 
@@ -254,12 +282,11 @@ export class PieceRenderer {
 
   private handlePerformMove(moveInfo: [PieceInfo, Move]) {
     this._animatedPiece = moveInfo[0];
-    this._animetedMove = moveInfo[1];
+    this._animatedMove = moveInfo[1];
 
     this._animationStart = performance.now();
     this._animationEnd = this._animationStart +
-      MoveCalculator.calculateMoveLength(this._animatedPiece, this._animetedMove) *
-      InterfaceConstants.MsPerCell;
+      this._animatedMove.length * InterfaceConstants.MsPerCell;
 
     this._inputState.acceptingInput = false;
 

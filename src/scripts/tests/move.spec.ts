@@ -1,10 +1,23 @@
 import { GameConstants } from 'domain/gameConstants';
-import { Move, PieceMoves } from 'domain/move';
+import { Move, PieceMovesInfo } from 'domain/move';
 import { Piece } from 'domain/piece';
+import { Vector2 } from 'math/Vector2';
 
 describe('Move tests', () => {
   test('Normal creation', () => {
-    new Move(0, 0);
+    new Move([Vector2.fromScalar(1), Vector2.fromScalar(1)]);
+  });
+
+  test('Creation - not enough points - 0', () => {
+    assert.throws(() => new Move([]));
+  });
+
+  test('Creation - not enough points - 1', () => {
+    assert.throws(() => new Move([Vector2.fromScalar(0)]));
+  });
+
+  test('Creating - invalid coords', () => {
+    assert.throws(() => new Move([Vector2.fromScalar(1), Vector2.fromScalar(-6)]))
   });
 
   const invalidCoordSet = [
@@ -15,14 +28,14 @@ describe('Move tests', () => {
   ];
 
   test.for(invalidCoordSet)('Creating with invalid coords: %i %i', ([x, y]) => {
-    assert.throws(() => new Move(x, y));
+    assert.throws(() => new Move([Vector2.fromScalar(1), new Vector2(x, y)]));
   });
 
   test('Empty moves', () => {
     const piece = new Piece(false, 0, 0);
 
     assert.throws(() => {
-      new PieceMoves(piece, []);
+      new PieceMovesInfo(piece, []);
     });
   });
 });
