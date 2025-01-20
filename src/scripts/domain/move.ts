@@ -1,8 +1,8 @@
-import { Piece, PieceInfo } from 'domain/piece';
-import { Vector2 } from 'math/Vector2';
+import { Piece } from 'domain/piece';
+import { RVector2 } from 'math/Vector2';
 
 export class Move {
-  public constructor(public readonly path: ReadonlyArray<Vector2>) {
+  public constructor(public readonly path: ReadonlyArray<RVector2>) {
     if (path.length < 2) {
       throw new Error('Path must contain at least 2 points');
     }
@@ -11,6 +11,14 @@ export class Move {
       Piece.checkCoordinate(point.x, 'X');
       Piece.checkCoordinate(point.y, 'Y');
     }
+  }
+
+  public get firstPoint(): RVector2 {
+    return this.path[0];
+  }
+
+  public get lastPoint(): RVector2 {
+    return this.path[this.path.length - 1];
   }
 
   public get length() {
@@ -23,12 +31,7 @@ export class Move {
   }
 }
 
-export interface PieceMovesInfo {
-  readonly piece: PieceInfo;
-  readonly moves: ReadonlyArray<Move>;
-}
-
-export class PieceMoves implements PieceMovesInfo {
+export class PieceMovesInfo {
   public constructor(
     public readonly piece: Piece,
     public readonly moves: ReadonlyArray<Move>,

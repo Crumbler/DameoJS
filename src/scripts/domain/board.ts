@@ -1,7 +1,7 @@
 import { Piece, PieceInfo, Wall, WallCell } from 'domain/piece';
 import { GameConstants } from 'domain/gameConstants';
 import { Matrix, ReadonlyMatrix } from 'misc/arrayTypes';
-import { Vector2 } from 'math/Vector2';
+import { RVector2 } from 'math/Vector2';
 
 export interface BoardInfo {
   readonly dataView: ReadonlyMatrix<PieceInfo | null>;
@@ -98,7 +98,7 @@ export class Board implements BoardInfo {
     return this._board[y][x];
   }
 
-  public movePiece(from: Vector2, to: Vector2) {
+  public movePiece(from: RVector2, to: RVector2) {
     Piece.checkCoordinate(from.x, 'fromX');
     Piece.checkCoordinate(from.y, 'fromY');
     Piece.checkCoordinate(to.x, 'toX');

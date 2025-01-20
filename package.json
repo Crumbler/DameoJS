@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "serve": "vite",
+    "check": "tsc --build",
     "build": "tsc --build && vite build",
     "test": "vitest --config src/scripts/tests/vitest.config.ts",
     "test-ci": "vitest --watch=false --config src/scripts/tests/vitest.config.ts"

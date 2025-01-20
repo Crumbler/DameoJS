@@ -41,8 +41,7 @@ export class CellHighlightRenderer {
     }
 
     for (const move of moves) {
-      const path = move.path;
-      const lastPoint = path[path.length - 1];
+      const lastPoint = move.lastPoint;
 
       context.fillRect(
         lastPoint.x * cellSize,

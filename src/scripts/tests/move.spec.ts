@@ -1,5 +1,5 @@
 import { GameConstants } from 'domain/gameConstants';
-import { Move, PieceMoves } from 'domain/move';
+import { Move, PieceMovesInfo } from 'domain/move';
 import { Piece } from 'domain/piece';
 import { Vector2 } from 'math/Vector2';
 
@@ -8,8 +8,12 @@ describe('Move tests', () => {
     new Move([Vector2.fromScalar(1), Vector2.fromScalar(1)]);
   });
 
-  test('Creation - not enough points', () => {
+  test('Creation - not enough points - 0', () => {
     assert.throws(() => new Move([]));
+  });
+
+  test('Creation - not enough points - 1', () => {
+    assert.throws(() => new Move([Vector2.fromScalar(0)]));
   });
 
   test('Creating - invalid coords', () => {
@@ -31,7 +35,7 @@ describe('Move tests', () => {
     const piece = new Piece(false, 0, 0);
 
     assert.throws(() => {
-      new PieceMoves(piece, []);
+      new PieceMovesInfo(piece, []);
     });
   });
 });

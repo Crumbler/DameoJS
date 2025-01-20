@@ -19,7 +19,7 @@ export class PieceRenderer {
   private _animationStart: number | null = null;
   private _animationEnd: number | null = null;
   private _animatedPiece: PieceInfo | null = null;
-  private _animetedMove: Move | null = null;
+  private _animatedMove: Move | null = null;
 
   /**
    * Gradient for the lower piece part
@@ -164,7 +164,7 @@ export class PieceRenderer {
     this._animationStart = null;
     this._animationEnd = null;
     this._animatedPiece = null;
-    this._animetedMove = null;
+    this._animatedMove = null;
 
     this._inputState.acceptingInput = true;
   }
@@ -173,7 +173,7 @@ export class PieceRenderer {
     if (this._animationStart === null ||
       this._animationEnd === null ||
       this._animatedPiece === null ||
-      this._animetedMove === null) {
+      this._animatedMove === null) {
       throw new Error('Animation info is not supposed to be null');
     }
 
@@ -193,25 +193,23 @@ export class PieceRenderer {
     window.requestAnimationFrame(this.onAnimation);
   }
 
-  private renderAnimatedPiece(
-     /**
-      Value from 0 to 1 indicating animation progress
-     */ progress: number) {
+  /**
+      * Renders the animated piece.
+      * @param progress Value from 0 to 1 indicating animation progress.
+      */
+  private renderAnimatedPiece(progress: number) {
     const cellSize = InterfaceConstants.CellSize;
     const context = this._pieceContext;
 
     // By the point this function is called
     // these parameters have already been validated
     const piece = this._animatedPiece as PieceInfo;
-    const move = this._animetedMove as Move;
-
-    const path = move.path;
+    const move = this._animatedMove as Move;
 
     // path length
-    let totalLength = 0;
-    for (let i = 0; i < path.length - 1; ++i) {
-      totalLength += path[i].distanceTo(path[i + 1]);
-    }
+    const totalLength = move.length;
+
+    const path = move.path;
 
     let currentProgress = 0;
     let segmentStart = path[0];
@@ -284,11 +282,11 @@ export class PieceRenderer {
 
   private handlePerformMove(moveInfo: [PieceInfo, Move]) {
     this._animatedPiece = moveInfo[0];
-    this._animetedMove = moveInfo[1];
+    this._animatedMove = moveInfo[1];
 
     this._animationStart = performance.now();
     this._animationEnd = this._animationStart +
-      this._animetedMove.length * InterfaceConstants.MsPerCell;
+      this._animatedMove.length * InterfaceConstants.MsPerCell;
 
     this._inputState.acceptingInput = false;
 
