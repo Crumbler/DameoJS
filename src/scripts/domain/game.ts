@@ -5,6 +5,7 @@ import { Move, PieceMoves } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
+import { Vector2 } from 'math/Vector2';
 
 export interface GameInteractable {
   performMove(pieceToMove: PieceInfo, move: Move): void;
@@ -140,7 +141,7 @@ export class Game implements GameInfo, GameInteractable {
       throw new Error(`The piece ${pieceToMove} does not have the move ${move}`);
     }
 
-    this._board.movePiece(pieceToMove.x, pieceToMove.y, move.x, move.y);
+    this._board.movePiece(new Vector2(pieceToMove.x, pieceToMove.y), move.path[move.path.length - 1]);
 
     this.swapPlayer();
 

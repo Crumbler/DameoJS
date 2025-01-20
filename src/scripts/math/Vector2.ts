@@ -5,6 +5,8 @@
 export interface RVector2 {
   readonly x: number;
   readonly y: number;
+
+  distanceTo(v: RVector2): number;
 }
 
 export class Vector2 extends Array implements RVector2 {
@@ -16,6 +18,17 @@ export class Vector2 extends Array implements RVector2 {
 
   public static fromScalar(x: number): Vector2 {
     return new Vector2(x, x);
+  }
+
+  public static length(a: RVector2, b: RVector2): number {
+    const dX = a.x - b.x;
+    const dY = a.y - b.y;
+
+    return Math.sqrt(dX * dX + dY * dY);
+  }
+
+  public distanceTo(v: RVector2): number {
+    return Vector2.length(this, v);
   }
 
   public get x(): number {
@@ -66,5 +79,9 @@ export class Vector2 extends Array implements RVector2 {
     this.y /= x;
 
     return this;
+  }
+
+  public static sub(a: RVector2, b: RVector2): Vector2 {
+    return new Vector2(a.x - b.x, a.y - b.y);
   }
 }

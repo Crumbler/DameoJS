@@ -41,9 +41,12 @@ export class CellHighlightRenderer {
     }
 
     for (const move of moves) {
+      const path = move.path;
+      const lastPoint = path[path.length - 1];
+
       context.fillRect(
-        move.x * cellSize,
-        move.y * cellSize,
+        lastPoint.x * cellSize,
+        lastPoint.y * cellSize,
         cellSize,
         cellSize,
       );

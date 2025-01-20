@@ -1,6 +1,7 @@
 import { Piece, PieceInfo, Wall, WallCell } from 'domain/piece';
 import { GameConstants } from 'domain/gameConstants';
 import { Matrix, ReadonlyMatrix } from 'misc/arrayTypes';
+import { Vector2 } from 'math/Vector2';
 
 export interface BoardInfo {
   readonly dataView: ReadonlyMatrix<PieceInfo | null>;
@@ -97,28 +98,28 @@ export class Board implements BoardInfo {
     return this._board[y][x];
   }
 
-  public movePiece(fromX: number, fromY: number, toX: number, toY: number) {
-    Piece.checkCoordinate(fromX, 'fromX');
-    Piece.checkCoordinate(fromY, 'fromY');
-    Piece.checkCoordinate(toX, 'toX');
-    Piece.checkCoordinate(toY, 'toY');
+  public movePiece(from: Vector2, to: Vector2) {
+    Piece.checkCoordinate(from.x, 'fromX');
+    Piece.checkCoordinate(from.y, 'fromY');
+    Piece.checkCoordinate(to.x, 'toX');
+    Piece.checkCoordinate(to.y, 'toY');
 
-    const piece = this._board[fromY][fromX];
+    const piece = this._board[from.y][from.x];
 
     if (piece === null) {
-      throw new Error(`Piece at ${fromX} ${fromY} not present`);
+      throw new Error(`Piece at ${from.x} ${from.y} not present`);
     }
 
-    const newCell = this._board[toY][toX];
+    const newCell = this._board[to.y][to.x];
 
     if (newCell !== null) {
-      throw new Error(`Cell at ${toX} ${toY} not empty`);
+      throw new Error(`Cell at ${to.x} ${to.y} not empty`);
     }
 
-    this._board[toY][toX] = piece;
-    this._board[fromY][fromX] = null;
+    this._board[to.y][to.x] = piece;
+    this._board[from.y][from.x] = null;
 
-    piece.moveTo(toX, toY);
+    piece.moveTo(to);
   }
 
   public get data(): Matrix<Piece | null> {

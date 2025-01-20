@@ -1,4 +1,5 @@
 import { GameConstants } from 'domain/gameConstants';
+import { Vector2 } from 'math/Vector2';
 
 export interface PieceInfo {
   readonly x: number;
@@ -53,12 +54,12 @@ export class Piece implements PieceInfo {
     return this._isWhite;
   }
 
-  public moveTo(x: number, y: number) {
-    Piece.checkCoordinate(x, 'X');
-    Piece.checkCoordinate(y, 'Y');
+  public moveTo(to: Vector2) {
+    Piece.checkCoordinate(to.x, 'X');
+    Piece.checkCoordinate(to.y, 'Y');
 
-    this.x = x;
-    this.y = y;
+    this.x = to.x;
+    this.y = to.y;
   }
 
   public promote() {
