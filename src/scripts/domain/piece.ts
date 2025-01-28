@@ -18,10 +18,10 @@ export type Wall = -1;
 export const WallCell: Wall = -1;
 
 export class Piece implements PieceInfo {
-  private readonly _isWhite: boolean;
+  public readonly isWhite: boolean;
   private _isPromoted: boolean;
-  public x: number;
-  public y: number;
+  private _x: number;
+  private _y: number;
 
   public static checkCoordinate(coord: number, coordName: string) {
     if (coord !== (coord | 0)) {
@@ -35,31 +35,48 @@ export class Piece implements PieceInfo {
     }
   }
 
-  public constructor(isWhite: boolean, x: number, y: number) {
+  public static fromJson(info: PieceInfo): Piece {
+    return new Piece(info.isWhite, info.x, info.y, info.isPromoted);
+  }
+
+  public toJson(): PieceInfo {
+    return {
+      x: this._x,
+      y: this._y,
+      isWhite: this.isWhite,
+      isPromoted: this._isPromoted
+    }
+  }
+
+  public constructor(isWhite: boolean, x: number, y: number, isPromoted: boolean = false) {
     Piece.checkCoordinate(x, 'X');
     Piece.checkCoordinate(y, 'Y');
 
-    this._isWhite = isWhite;
-    this._isPromoted = false;
+    this.isWhite = isWhite;
+    this._isPromoted = isPromoted;
 
-    this.x = x;
-    this.y = y;
+    this._x = x;
+    this._y = y;
   }
 
   public get isPromoted() {
     return this._isPromoted;
   }
 
-  public get isWhite() {
-    return this._isWhite;
+  public get x(): number {
+    return this._x;
+  }
+
+  public get y(): number {
+    return this._y;
   }
 
   public moveTo(to: RVector2) {
     Piece.checkCoordinate(to.x, 'X');
     Piece.checkCoordinate(to.y, 'Y');
 
-    this.x = to.x;
-    this.y = to.y;
+    this._x = to.x;
+    this._y = to.y;
   }
 
   public promote() {

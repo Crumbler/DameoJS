@@ -3,7 +3,7 @@ import { FullscreenIcon } from 'interface/images/fullscreenIcon';
 import { RestartIcon } from 'interface/images/restartIcon';
 import { UndoIcon } from 'interface/images/undoIcon';
 import { Input } from 'interface/input';
-import { Timer } from 'interface/timer';
+import { GameTimer } from 'interface/gameTimer';
 import { PieceRenderer } from 'interface/pieceRenderer';
 import { Game } from 'domain/game';
 import { PlayerIndicator } from 'interface/playerIndicator';
@@ -14,6 +14,9 @@ import { InputState } from 'interface/inputState';
 import { Wake } from 'interface/wake';
 import { HeaderManager } from 'interface/headerManager';
 import { VisibilityMonitor } from 'interface/visibilityMonitor';
+import { AppState } from 'interface/appState';
+import { AppStateLoader } from 'interface/appStateLoader';
+import { AppStateSaver } from 'interface/appStateSaver';
 
 function generateImages() {
   new FullscreenIcon().generateAndSet();
@@ -25,10 +28,17 @@ let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
 let headerManager: HeaderManager;
 let cellHighlightRenderer: CellHighlightRenderer;
+let game: Game;
+const appStateLoader = new AppStateLoader();
+const appStateSaver = new AppStateSaver(getState);
 
 function registerEventHandlers(game: Game) {
   PlayerIndicator.registerEventHandler(game);
-  Timer.registerEventHandler(game);
+  GameTimer.registerEventHandler(game);
+
+  window.addEventListener('beforeunload', () => {
+    appStateSaver.save();
+  });
 }
 
 function onLoad() {
@@ -39,7 +49,13 @@ function onLoad() {
 
   Input.registerOnFullscreen(Fullscreen.toggle);
 
-  const game = new Game();
+  const appState = appStateLoader.loadState();
+
+  if (appState !== null) {
+    GameTimer.setInitialTime(appState.timerStart);
+  }
+
+  game = new Game(appState?.gameState);
 
   const inputState = new InputState();
 
@@ -52,6 +68,15 @@ function onLoad() {
   registerEventHandlers(game);
 
   game.fireInitialEvents();
+
+  appStateSaver.startSaveTimer();
+}
+
+function getState(): AppState {
+  return {
+    gameState: game.state,
+    timerStart: GameTimer.start
+  };
 }
 
 onLoad();

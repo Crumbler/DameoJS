@@ -59,24 +59,24 @@ describe('Board tests', () => {
   test('Filling', () => {
     const board = new Board();
 
-    board.fillBoard();
+    board.fillStandardBoard();
 
     testBoardFilled(board);
   });
 
   test('Repeated fill throws error', () => {
     const board = new Board();
-    board.fillBoard();
+    board.fillStandardBoard();
 
     assert.throws(() => {
-      board.fillBoard();
+      board.fillStandardBoard();
     });
   });
 
   test('Reset', () => {
     const board = new Board();
 
-    board.fillBoard();
+    board.fillStandardBoard();
     board.reset();
 
     testBoardFilled(board);
@@ -85,7 +85,7 @@ describe('Board tests', () => {
   describe('Movement', () => {
     test('Successful move', () => {
       const board = new Board();
-      board.fillBoard();
+      board.fillStandardBoard();
 
       board.movePiece(Vector2.fromScalar(0), new Vector2(0, 1));
     });
@@ -119,7 +119,7 @@ describe('Board tests', () => {
 
     test('Move into another cell', () => {
       const board = new Board();
-      board.fillBoard();
+      board.fillStandardBoard();
 
       assert.throws(() => {
         board.movePiece(Vector2.fromScalar(0), Vector2.fromScalar(1));
@@ -128,7 +128,7 @@ describe('Board tests', () => {
 
     test('Move to same cell', () => {
       const board = new Board();
-      board.fillBoard();
+      board.fillStandardBoard();
 
       assert.throws(() => {
         board.movePiece(Vector2.fromScalar(0), Vector2.fromScalar(0));
