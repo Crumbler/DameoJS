@@ -6,6 +6,9 @@ export interface RVector2 {
   readonly x: number;
   readonly y: number;
 
+  readonly width: number;
+  readonly height: number;
+
   distanceTo(v: RVector2): number;
 }
 

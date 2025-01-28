@@ -1,16 +1,16 @@
-import { Vector2 } from 'math/Vector2';
+import { RVector2, Vector2 } from 'math/Vector2';
 import { InterfaceConstants } from 'interface/interfaceConstants';
-import { BlobHelper } from 'helpers/blobHelper';
-import { Elements } from 'interface/elements';
+import { IconRenderer } from 'interface/images/iconRenderer';
 
 /**
  * Renders the toggle fullscreen icon
  */
-export class FullscreenIcon {
-  private static readonly fullscreenIcon =
-    Elements.findById('fullscreen-button');
+export class FullscreenIcon extends IconRenderer {
+  public constructor() {
+    super('fullscreen-button');
+  }
 
-  private static calculateBounds(): Vector2 {
+  protected calculateBounds(): RVector2 {
     return Vector2.fromScalar(InterfaceConstants.HeaderIconSize);
   }
 
@@ -25,7 +25,7 @@ export class FullscreenIcon {
     context.fillRect(0, 0, size * length, size * width);
   }
 
-  private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
+  protected drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const size = context.canvas.width;
 
     context.fillStyle = 'white';
@@ -49,16 +49,5 @@ export class FullscreenIcon {
     context.rotate(Math.PI * 1.5);
     FullscreenIcon.drawCorner(context, size);
     context.restore();
-  }
-
-  public static async generateAndSet() {
-    const bounds = FullscreenIcon.calculateBounds();
-
-    const imageUrl = await BlobHelper.drawToBlobUrl(
-      bounds,
-      FullscreenIcon.drawPattern,
-    );
-
-    FullscreenIcon.fullscreenIcon.style.maskImage = `url(${imageUrl})`;
   }
 }

@@ -1,10 +1,10 @@
-import { Vector2 } from 'math/Vector2';
+import { RVector2 } from 'math/Vector2';
 
 export type RenderAction = (context: OffscreenCanvasRenderingContext2D) => void;
 
 export class BlobHelper {
   private static generateBackgroundBlob(
-    bounds: Vector2,
+    bounds: RVector2,
     drawAction: RenderAction,
     transparent: boolean,
   ): Promise<Blob> {
@@ -31,7 +31,7 @@ export class BlobHelper {
    * @returns URL to resource
    */
   public static async drawToBlobUrl(
-    size: Vector2,
+    size: RVector2,
     drawAction: RenderAction,
     transparent = false,
   ): Promise<string> {

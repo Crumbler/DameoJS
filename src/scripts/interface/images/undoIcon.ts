@@ -1,16 +1,16 @@
 import { Vector2 } from 'math/Vector2';
 import { InterfaceConstants } from 'interface/interfaceConstants';
-import { BlobHelper } from 'helpers/blobHelper';
-import { Elements } from 'interface/elements';
+import { IconRenderer } from 'interface/images/iconRenderer';
 
 /**
  * Renders the undo icon
  */
-export class UndoIcon {
-  private static readonly undoIcon =
-    Elements.findById<HTMLImageElement>('undo-button');
+export class UndoIcon extends IconRenderer {
+  public constructor() {
+    super('undo-button');
+  }
 
-  private static calculateBounds(): Vector2 {
+  protected calculateBounds(): Vector2 {
     return Vector2.fromScalar(InterfaceConstants.HeaderIconSize);
   }
 
@@ -28,7 +28,7 @@ export class UndoIcon {
     context.fill();
   }
 
-  private static drawPattern(context: OffscreenCanvasRenderingContext2D) {
+  protected drawPattern(context: OffscreenCanvasRenderingContext2D) {
     const size = context.canvas.width;
 
     context.fillStyle = 'white';
@@ -53,16 +53,5 @@ export class UndoIcon {
     );
     context.rotate(endAngle - Math.PI / 2);
     UndoIcon.drawArrowhead(context, size);
-  }
-
-  public static async generateAndSet() {
-    const bounds = UndoIcon.calculateBounds();
-
-    const imageUrl = await BlobHelper.drawToBlobUrl(
-      bounds,
-      UndoIcon.drawPattern,
-    );
-
-    UndoIcon.undoIcon.style.maskImage = `url(${imageUrl})`;
   }
 }

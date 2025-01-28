@@ -16,9 +16,9 @@ import { HeaderManager } from 'interface/headerManager';
 import { VisibilityMonitor } from 'interface/visibilityMonitor';
 
 function generateImages() {
-  FullscreenIcon.generateAndSet();
-  RestartIcon.generateAndSet();
-  UndoIcon.generateAndSet();
+  new FullscreenIcon().generateAndSet();
+  new RestartIcon().generateAndSet();
+  new UndoIcon().generateAndSet();
 }
 
 let pieceRenderer: PieceRenderer;
