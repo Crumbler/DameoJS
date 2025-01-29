@@ -57,8 +57,6 @@ export class GameTimer {
       return;
     }
 
-    console.log('Handling game timer reset');
-
     GameTimer.restart();
 
     GameTimer.timeElapsed = 0;
