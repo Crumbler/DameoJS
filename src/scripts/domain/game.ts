@@ -5,7 +5,6 @@ import { Move, PieceMovesInfo } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
-import { Vector2 } from 'math/Vector2';
 import { GameState } from 'domain/gameState';
 
 export interface GameInteractable {
@@ -152,11 +151,11 @@ export class Game implements GameInfo, GameInteractable {
       throw new Error(`The piece ${pieceToMove} does not have the move ${move}`);
     }
 
-    this._board.movePiece(new Vector2(pieceToMove.x, pieceToMove.y), move.lastPoint);
+    this._board.movePiece(pieceToMove.pos, move.lastPoint);
 
     if (move.toRemove !== null) {
       for (const piece of move.toRemove) {
-        this._board.removePiece(new Vector2(piece.x, piece.y));
+        this._board.removePiece(piece.pos);
       }
 
       this._pieces = this._pieces.filter(p => !move.toRemove!.includes(p));
@@ -192,7 +191,7 @@ export class Game implements GameInfo, GameInteractable {
 
   public get state(): GameState {
     return {
-      pieces: this._pieces.map(p => p.toJson()),
+      pieces: this._pieces.map(p => p.toJson() as PieceInfo),
       canUndo: this._canUndo,
       currentPlayer: this._currentPlayer
     };

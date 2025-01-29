@@ -67,16 +67,16 @@ describe('Board tests', () => {
 
   test('Fill from pieces', () => {
     const board = new Board();
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     board.fillBoard([piece]);
 
-    assert.strictEqual(board.getCell(piece.x, piece.y), piece);
+    assert.strictEqual(board.getCell(piece.pos), piece);
   });
 
   test('Fill with duplicate pieces throws error', () => {
     const board = new Board();
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     assert.throws(() => {
       board.fillBoard([piece, piece]);

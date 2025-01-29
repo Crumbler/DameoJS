@@ -36,7 +36,7 @@ describe('Move tests', () => {
   });
 
   test('Empty moves', () => {
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     assert.throws(() => {
       new PieceMovesInfo(piece, []);

@@ -256,7 +256,7 @@ export class PieceRenderer {
 
       context.save();
 
-      context.translate(piece.x * cellSize, piece.y * cellSize);
+      context.translate(piece.pos.x * cellSize, piece.pos.y * cellSize);
 
       this.renderPiece(piece.isWhite);
 

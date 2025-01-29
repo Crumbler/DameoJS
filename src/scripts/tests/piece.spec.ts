@@ -6,17 +6,17 @@ describe('Piece tests', () => {
   test('Piece normal creation', () => {
     const x = 2;
     const y = 3;
-    const piece = new Piece(false, x, y);
+    const piece = new Piece(false, new Vector2(x, y));
 
-    assert.strictEqual(piece.x, x);
-    assert.strictEqual(piece.y, y);
+    assert.strictEqual(piece.pos.x, x);
+    assert.strictEqual(piece.pos.y, y);
   });
 
   test.for([
     true,
     false
   ])('Test whiteness: %o', (isWhite) => {
-    const piece = new Piece(isWhite, 0, 0);
+    const piece = new Piece(isWhite, new Vector2());
     assert.strictEqual(piece.isWhite, isWhite);
   });
 
@@ -24,7 +24,7 @@ describe('Piece tests', () => {
     true,
     false
   ])('Test promotion: %o', (isPromoted) => {
-    const piece = new Piece(false, 0, 0, isPromoted);
+    const piece = new Piece(false, new Vector2(), isPromoted);
     assert.strictEqual(piece.isPromoted, isPromoted);
   });
 
@@ -36,28 +36,28 @@ describe('Piece tests', () => {
   ];
 
   test.for(invalidCoordSet)('Creating with invalid coords: %i %i', ([x, y]) => {
-    assert.throws(() => new Piece(false, x, y));
+    assert.throws(() => new Piece(false, new Vector2(x, y)));
   });
 
   test('Moving', () => {
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     piece.moveTo(Vector2.fromScalar(1));
   });
 
   test.for(invalidCoordSet)('Moving to invalid coords: %i %i', ([x, y]) => {
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     assert.throws(() => piece.moveTo(new Vector2(x, y)));
   });
 
   test('Initially not promoted', () => {
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
     assert.isFalse(piece.isPromoted);
   });
 
   test('Promotion successful', () => {
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     piece.promote();
 
@@ -65,7 +65,7 @@ describe('Piece tests', () => {
   });
 
   test('Double promotion forbidden', () => {
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     piece.promote();
 

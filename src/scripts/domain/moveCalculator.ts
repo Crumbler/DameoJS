@@ -1,33 +1,30 @@
 import { Move } from 'domain/move';
 import { PieceInfo, WallCell } from 'domain/piece';
 import { BoardInfo } from 'domain/board';
-import { Vector2 } from 'math/Vector2';
+import { RVector2, Vector2 } from 'math/Vector2';
 
 export class MoveCalculator {
   private static getSimpleMove(
     board: BoardInfo,
     piece: PieceInfo,
-    dX: number,
-    dY: number,
+    dV: RVector2,
   ): Move | null {
-    let x = piece.x;
-    let y = piece.y;
+    const pos = piece.pos;
 
-    let cell = board.getCell(x + dX, y + dY);
+    let cell = board.getCell(pos.x + dV.x, pos.y + dV.y);
 
     while (
       cell !== null &&
       cell !== WallCell &&
       cell.isWhite === piece.isWhite
     ) {
-      x += dX;
-      y += dY;
+      pos.add(dV);
 
-      cell = board.getCell(x + dX, y + dY);
+      cell = board.getCell(pos.x + dV.x, pos.y + dV.y);
     }
 
     if (cell === null) {
-      return new Move([new Vector2(piece.x, piece.y), new Vector2(x + dX, y + dY)]);
+      return new Move([piece.pos, pos.add(dV)]);
     }
 
     return null;
@@ -41,7 +38,7 @@ export class MoveCalculator {
     const dY = piece.isWhite ? -1 : 1;
 
     for (let dX = -1; dX <= 1; ++dX) {
-      const move = this.getSimpleMove(board, piece, dX, dY);
+      const move = this.getSimpleMove(board, piece, new Vector2(dX, dY));
       if (move !== null) {
         moves.push(move);
       }

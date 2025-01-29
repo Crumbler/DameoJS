@@ -1,7 +1,7 @@
 import { Piece, PieceInfo, Wall, WallCell } from 'domain/piece';
 import { GameConstants } from 'domain/gameConstants';
 import { Matrix, ReadonlyMatrix } from 'misc/arrayTypes';
-import { RVector2 } from 'math/Vector2';
+import { RVector2, Vector2 } from 'math/Vector2';
 
 export interface BoardInfo {
   readonly dataView: ReadonlyMatrix<PieceInfo | null>;
@@ -36,7 +36,7 @@ export class Board implements BoardInfo {
       j < cellsPerSide / 2 + pieceCount / 2;
       ++j
     ) {
-      const piece = new Piece(white, j, rowNumber);
+      const piece = new Piece(white, new Vector2(j, rowNumber));
       row[j] = piece;
     }
   }
@@ -76,11 +76,11 @@ export class Board implements BoardInfo {
 
   public fillBoard(pieces: ReadonlyArray<Piece>) {
     for (const piece of pieces) {
-      if (this._board[piece.y][piece.x] !== null) {
-        throw new Error(`Cell at (${piece.x} ${piece.y}) already occupied`);
+      if (this._board[piece.pos.y][piece.pos.x] !== null) {
+        throw new Error(`Cell at ${piece.pos} already occupied`);
       }
 
-      this._board[piece.y][piece.x] = piece;
+      this._board[piece.pos.y][piece.pos.x] = piece;
     }
   }
 
@@ -98,8 +98,18 @@ export class Board implements BoardInfo {
     this.fillStandardBoard();
   }
 
-  public getCell(x: number, y: number): PieceInfo | Wall | null {
+  public getCell(pos: RVector2): PieceInfo | Wall | null;
+  public getCell(x: number, y: number): PieceInfo | Wall | null;
+  public getCell(pos: RVector2 | number, y?: number): PieceInfo | Wall | null {
     const cellsPerSide = GameConstants.CellsPerSide;
+
+    let x = 0;
+    if (y === undefined) {
+      x = (pos as RVector2).x;
+      y = (pos as RVector2).y;
+    } else {
+      x = pos as number;
+    }
 
     if (x < 0 || x >= cellsPerSide || y < 0 || y >= cellsPerSide) {
       return WallCell;
