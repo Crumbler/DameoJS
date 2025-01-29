@@ -20,6 +20,14 @@ describe('Piece tests', () => {
     assert.strictEqual(piece.isWhite, isWhite);
   });
 
+  test.for([
+    true,
+    false
+  ])('Test promotion: %o', (isPromoted) => {
+    const piece = new Piece(false, 0, 0, isPromoted);
+    assert.strictEqual(piece.isPromoted, isPromoted);
+  });
+
   const invalidCoordSet = [
     [-1, 0],
     [GameConstants.CellsPerSide, 0],

@@ -76,6 +76,10 @@ export class Board implements BoardInfo {
 
   public fillBoard(pieces: ReadonlyArray<Piece>) {
     for (const piece of pieces) {
+      if (this._board[piece.y][piece.x] !== null) {
+        throw new Error(`Cell at (${piece.x} ${piece.y}) already occupied`);
+      }
+
       this._board[piece.y][piece.x] = piece;
     }
   }

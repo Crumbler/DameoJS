@@ -48,7 +48,7 @@ export class Piece implements PieceInfo {
     }
   }
 
-  public constructor(isWhite: boolean, x: number, y: number, isPromoted: boolean = false) {
+  public constructor(isWhite: boolean, x: number, y: number, isPromoted = false) {
     Piece.checkCoordinate(x, 'X');
     Piece.checkCoordinate(y, 'Y');
 

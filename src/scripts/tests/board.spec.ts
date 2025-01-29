@@ -1,5 +1,6 @@
 import { Board, BoardInfo } from 'domain/board';
 import { GameConstants } from 'domain/gameConstants';
+import { Piece } from 'domain/piece';
 import { Vector2 } from 'math/Vector2';
 
 function testBoardClear(board: BoardInfo) {
@@ -56,12 +57,30 @@ describe('Board tests', () => {
     testBoardClear(board);
   });
 
-  test('Filling', () => {
+  test('Fill standard', () => {
     const board = new Board();
 
     board.fillStandardBoard();
 
     testBoardFilled(board);
+  });
+
+  test('Fill from pieces', () => {
+    const board = new Board();
+    const piece = new Piece(false, 0, 0);
+
+    board.fillBoard([piece]);
+
+    assert.strictEqual(board.getCell(piece.x, piece.y), piece);
+  });
+
+  test('Fill with duplicate pieces throws error', () => {
+    const board = new Board();
+    const piece = new Piece(false, 0, 0);
+
+    assert.throws(() => {
+      board.fillBoard([piece, piece]);
+    });
   });
 
   test('Repeated fill throws error', () => {
