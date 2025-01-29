@@ -101,6 +101,25 @@ describe('Board tests', () => {
     testBoardFilled(board);
   });
 
+  describe('Removal', () => {
+    test('Success', () => {
+      const board = new Board();
+      board.fillStandardBoard();
+
+      board.removePiece(Vector2.fromScalar(0));
+
+      assert.strictEqual(board.dataView[0][0], null);
+    });
+
+    test('Throw on removing from empty cell', () => {
+      const board = new Board();
+
+      assert.throws(() => {
+        board.removePiece(new Vector2(0, 0));
+      });
+    });
+  });
+
   describe('Movement', () => {
     test('Successful move', () => {
       const board = new Board();

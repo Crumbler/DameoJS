@@ -132,7 +132,20 @@ export class Board implements BoardInfo {
     piece.moveTo(to);
   }
 
-  public get data(): Matrix<Piece | null> {
+  public removePiece(from: RVector2) {
+    Piece.checkCoordinate(from.x, 'fromX');
+    Piece.checkCoordinate(from.y, 'fromY');
+
+    const piece = this._board[from.y][from.x];
+
+    if (piece === null) {
+      throw new Error(`Cell at ${from.x} ${from.y} empty`);
+    }
+
+    this._board[from.y][from.x] = null;
+  }
+
+  public get data(): ReadonlyMatrix<Piece | null> {
     return this._board;
   }
 

@@ -154,6 +154,14 @@ export class Game implements GameInfo, GameInteractable {
 
     this._board.movePiece(new Vector2(pieceToMove.x, pieceToMove.y), move.lastPoint);
 
+    if (move.toRemove !== null) {
+      for (const piece of move.toRemove) {
+        this._board.removePiece(new Vector2(piece.x, piece.y));
+      }
+
+      this._pieces = this._pieces.filter(p => !move.toRemove!.includes(p));
+    }
+
     this.swapPlayer();
 
     this.onPiecesChanged();
