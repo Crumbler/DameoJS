@@ -1,5 +1,6 @@
 import { Board, BoardInfo } from 'domain/board';
 import { GameConstants } from 'domain/gameConstants';
+import { Piece } from 'domain/piece';
 import { Vector2 } from 'math/Vector2';
 
 function testBoardClear(board: BoardInfo) {
@@ -56,27 +57,45 @@ describe('Board tests', () => {
     testBoardClear(board);
   });
 
-  test('Filling', () => {
+  test('Fill standard', () => {
     const board = new Board();
 
-    board.fillBoard();
+    board.fillStandardBoard();
 
     testBoardFilled(board);
   });
 
-  test('Repeated fill throws error', () => {
+  test('Fill from pieces', () => {
     const board = new Board();
-    board.fillBoard();
+    const piece = new Piece(false, 0, 0);
+
+    board.fillBoard([piece]);
+
+    assert.strictEqual(board.getCell(piece.x, piece.y), piece);
+  });
+
+  test('Fill with duplicate pieces throws error', () => {
+    const board = new Board();
+    const piece = new Piece(false, 0, 0);
 
     assert.throws(() => {
-      board.fillBoard();
+      board.fillBoard([piece, piece]);
+    });
+  });
+
+  test('Repeated fill throws error', () => {
+    const board = new Board();
+    board.fillStandardBoard();
+
+    assert.throws(() => {
+      board.fillStandardBoard();
     });
   });
 
   test('Reset', () => {
     const board = new Board();
 
-    board.fillBoard();
+    board.fillStandardBoard();
     board.reset();
 
     testBoardFilled(board);
@@ -85,7 +104,7 @@ describe('Board tests', () => {
   describe('Movement', () => {
     test('Successful move', () => {
       const board = new Board();
-      board.fillBoard();
+      board.fillStandardBoard();
 
       board.movePiece(Vector2.fromScalar(0), new Vector2(0, 1));
     });
@@ -119,7 +138,7 @@ describe('Board tests', () => {
 
     test('Move into another cell', () => {
       const board = new Board();
-      board.fillBoard();
+      board.fillStandardBoard();
 
       assert.throws(() => {
         board.movePiece(Vector2.fromScalar(0), Vector2.fromScalar(1));
@@ -128,7 +147,7 @@ describe('Board tests', () => {
 
     test('Move to same cell', () => {
       const board = new Board();
-      board.fillBoard();
+      board.fillStandardBoard();
 
       assert.throws(() => {
         board.movePiece(Vector2.fromScalar(0), Vector2.fromScalar(0));

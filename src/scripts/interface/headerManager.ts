@@ -19,7 +19,6 @@ export class HeaderManager {
 
   private onGameEvent(event: GameEvent) {
     if (event.isCanUndoEvent()) {
-      console.log('Can undo: ' + event.canUndo);
       this.setCanUndo(event.canUndo);
     }
   }

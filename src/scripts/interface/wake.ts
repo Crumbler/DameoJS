@@ -4,7 +4,7 @@ export class Wake {
   public static async tryStayAwake() {
     const supportsWakeLock = 'wakeLock' in navigator;
     if (!supportsWakeLock) {
-      console.log('WakeLock not supported');
+      console.warn('WakeLock not supported');
       return;
     }
 
@@ -24,8 +24,6 @@ export class Wake {
       console.error(`Failed to request WakeLock\nError: ${e.name}\n${e.message}`);
       return;
     }
-
-    console.log('WakeLock acquired');
 
     Wake._wakeLock.onrelease = () => {
       if (Wake._wakeLock !== null) {

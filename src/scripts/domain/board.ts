@@ -53,7 +53,7 @@ export class Board implements BoardInfo {
     return true;
   }
 
-  public fillBoard() {
+  public fillStandardBoard() {
     if (!this.isClear()) {
       throw new Error('Board is not clear');
     }
@@ -74,6 +74,16 @@ export class Board implements BoardInfo {
     }
   }
 
+  public fillBoard(pieces: ReadonlyArray<Piece>) {
+    for (const piece of pieces) {
+      if (this._board[piece.y][piece.x] !== null) {
+        throw new Error(`Cell at (${piece.x} ${piece.y}) already occupied`);
+      }
+
+      this._board[piece.y][piece.x] = piece;
+    }
+  }
+
   private clearBoard() {
     for (let i = 0; i < this._board.length; ++i) {
       const row = this._board[i];
@@ -85,7 +95,7 @@ export class Board implements BoardInfo {
 
   public reset() {
     this.clearBoard();
-    this.fillBoard();
+    this.fillStandardBoard();
   }
 
   public getCell(x: number, y: number): PieceInfo | Wall | null {

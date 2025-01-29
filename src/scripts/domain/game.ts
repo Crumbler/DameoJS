@@ -6,6 +6,7 @@ import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
 import { Vector2 } from 'math/Vector2';
+import { GameState } from 'domain/gameState';
 
 export interface GameInteractable {
   performMove(pieceToMove: PieceInfo, move: Move): void;
@@ -77,18 +78,28 @@ export class Game implements GameInfo, GameInteractable {
     }
   }
 
+  private fillPieces(pieces: ReadonlyArray<PieceInfo>) {
+    this._pieces = pieces.map(p => Piece.fromJson(p));
+  }
+
   private swapPlayer() {
     this._currentPlayer = this._currentPlayer === Player.Red ? Player.White : Player.Red;
     this.onPlayerChanged();
   }
 
-  public constructor() {
-    this._currentPlayer = Player.White;
-
+  public constructor(state: GameState | null = null) {
     this._board = new Board();
-    this._board.fillBoard();
 
-    this.resetPieces();
+    if (state === null) {
+      this._currentPlayer = Player.White;
+      this._board.fillStandardBoard();
+      this.resetPieces();
+    } else {
+      this._currentPlayer = state.currentPlayer;
+      this._canUndo = state.canUndo;
+      this.fillPieces(state.pieces);
+      this._board.fillBoard(this._pieces);
+    }
 
     this.calculateMoves();
   }
@@ -169,6 +180,14 @@ export class Game implements GameInfo, GameInteractable {
 
   public registerEventHandler(handler: GameEventHandler) {
     this._eventSubject.subscribe(handler);
+  }
+
+  public get state(): GameState {
+    return {
+      pieces: this._pieces.map(p => p.toJson()),
+      canUndo: this._canUndo,
+      currentPlayer: this._currentPlayer
+    };
   }
 
   private raiseEvent(event: GameEvent) {
