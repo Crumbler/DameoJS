@@ -52,7 +52,7 @@ function onLoad() {
   const appState = appStateLoader.loadState();
 
   if (appState !== null) {
-    GameTimer.setInitialTime(appState.timerStart);
+    GameTimer.setElapsedTime(appState.elapsedTime);
   }
 
   game = new Game(appState?.gameState);
@@ -75,7 +75,7 @@ function onLoad() {
 function getState(): AppState {
   return {
     gameState: game.state,
-    timerStart: GameTimer.start
+    elapsedTime: game.canUndo ? GameTimer.getElapsedTime() : 0
   };
 }
 

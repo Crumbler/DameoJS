@@ -8,8 +8,8 @@ import { Format } from 'misc/format';
  */
 export class GameTimer {
   private static timerElement = Elements.findById('game-time');
-  private static initialTime: number | null = null;
-  public static start: number;
+  private static timeElapsed = 0;
+  private static start: number;
   private static interval: number | null = null;
 
   /**
@@ -20,18 +20,18 @@ export class GameTimer {
       clearInterval(GameTimer.interval);
     }
 
-    if (this.initialTime === null) {
-      GameTimer.start = (Date.now() / 1000) | 0;
-    } else {
-      GameTimer.start = this.initialTime;
-    }
+    GameTimer.start = ((Date.now() / 1000) | 0) - GameTimer.timeElapsed;
     GameTimer.interval = window.setInterval(GameTimer.update, 1000);
 
     GameTimer.update();
   }
 
-  public static setInitialTime(initialTime: number) {
-    GameTimer.initialTime = initialTime;
+  public static getElapsedTime(): number {
+    return ((Date.now() / 1000) | 0) - GameTimer.start;
+  }
+
+  public static setElapsedTime(timeElapsed: number) {
+    GameTimer.timeElapsed = timeElapsed;
   }
 
   private static update() {
@@ -57,9 +57,11 @@ export class GameTimer {
       return;
     }
 
+    console.log('Handling game timer reset');
+
     GameTimer.restart();
 
-    GameTimer.initialTime = null;
+    GameTimer.timeElapsed = 0;
   }
 
   public static registerEventHandler(game: GameInfo) {
