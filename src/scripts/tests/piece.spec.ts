@@ -73,4 +73,23 @@ describe('Piece tests', () => {
       piece.promote();
     });
   });
+
+  test('Should be promoted - already promoted', () => {
+    const piece = new Piece(false, new Vector2(), true);
+
+    assert.isFalse(piece.shouldBePromoted);
+  });
+
+  const promotionParamSet = [
+    [true, 1, false],
+    [true, 0, true],
+    [false, 1, false],
+    [false, GameConstants.CellsPerSide - 1, true]
+  ] as const;
+
+  test.for(promotionParamSet)('Creating with invalid coords: %i %i', ([isWhite, y, promotion]) => {
+    const piece = new Piece(isWhite, new Vector2(0, y));
+
+    assert.strictEqual(piece.shouldBePromoted, promotion);
+  });
 });

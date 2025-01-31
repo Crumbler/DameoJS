@@ -6,6 +6,7 @@ import { RVector2, Vector2 } from 'math/Vector2';
 export interface BoardInfo {
   readonly dataView: ReadonlyMatrix<PieceInfo | null>;
   getCell(x: number, y: number): PieceInfo | Wall | null
+  getCell(pos: RVector2): PieceInfo | Wall | null;
 }
 
 export class Board implements BoardInfo {

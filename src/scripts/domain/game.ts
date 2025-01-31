@@ -140,11 +140,13 @@ export class Game implements GameInfo, GameInteractable {
     return null;
   }
 
-  public performMove(pieceToMove: PieceInfo, move: Move) {
-    const pieceMoveInfo = this._moveInfos.find((mi) => mi.piece === pieceToMove);
+  public performMove(pieceToMoveInfo: PieceInfo, move: Move) {
+    const pieceMoveInfo = this._moveInfos.find((mi) => mi.piece === pieceToMoveInfo);
     if (!pieceMoveInfo) {
-      throw new Error('Unable to find moves for piece ' + pieceToMove);
+      throw new Error('Unable to find moves for piece ' + pieceToMoveInfo);
     }
+
+    const pieceToMove = pieceMoveInfo.piece;
 
     const hasMove = pieceMoveInfo.moves.includes(move);
     if (!hasMove) {
@@ -152,6 +154,11 @@ export class Game implements GameInfo, GameInteractable {
     }
 
     this._board.movePiece(pieceToMove.pos, move.lastPoint);
+
+    if (pieceToMove.shouldBePromoted) {
+      console.log('Promoted');
+      pieceToMove.promote();
+    }
 
     if (move.toRemove !== null) {
       for (const piece of move.toRemove) {

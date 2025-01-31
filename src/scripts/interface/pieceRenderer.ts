@@ -33,6 +33,8 @@ export class PieceRenderer {
   private readonly _whitePieceLowerGradient =
     PieceRenderer.createPieceLowerGradient(this._pieceContext, true);
 
+  private static readonly _crownPath = PieceRenderer.createCrownPath();
+
   public constructor(game: GameInfo, inputState: InputState) {
     this._game = game;
     this._inputState = inputState;
@@ -63,6 +65,50 @@ export class PieceRenderer {
     );
 
     return gradient;
+  }
+
+  private static createCrownPath(): Path2D {
+    const path = new Path2D();
+
+    const cellSize = InterfaceConstants.CellSize;
+    const center = cellSize / 2;
+    const baseY = center;
+    const baseYOffset = cellSize * 0.02;
+    const outX = cellSize * 0.1;
+    const width = cellSize * 0.27;
+    const inX = width * 0.2;
+    const inY = cellSize * 0.07;
+    const biggerHeight = cellSize * 0.23;
+    const smallerHeight = cellSize * 0.16;
+    const baseHeight = cellSize * 0.05;
+
+    path.moveTo(center - width / 2, baseY + baseYOffset);
+    path.lineTo(center - width / 2, baseY - baseHeight);
+
+    path.lineTo(center - width / 2 - outX, baseY - smallerHeight);
+    path.lineTo(center - inX, baseY - baseHeight - inY);
+    path.lineTo(center, baseY - biggerHeight);
+    path.lineTo(center + inX, baseY - baseHeight - inY);
+    path.lineTo(center + width / 2 + outX, baseY - smallerHeight);
+
+    path.lineTo(center + width / 2, baseY - baseHeight);
+    path.lineTo(center + width / 2, baseY + baseYOffset);
+
+    path.closePath();
+
+    return path;
+  }
+
+  private renderCrown() {
+    const context = this._pieceContext;
+
+    context.fillStyle = InterfaceColors.CrownColor;
+
+    context.fill(PieceRenderer._crownPath);
+
+    context.strokeStyle = 'black';
+    context.lineWidth = 1.5;
+    context.stroke(PieceRenderer._crownPath);
   }
 
   private renderPiece(white: boolean) {
@@ -194,9 +240,9 @@ export class PieceRenderer {
   }
 
   /**
-      * Renders the animated piece.
-      * @param progress Value from 0 to 1 indicating animation progress.
-      */
+  * Renders the animated piece.
+  * @param progress Value from 0 to 1 indicating animation progress.
+  */
   private renderAnimatedPiece(progress: number) {
     const cellSize = InterfaceConstants.CellSize;
     const context = this._pieceContext;
@@ -241,6 +287,9 @@ export class PieceRenderer {
     context.translate(x * cellSize, y * cellSize);
 
     this.renderPiece(piece.isWhite);
+    if (piece.isPromoted) {
+      this.renderCrown();
+    }
 
     context.restore();
   }
@@ -259,6 +308,9 @@ export class PieceRenderer {
       context.translate(piece.pos.x * cellSize, piece.pos.y * cellSize);
 
       this.renderPiece(piece.isWhite);
+      if (piece.isPromoted) {
+        this.renderCrown();
+      }
 
       context.restore();
     }

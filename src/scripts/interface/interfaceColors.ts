@@ -31,6 +31,11 @@ export class InterfaceColors {
   public static readonly WhitePieceB = 'white';
 
   /**
+   * Crown color
+   */
+  public static readonly CrownColor = 'rgb(255, 255, 9)'
+
+  /**
    * Highlight color of a cell that can be selected
    */
   public static readonly SelectableCell = 'rgb(255, 247, 0)';

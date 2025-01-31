@@ -5,6 +5,7 @@ export interface PieceInfo {
   readonly pos: Vector2;
   readonly isPromoted: boolean;
   readonly isWhite: boolean;
+  readonly shouldBePromoted: boolean;
 }
 
 /**
@@ -17,7 +18,6 @@ export type Wall = -1;
 export const WallCell: Wall = -1;
 
 export class Piece implements PieceInfo {
-  public readonly isWhite: boolean;
   private _isPromoted: boolean;
   private _pos: Vector2;
 
@@ -45,7 +45,7 @@ export class Piece implements PieceInfo {
     };
   }
 
-  public constructor(isWhite: boolean, pos: RVector2, isPromoted = false) {
+  public constructor(public readonly isWhite: boolean, pos: RVector2, isPromoted = false) {
     Piece.checkCoordinate(pos.x, 'X');
     Piece.checkCoordinate(pos.y, 'Y');
 
@@ -76,5 +76,11 @@ export class Piece implements PieceInfo {
     }
 
     this._isPromoted = true;
+  }
+
+  public get shouldBePromoted(): boolean {
+    const backRowY = this.isWhite ? 0 : GameConstants.CellsPerSide - 1;
+
+    return this._pos.y === backRowY && !this._isPromoted;
   }
 }

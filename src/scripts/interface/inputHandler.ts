@@ -105,20 +105,21 @@ export class InputHandler {
 
     const currentPiece = this._inputState.selectedPiece;
 
+    if (currentPiece !== null &&
+      this.tryMoveToCell(currentPiece, cellX, cellY)
+    ) {
+      return;
+    }
+
     // If the selection is the same, do nothing
     if (currentPiece === piece) {
       return;
     }
 
     // If clicked on other player's piece or own piece without moves, deselect
-    if (piece !== null && this._game.findPieceMoves(piece) === null) {
+    if (piece !== null &&
+      this._game.findPieceMoves(piece) === null) {
       this._inputState.selectedPiece = null;
-      return;
-    }
-
-    if (piece === null &&
-      this._inputState.selectedPiece !== null &&
-      this.tryMoveToCell(this._inputState.selectedPiece, cellX, cellY)) {
       return;
     }
 
