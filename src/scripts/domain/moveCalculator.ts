@@ -1,50 +1,106 @@
 import { Move } from 'domain/move';
 import { PieceInfo, WallCell } from 'domain/piece';
 import { BoardInfo } from 'domain/board';
-import { Vector2 } from 'math/Vector2';
+import { RVector2, Vector2 } from 'math/Vector2';
 
 export class MoveCalculator {
-  private static getSimpleMove(
+  private static readonly cardinalDirections: ReadonlyArray<RVector2> = [
+    new Vector2(0, 1),
+    new Vector2(1, 0),
+    new Vector2(0, -1),
+    new Vector2(-1, 0)
+  ];
+
+  private static readonly allDirections: ReadonlyArray<RVector2> = [
+    new Vector2(0, 1),
+    new Vector2(1, 0),
+    new Vector2(0, -1),
+    new Vector2(-1, 0),
+    new Vector2(-1, 1),
+    new Vector2(1, 1),
+    new Vector2(1, -1),
+    new Vector2(-1, -1)
+  ];
+
+  /**
+   * Find a non-capturing move for a pawn in a certain direction
+   */
+  private static getPawnMoveInDirection(
     board: BoardInfo,
     piece: PieceInfo,
-    dX: number,
-    dY: number,
+    dV: RVector2,
   ): Move | null {
-    let x = piece.x;
-    let y = piece.y;
+    const pos = piece.pos;
 
-    let cell = board.getCell(x + dX, y + dY);
+    pos.add(dV);
+
+    let cell = board.getCell(pos);
 
     while (
       cell !== null &&
       cell !== WallCell &&
-      cell.isWhite === piece.isWhite
+      cell.isWhite === piece.isWhite &&
+      !cell.isPromoted
     ) {
-      x += dX;
-      y += dY;
-
-      cell = board.getCell(x + dX, y + dY);
+      pos.add(dV);
+      cell = board.getCell(pos);
     }
 
     if (cell === null) {
-      return new Move([new Vector2(piece.x, piece.y), new Vector2(x + dX, y + dY)]);
+      return new Move([piece.pos, pos]);
     }
 
     return null;
   }
 
-  private static addSimpleMoves(
+  /**
+   * Adds the moves for a pawn
+   */
+  private static addPawnMoves(
     board: BoardInfo,
     moves: Move[],
     piece: PieceInfo,
   ) {
     const dY = piece.isWhite ? -1 : 1;
+    const dV = new Vector2(0, dY);
 
     for (let dX = -1; dX <= 1; ++dX) {
-      const move = this.getSimpleMove(board, piece, dX, dY);
+      dV.x = dX;
+      const move = this.getPawnMoveInDirection(board, piece, dV);
       if (move !== null) {
         moves.push(move);
       }
+    }
+  }
+
+  private static addKingMovesInDirection(
+    board: BoardInfo,
+    piece: PieceInfo,
+    moves: Move[],
+    dV: RVector2
+  ) {
+    const piecePos = piece.pos;
+    const pos = piecePos.clone();
+
+    pos.add(dV);
+
+    let cell = board.getCell(pos.x, pos.y);
+
+    while (cell === null) {
+      moves.push(new Move([piecePos, pos.clone()]));
+      pos.add(dV);
+
+      cell = board.getCell(pos);
+    }
+  }
+
+  private static addKingMoves(
+    board: BoardInfo,
+    moves: Move[],
+    piece: PieceInfo
+  ) {
+    for (const direction of this.allDirections) {
+      this.addKingMovesInDirection(board, piece, moves, direction);
     }
   }
 
@@ -59,9 +115,9 @@ export class MoveCalculator {
     const moves: Move[] = [];
 
     if (piece.isPromoted) {
-      // TBD
+      this.addKingMoves(board, moves, piece);
     } else {
-      this.addSimpleMoves(board, moves, piece);
+      this.addPawnMoves(board, moves, piece);
     }
 
     if (moves.length === 0) {

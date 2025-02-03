@@ -20,6 +20,10 @@ describe('Move tests', () => {
     assert.throws(() => new Move([Vector2.fromScalar(1), Vector2.fromScalar(-6)]))
   });
 
+  test('Creating - empty toRemove array', () => {
+    assert.throws(() => new Move([Vector2.fromScalar(1), Vector2.fromScalar(2)], []));
+  });
+
   const invalidCoordSet = [
     [-1, 0],
     [GameConstants.CellsPerSide, 0],
@@ -32,7 +36,7 @@ describe('Move tests', () => {
   });
 
   test('Empty moves', () => {
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     assert.throws(() => {
       new PieceMovesInfo(piece, []);

@@ -10,6 +10,7 @@ export interface RVector2 {
   readonly height: number;
 
   distanceTo(v: RVector2): number;
+  clone(): Vector2;
 }
 
 export class Vector2 extends Array implements RVector2 {
@@ -28,6 +29,17 @@ export class Vector2 extends Array implements RVector2 {
     const dY = a.y - b.y;
 
     return Math.sqrt(dX * dX + dY * dY);
+  }
+
+  public static fromJson(v: RVector2): Vector2 {
+    return new Vector2(v.x, v.y);
+  }
+
+  public toJson(): object {
+    return {
+      x: this.x,
+      y: this.y
+    };
   }
 
   public distanceTo(v: RVector2): number {
@@ -70,6 +82,13 @@ export class Vector2 extends Array implements RVector2 {
     return this.slice() as Vector2;
   }
 
+  public add(v: RVector2): Vector2 {
+    this.x += v.x;
+    this.y += v.y;
+
+    return this;
+  }
+
   public mul(x: number): Vector2 {
     this.x *= x;
     this.y *= x;
@@ -82,6 +101,10 @@ export class Vector2 extends Array implements RVector2 {
     this.y /= x;
 
     return this;
+  }
+
+  public toString(): string {
+    return `(${this.x}, ${this.y})`;
   }
 
   public static sub(a: RVector2, b: RVector2): Vector2 {

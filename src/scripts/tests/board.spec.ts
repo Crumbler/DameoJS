@@ -67,16 +67,16 @@ describe('Board tests', () => {
 
   test('Fill from pieces', () => {
     const board = new Board();
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     board.fillBoard([piece]);
 
-    assert.strictEqual(board.getCell(piece.x, piece.y), piece);
+    assert.strictEqual(board.getCell(piece.pos), piece);
   });
 
   test('Fill with duplicate pieces throws error', () => {
     const board = new Board();
-    const piece = new Piece(false, 0, 0);
+    const piece = new Piece(false, new Vector2());
 
     assert.throws(() => {
       board.fillBoard([piece, piece]);
@@ -99,6 +99,25 @@ describe('Board tests', () => {
     board.reset();
 
     testBoardFilled(board);
+  });
+
+  describe('Removal', () => {
+    test('Success', () => {
+      const board = new Board();
+      board.fillStandardBoard();
+
+      board.removePiece(Vector2.fromScalar(0));
+
+      assert.strictEqual(board.dataView[0][0], null);
+    });
+
+    test('Throw on removing from empty cell', () => {
+      const board = new Board();
+
+      assert.throws(() => {
+        board.removePiece(new Vector2(0, 0));
+      });
+    });
   });
 
   describe('Movement', () => {

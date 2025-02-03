@@ -1,10 +1,16 @@
-import { Piece } from 'domain/piece';
+import { Piece, PieceInfo } from 'domain/piece';
 import { RVector2 } from 'math/Vector2';
 
 export class Move {
-  public constructor(public readonly path: ReadonlyArray<RVector2>) {
+  public constructor(
+    public readonly path: ReadonlyArray<RVector2>,
+    public readonly toRemove: ReadonlyArray<PieceInfo> | null = null) {
     if (path.length < 2) {
       throw new Error('Path must contain at least 2 points');
+    }
+
+    if (toRemove !== null && toRemove.length === 0) {
+      throw new Error('toRemove array must have at least 1 piece if not null');
     }
 
     for (const point of path) {

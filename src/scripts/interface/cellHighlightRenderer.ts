@@ -27,8 +27,8 @@ export class CellHighlightRenderer {
     context.fillStyle = InterfaceColors.SelectedCell;
 
     context.fillRect(
-      piece.x * cellSize,
-      piece.y * cellSize,
+      piece.pos.x * cellSize,
+      piece.pos.y * cellSize,
       cellSize,
       cellSize,
     );
@@ -68,8 +68,8 @@ export class CellHighlightRenderer {
       }
 
       context.fillRect(
-        rPiece.x * cellSize,
-        rPiece.y * cellSize,
+        rPiece.pos.x * cellSize,
+        rPiece.pos.y * cellSize,
         cellSize,
         cellSize,
       );

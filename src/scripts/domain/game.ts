@@ -5,7 +5,6 @@ import { Move, PieceMovesInfo } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
-import { Vector2 } from 'math/Vector2';
 import { GameState } from 'domain/gameState';
 
 export interface GameInteractable {
@@ -141,18 +140,33 @@ export class Game implements GameInfo, GameInteractable {
     return null;
   }
 
-  public performMove(pieceToMove: PieceInfo, move: Move) {
-    const pieceMoveInfo = this._moveInfos.find((mi) => mi.piece === pieceToMove);
+  public performMove(pieceToMoveInfo: PieceInfo, move: Move) {
+    const pieceMoveInfo = this._moveInfos.find((mi) => mi.piece === pieceToMoveInfo);
     if (!pieceMoveInfo) {
-      throw new Error('Unable to find moves for piece ' + pieceToMove);
+      throw new Error('Unable to find moves for piece ' + pieceToMoveInfo);
     }
+
+    const pieceToMove = pieceMoveInfo.piece;
 
     const hasMove = pieceMoveInfo.moves.includes(move);
     if (!hasMove) {
       throw new Error(`The piece ${pieceToMove} does not have the move ${move}`);
     }
 
-    this._board.movePiece(new Vector2(pieceToMove.x, pieceToMove.y), move.lastPoint);
+    this._board.movePiece(pieceToMove.pos, move.lastPoint);
+
+    if (pieceToMove.shouldBePromoted) {
+      pieceToMove.promote();
+    }
+
+    if (move.toRemove !== null) {
+      const piecesToRemove = move.toRemove;
+      for (const piece of piecesToRemove) {
+        this._board.removePiece(piece.pos);
+      }
+
+      this._pieces = this._pieces.filter(p => !piecesToRemove.includes(p));
+    }
 
     this.swapPlayer();
 
@@ -184,7 +198,7 @@ export class Game implements GameInfo, GameInteractable {
 
   public get state(): GameState {
     return {
-      pieces: this._pieces.map(p => p.toJson()),
+      pieces: this._pieces.map(p => p.toJson() as PieceInfo),
       canUndo: this._canUndo,
       currentPlayer: this._currentPlayer
     };

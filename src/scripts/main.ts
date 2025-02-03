@@ -75,7 +75,7 @@ function onLoad() {
 function getState(): AppState {
   return {
     gameState: game.state,
-    elapsedTime: game.canUndo ? GameTimer.getElapsedTime() : 0
+    elapsedTime: game.state.canUndo ? GameTimer.getElapsedTime() : 0
   };
 }
 

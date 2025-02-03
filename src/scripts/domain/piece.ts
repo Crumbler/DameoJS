@@ -1,11 +1,11 @@
 import { GameConstants } from 'domain/gameConstants';
-import { RVector2 } from 'math/Vector2';
+import { RVector2, Vector2 } from 'math/Vector2';
 
 export interface PieceInfo {
-  readonly x: number;
-  readonly y: number;
+  readonly pos: Vector2;
   readonly isPromoted: boolean;
   readonly isWhite: boolean;
+  readonly shouldBePromoted: boolean;
 }
 
 /**
@@ -18,10 +18,8 @@ export type Wall = -1;
 export const WallCell: Wall = -1;
 
 export class Piece implements PieceInfo {
-  public readonly isWhite: boolean;
   private _isPromoted: boolean;
-  private _x: number;
-  private _y: number;
+  private _pos: Vector2;
 
   public static checkCoordinate(coord: number, coordName: string) {
     if (coord !== (coord | 0)) {
@@ -36,47 +34,40 @@ export class Piece implements PieceInfo {
   }
 
   public static fromJson(info: PieceInfo): Piece {
-    return new Piece(info.isWhite, info.x, info.y, info.isPromoted);
+    return new Piece(info.isWhite, Vector2.fromJson(info.pos), info.isPromoted);
   }
 
-  public toJson(): PieceInfo {
+  public toJson(): object {
     return {
-      x: this._x,
-      y: this._y,
       isWhite: this.isWhite,
-      isPromoted: this._isPromoted
-    }
+      isPromoted: this.isPromoted,
+      pos: this._pos.toJson()
+    };
   }
 
-  public constructor(isWhite: boolean, x: number, y: number, isPromoted = false) {
-    Piece.checkCoordinate(x, 'X');
-    Piece.checkCoordinate(y, 'Y');
+  public constructor(public readonly isWhite: boolean, pos: RVector2, isPromoted = false) {
+    Piece.checkCoordinate(pos.x, 'X');
+    Piece.checkCoordinate(pos.y, 'Y');
 
     this.isWhite = isWhite;
     this._isPromoted = isPromoted;
 
-    this._x = x;
-    this._y = y;
+    this._pos = pos.clone();
   }
 
   public get isPromoted() {
     return this._isPromoted;
   }
 
-  public get x(): number {
-    return this._x;
-  }
-
-  public get y(): number {
-    return this._y;
+  public get pos(): Vector2 {
+    return this._pos.clone();
   }
 
   public moveTo(to: RVector2) {
     Piece.checkCoordinate(to.x, 'X');
     Piece.checkCoordinate(to.y, 'Y');
 
-    this._x = to.x;
-    this._y = to.y;
+    this._pos = to.clone();
   }
 
   public promote() {
@@ -85,5 +76,11 @@ export class Piece implements PieceInfo {
     }
 
     this._isPromoted = true;
+  }
+
+  public get shouldBePromoted(): boolean {
+    const backRowY = this.isWhite ? 0 : GameConstants.CellsPerSide - 1;
+
+    return this._pos.y === backRowY && !this._isPromoted;
   }
 }
