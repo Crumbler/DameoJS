@@ -156,16 +156,16 @@ export class Game implements GameInfo, GameInteractable {
     this._board.movePiece(pieceToMove.pos, move.lastPoint);
 
     if (pieceToMove.shouldBePromoted) {
-      console.log('Promoted');
       pieceToMove.promote();
     }
 
     if (move.toRemove !== null) {
-      for (const piece of move.toRemove) {
+      const piecesToRemove = move.toRemove;
+      for (const piece of piecesToRemove) {
         this._board.removePiece(piece.pos);
       }
 
-      this._pieces = this._pieces.filter(p => !move.toRemove!.includes(p));
+      this._pieces = this._pieces.filter(p => !piecesToRemove.includes(p));
     }
 
     this.swapPlayer();

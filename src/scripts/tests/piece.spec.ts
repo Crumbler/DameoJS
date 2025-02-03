@@ -87,7 +87,7 @@ describe('Piece tests', () => {
     [false, GameConstants.CellsPerSide - 1, true]
   ] as const;
 
-  test.for(promotionParamSet)('Creating with invalid coords: %i %i', ([isWhite, y, promotion]) => {
+  test.for(promotionParamSet)('Creating with white: %s, y: %i, promotion: %s', ([isWhite, y, promotion]) => {
     const piece = new Piece(isWhite, new Vector2(0, y));
 
     assert.strictEqual(piece.shouldBePromoted, promotion);

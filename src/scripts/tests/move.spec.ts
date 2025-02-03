@@ -21,7 +21,7 @@ describe('Move tests', () => {
   });
 
   test('Creating - empty toRemove array', () => {
-    assert.throws(() => new Move([Vector2.fromScalar(1), Vector2.fromScalar(-6)], []));
+    assert.throws(() => new Move([Vector2.fromScalar(1), Vector2.fromScalar(2)], []));
   });
 
   const invalidCoordSet = [
