@@ -27,6 +27,10 @@ export class Move {
     return this.path[this.path.length - 1];
   }
 
+  public get isAttackMove(): boolean {
+    return this.toRemove !== null;
+  }
+
   public get length() {
     let length = 0;
     for (let i = 0; i < this.path.length - 1; ++i) {

@@ -1,5 +1,5 @@
 import { Move } from 'domain/move';
-import { PieceInfo, WallCell } from 'domain/piece';
+import { PieceInfo, Wall, WallCell } from 'domain/piece';
 import { BoardInfo } from 'domain/board';
 import { RVector2, Vector2 } from 'math/Vector2';
 
@@ -125,5 +125,110 @@ export class MoveCalculator {
     }
 
     return moves;
+  }
+
+  private static addPawnAttackMoves(
+    board: BoardInfo,
+    moves: Move[],
+    piece: PieceInfo,
+  ) {
+
+  }
+
+  private static addKingAttackMoves(
+    board: BoardInfo,
+    moves: Move[],
+    piece: PieceInfo
+  ) {
+
+  }
+
+  /**
+   * Calculates all the possible attack moves for a given piece
+   * @returns Move array if there are any available moves, otherwise null
+   */
+  public static calculateAttackMoves(
+    board: BoardInfo,
+    piece: PieceInfo,
+  ): Move[] | null {
+    const moves: Move[] = [];
+
+    if (piece.isPromoted) {
+      this.addKingAttackMoves(board, moves, piece);
+    } else {
+      this.addPawnAttackMoves(board, moves, piece);
+    }
+
+    if (moves.length === 0) {
+      return null;
+    }
+
+    return moves;
+  }
+
+  private static pawnHasAttackMoves(
+    board: BoardInfo,
+    piece: PieceInfo
+  ): boolean {
+    for (const direction of this.cardinalDirections) {
+      const pos = piece.pos.clone();
+
+      pos.add(direction);
+
+      const cell1 = board.getCell(pos);
+
+      pos.add(direction);
+
+      const cell2 = board.getCell(pos);
+
+      if (cell1 !== WallCell &&
+        cell1 !== null &&
+        cell1.isWhite !== piece.isWhite &&
+        cell2 === null) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private static kingHasAttackMoves(
+    board: BoardInfo,
+    piece: PieceInfo
+  ): boolean {
+    for (const direction of this.cardinalDirections) {
+      const pos = piece.pos.clone();
+
+      let cell1: PieceInfo | null | Wall = null;
+
+      do {
+        pos.add(direction);
+        cell1 = board.getCell(pos);
+      } while (cell1 === null);
+
+      pos.add(direction);
+
+      const cell2 = board.getCell(pos);
+
+      if (cell1 !== WallCell &&
+        cell1 !== null &&
+        cell1.isWhite !== piece.isWhite &&
+        cell2 === null) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public static hasAttackMoves(
+    board: BoardInfo,
+    piece: PieceInfo
+  ): boolean {
+    if (piece.isPromoted) {
+      return this.kingHasAttackMoves(board, piece);
+    }
+
+    return this.pawnHasAttackMoves(board, piece);
   }
 }

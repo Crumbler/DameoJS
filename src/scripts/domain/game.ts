@@ -39,8 +39,13 @@ export class Game implements GameInfo, GameInteractable {
   private _moveInfos: Array<PieceMovesInfo> = [];
   private _eventSubject = new Subject<GameEvent>();
 
-  private calculatePieceMoves(boardView: BoardInfo, piece: Piece) {
-    const moves = MoveCalculator.calculateMoves(boardView, piece);
+  private calculatePieceMoves(boardView: BoardInfo, piece: Piece, anyAttackMoves: boolean) {
+    let moves: Move[] | null = null;
+    if (anyAttackMoves) {
+      moves = MoveCalculator.calculateAttackMoves(boardView, piece);
+    } else {
+      moves = MoveCalculator.calculateMoves(boardView, piece);
+    }
     if (moves !== null) {
       this._moveInfos.push(new PieceMovesInfo(piece, moves));
     }
@@ -51,12 +56,23 @@ export class Game implements GameInfo, GameInteractable {
 
     const isWhite = this._currentPlayer === Player.White;
 
+    let anyAttackMoves = false;
     for (const piece of this._pieces) {
       if (piece.isWhite !== isWhite) {
         continue;
       }
 
-      this.calculatePieceMoves(this._board, piece);
+      if (MoveCalculator.hasAttackMoves(this._board, piece)) {
+        anyAttackMoves = true;
+        break;
+      }
+    }
+
+    for (const piece of this._pieces) {
+      if (piece.isWhite !== isWhite) {
+        continue;
+      }
+      this.calculatePieceMoves(this._board, piece, anyAttackMoves);
     }
   }
 
