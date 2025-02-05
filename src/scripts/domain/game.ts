@@ -74,6 +74,34 @@ export class Game implements GameInfo, GameInteractable {
       }
       this.calculatePieceMoves(this._board, piece, anyAttackMoves);
     }
+
+    if (anyAttackMoves) {
+      this.filterAttackMoves();
+    }
+  }
+
+  /**
+   * Filter attack moves so that only the
+   * attack moves that take the most pieces
+   * are left
+   */
+  private filterAttackMoves() {
+    // Calculate max pieces taken
+    let maxPiecesTaken = 2;
+    for (const moveInfo of this._moveInfos) {
+      for (const move of moveInfo.moves) {
+        maxPiecesTaken = Math.max(maxPiecesTaken, move.toRemove!.length);
+      }
+    }
+
+    // Remove moves without enough pieces taken
+    for (const moveInfo of this._moveInfos) {
+      moveInfo.moves = moveInfo.moves.filter(m =>
+        m.toRemove?.length !== maxPiecesTaken);
+    }
+
+    // Remove move infos without moves
+    this._moveInfos = this._moveInfos.filter(mi => mi.moves.length !== 0);
   }
 
   /**

@@ -44,7 +44,7 @@ export class Move {
 export class PieceMovesInfo {
   public constructor(
     public readonly piece: Piece,
-    public readonly moves: ReadonlyArray<Move>,
+    public moves: Move[],
   ) {
     if (moves.length === 0) {
       throw new Error('Moves may not be empty');
