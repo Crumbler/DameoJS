@@ -38,7 +38,7 @@ export class Vector2 extends Array implements RVector2 {
   public toJson(): object {
     return {
       x: this.x,
-      y: this.y
+      y: this.y,
     };
   }
 
@@ -85,6 +85,13 @@ export class Vector2 extends Array implements RVector2 {
   public add(v: RVector2): Vector2 {
     this.x += v.x;
     this.y += v.y;
+
+    return this;
+  }
+
+  public sub(v: RVector2): Vector2 {
+    this.x -= v.x;
+    this.y -= v.y;
 
     return this;
   }

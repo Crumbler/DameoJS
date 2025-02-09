@@ -1,6 +1,13 @@
 import { Piece, PieceInfo } from 'domain/piece';
 import { Player } from 'domain/player';
-import { CanUndoChangedEvent, GameEvent, GameEventHandler, GameResetEvent, PiecesChangedEvent, PlayerChangedEvent } from 'domain/gameEvent';
+import {
+  CanUndoChangedEvent,
+  GameEvent,
+  GameEventHandler,
+  GameResetEvent,
+  PiecesChangedEvent,
+  PlayerChangedEvent,
+} from 'domain/gameEvent';
 import { Move, PieceMovesInfo } from 'domain/move';
 import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
@@ -39,13 +46,18 @@ export class Game implements GameInfo, GameInteractable {
   private _moveInfos: Array<PieceMovesInfo> = [];
   private _eventSubject = new Subject<GameEvent>();
 
-  private calculatePieceMoves(boardView: BoardInfo, piece: Piece, anyAttackMoves: boolean) {
+  private calculatePieceMoves(
+    boardView: BoardInfo,
+    piece: Piece,
+    anyAttackMoves: boolean,
+  ) {
     let moves: Move[] | null = null;
     if (anyAttackMoves) {
       moves = MoveCalculator.calculateAttackMoves(boardView, piece);
     } else {
       moves = MoveCalculator.calculateMoves(boardView, piece);
     }
+
     if (moves !== null) {
       this._moveInfos.push(new PieceMovesInfo(piece, moves));
     }
@@ -87,7 +99,7 @@ export class Game implements GameInfo, GameInteractable {
    */
   private filterAttackMoves() {
     // Calculate max pieces taken
-    let maxPiecesTaken = 2;
+    let maxPiecesTaken = 1;
     for (const moveInfo of this._moveInfos) {
       for (const move of moveInfo.moves) {
         maxPiecesTaken = Math.max(maxPiecesTaken, move.toRemove!.length);
@@ -96,12 +108,13 @@ export class Game implements GameInfo, GameInteractable {
 
     // Remove moves without enough pieces taken
     for (const moveInfo of this._moveInfos) {
-      moveInfo.moves = moveInfo.moves.filter(m =>
-        m.toRemove?.length !== maxPiecesTaken);
+      moveInfo.moves = moveInfo.moves.filter(
+        (m) => m.toRemove!.length === maxPiecesTaken,
+      );
     }
 
     // Remove move infos without moves
-    this._moveInfos = this._moveInfos.filter(mi => mi.moves.length !== 0);
+    this._moveInfos = this._moveInfos.filter((mi) => mi.moves.length !== 0);
   }
 
   /**
@@ -122,11 +135,12 @@ export class Game implements GameInfo, GameInteractable {
   }
 
   private fillPieces(pieces: ReadonlyArray<PieceInfo>) {
-    this._pieces = pieces.map(p => Piece.fromJson(p));
+    this._pieces = pieces.map((p) => Piece.fromJson(p));
   }
 
   private swapPlayer() {
-    this._currentPlayer = this._currentPlayer === Player.Red ? Player.White : Player.Red;
+    this._currentPlayer =
+      this._currentPlayer === Player.Red ? Player.White : Player.Red;
     this.onPlayerChanged();
   }
 
@@ -185,7 +199,9 @@ export class Game implements GameInfo, GameInteractable {
   }
 
   public performMove(pieceToMoveInfo: PieceInfo, move: Move) {
-    const pieceMoveInfo = this._moveInfos.find((mi) => mi.piece === pieceToMoveInfo);
+    const pieceMoveInfo = this._moveInfos.find(
+      (mi) => mi.piece === pieceToMoveInfo,
+    );
     if (!pieceMoveInfo) {
       throw new Error('Unable to find moves for piece ' + pieceToMoveInfo);
     }
@@ -194,10 +210,12 @@ export class Game implements GameInfo, GameInteractable {
 
     const hasMove = pieceMoveInfo.moves.includes(move);
     if (!hasMove) {
-      throw new Error(`The piece ${pieceToMove} does not have the move ${move}`);
+      throw new Error(
+        `The piece ${pieceToMove} does not have the move ${move}`,
+      );
     }
 
-    this._board.movePiece(pieceToMove.pos, move.lastPoint);
+    this._board.movePiece(pieceToMove.pos, move.lastPoint, move.isAttackMove);
 
     if (pieceToMove.shouldBePromoted) {
       pieceToMove.promote();
@@ -209,7 +227,7 @@ export class Game implements GameInfo, GameInteractable {
         this._board.removePiece(piece.pos);
       }
 
-      this._pieces = this._pieces.filter(p => !piecesToRemove.includes(p));
+      this._pieces = this._pieces.filter((p) => !piecesToRemove.includes(p));
     }
 
     this.swapPlayer();
@@ -242,9 +260,9 @@ export class Game implements GameInfo, GameInteractable {
 
   public get state(): GameState {
     return {
-      pieces: this._pieces.map(p => p.toJson() as PieceInfo),
+      pieces: this._pieces.map((p) => p.toJson() as PieceInfo),
       canUndo: this._canUndo,
-      currentPlayer: this._currentPlayer
+      currentPlayer: this._currentPlayer,
     };
   }
 

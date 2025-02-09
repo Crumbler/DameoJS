@@ -4,7 +4,8 @@ import { RVector2 } from 'math/Vector2';
 export class Move {
   public constructor(
     public readonly path: ReadonlyArray<RVector2>,
-    public readonly toRemove: ReadonlyArray<PieceInfo> | null = null) {
+    public readonly toRemove: ReadonlyArray<PieceInfo> | null = null,
+  ) {
     if (path.length < 2) {
       throw new Error('Path must contain at least 2 points');
     }

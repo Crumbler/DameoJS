@@ -8,7 +8,7 @@ export class MoveCalculator {
     new Vector2(0, 1),
     new Vector2(1, 0),
     new Vector2(0, -1),
-    new Vector2(-1, 0)
+    new Vector2(-1, 0),
   ];
 
   private static readonly allDirections: ReadonlyArray<RVector2> = [
@@ -19,7 +19,7 @@ export class MoveCalculator {
     new Vector2(-1, 1),
     new Vector2(1, 1),
     new Vector2(1, -1),
-    new Vector2(-1, -1)
+    new Vector2(-1, -1),
   ];
 
   /**
@@ -77,7 +77,7 @@ export class MoveCalculator {
     board: BoardInfo,
     piece: PieceInfo,
     moves: Move[],
-    dV: RVector2
+    dV: RVector2,
   ) {
     const piecePos = piece.pos;
     const pos = piecePos.clone();
@@ -97,7 +97,7 @@ export class MoveCalculator {
   private static addKingMoves(
     board: BoardInfo,
     moves: Move[],
-    piece: PieceInfo
+    piece: PieceInfo,
   ) {
     for (const direction of this.allDirections) {
       this.addKingMovesInDirection(board, piece, moves, direction);
@@ -127,21 +127,112 @@ export class MoveCalculator {
     return moves;
   }
 
+  private static areOpposite(a: RVector2, b: RVector2): boolean {
+    return a.x === -b.x && a.y === -b.y;
+  }
+
+  private static addPawnAttackMovesRec(
+    board: BoardInfo,
+    moves: Move[],
+    piece: PieceInfo,
+    path: Vector2[],
+    toRemove: PieceInfo[],
+    pos: Vector2,
+  ) {
+    let hasFurtherMoves = false;
+
+    for (const direction of this.cardinalDirections) {
+      pos.add(direction);
+
+      const cell1 = board.getCell(pos);
+
+      // If not enemy piece or removed piece
+      if (
+        cell1 === null ||
+        cell1 === WallCell ||
+        cell1.isWhite === piece.isWhite ||
+        toRemove.includes(cell1)
+      ) {
+        pos.sub(direction);
+        continue;
+      }
+
+      pos.add(direction);
+
+      const cell2 = board.getCell(pos);
+
+      // If not empty cell or self
+      if (cell2 !== null && cell2 !== piece) {
+        pos.sub(direction).sub(direction);
+        continue;
+      }
+
+      hasFurtherMoves = true;
+
+      toRemove.push(cell1);
+      path.push(pos.clone());
+
+      this.addPawnAttackMovesRec(board, moves, piece, path, toRemove, pos);
+
+      path.pop();
+      toRemove.pop();
+
+      pos.sub(direction).sub(direction);
+    }
+
+    if (!hasFurtherMoves) {
+      moves.push(new Move(path.slice(), toRemove.slice()));
+    }
+  }
+
   private static addPawnAttackMoves(
     board: BoardInfo,
     moves: Move[],
     piece: PieceInfo,
   ) {
+    const toRemove: PieceInfo[] = [];
+    const pos = piece.pos;
+    const path: Vector2[] = [pos.clone()];
 
+    for (const direction of this.cardinalDirections) {
+      pos.add(direction);
+      const cell1 = board.getCell(pos);
+
+      // If not enemy piece
+      if (
+        cell1 === null ||
+        cell1 === WallCell ||
+        cell1.isWhite === piece.isWhite
+      ) {
+        pos.sub(direction);
+        continue;
+      }
+
+      pos.add(direction);
+      const cell2 = board.getCell(pos);
+
+      // If not empty cell
+      if (cell2 !== null) {
+        pos.sub(direction);
+        pos.sub(direction);
+        continue;
+      }
+
+      toRemove.push(cell1);
+      path.push(pos.clone());
+
+      this.addPawnAttackMovesRec(board, moves, piece, path, toRemove, pos);
+
+      path.pop();
+      toRemove.pop();
+    }
   }
 
   private static addKingAttackMoves(
     board: BoardInfo,
     moves: Move[],
-    piece: PieceInfo
-  ) {
-
-  }
+    piece: PieceInfo,
+  ) {}
 
   /**
    * Calculates all the possible attack moves for a given piece
@@ -168,7 +259,7 @@ export class MoveCalculator {
 
   private static pawnHasAttackMoves(
     board: BoardInfo,
-    piece: PieceInfo
+    piece: PieceInfo,
   ): boolean {
     for (const direction of this.cardinalDirections) {
       const pos = piece.pos.clone();
@@ -181,10 +272,12 @@ export class MoveCalculator {
 
       const cell2 = board.getCell(pos);
 
-      if (cell1 !== WallCell &&
+      if (
+        cell1 !== WallCell &&
         cell1 !== null &&
         cell1.isWhite !== piece.isWhite &&
-        cell2 === null) {
+        cell2 === null
+      ) {
         return true;
       }
     }
@@ -194,7 +287,7 @@ export class MoveCalculator {
 
   private static kingHasAttackMoves(
     board: BoardInfo,
-    piece: PieceInfo
+    piece: PieceInfo,
   ): boolean {
     for (const direction of this.cardinalDirections) {
       const pos = piece.pos.clone();
@@ -210,10 +303,12 @@ export class MoveCalculator {
 
       const cell2 = board.getCell(pos);
 
-      if (cell1 !== WallCell &&
+      if (
+        cell1 !== WallCell &&
         cell1 !== null &&
         cell1.isWhite !== piece.isWhite &&
-        cell2 === null) {
+        cell2 === null
+      ) {
         return true;
       }
     }
@@ -221,10 +316,7 @@ export class MoveCalculator {
     return false;
   }
 
-  public static hasAttackMoves(
-    board: BoardInfo,
-    piece: PieceInfo
-  ): boolean {
+  public static hasAttackMoves(board: BoardInfo, piece: PieceInfo): boolean {
     if (piece.isPromoted) {
       return this.kingHasAttackMoves(board, piece);
     }
