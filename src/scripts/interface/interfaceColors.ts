@@ -33,7 +33,7 @@ export class InterfaceColors {
   /**
    * Crown color
    */
-  public static readonly CrownColor = 'rgb(255, 255, 9)'
+  public static readonly CrownColor = 'rgb(255, 255, 9)';
 
   /**
    * Highlight color of a cell that can be selected
@@ -49,4 +49,9 @@ export class InterfaceColors {
    * Highlight color for a cell that can be moved to
    */
   public static readonly ReachableCell = 'rgb(53, 255, 2)';
+
+  /**
+   * Highlight color for a cell that is passed through when attacking
+   */
+  public static readonly PassedThroughCell = 'rgb(35, 109, 179)';
 }

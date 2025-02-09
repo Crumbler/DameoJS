@@ -8,6 +8,20 @@ import type { CellHighlightRenderer } from 'interface/cellHighlightRenderer';
 import type { PieceRenderer } from 'interface/pieceRenderer';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
+export interface RSelectionState {
+  selectedPiece: PieceInfo | null;
+  moves: ReadonlyArray<Move> | null;
+  selectedMoveIndex: number | null;
+}
+
+export class SelectionState implements RSelectionState {
+  public constructor(
+    public selectedPiece: PieceInfo | null,
+    public moves: ReadonlyArray<Move> | null,
+    public selectedMoveIndex: number | null,
+  ) {}
+}
+
 /**
  * Holds input state and delegates input events between InputHandler and the cell and piece renderers
  * @see {@link InputHandler}
@@ -18,24 +32,34 @@ export class InputState {
   /**
    * The currently selected piece
    */
-  private _selectedPiece: PieceInfo | null = null;
+  private _selection = new SelectionState(null, null, null);
 
   /**
    * Indicates whether any game input is being accepted right now
    */
   private _acceptingInput = true;
 
-  private readonly _selectedPieceChangedSubject = new Subject<PieceInfo | null>();
+  private readonly _selectionChangedSubject = new Subject<RSelectionState>();
   private readonly _acceptingInputSubject = new Subject<boolean>();
   private readonly _performMoveSubject = new Subject<[PieceInfo, Move]>();
 
   public get selectedPiece(): PieceInfo | null {
-    return this._selectedPiece;
+    return this._selection.selectedPiece;
   }
 
-  public set selectedPiece(piece: PieceInfo | null) {
-    this._selectedPiece = piece;
+  public setSelection(
+    piece: PieceInfo | null,
+    moves: ReadonlyArray<Move> | null,
+    moveIndex: number | null,
+  ) {
+    this._selection.selectedPiece = piece;
+    this._selection.moves = moves;
+    this._selection.selectedMoveIndex = moveIndex;
     this.raisePieceChange();
+  }
+
+  public deselectPiece() {
+    this.setSelection(null, null, null);
   }
 
   public get acceptingInput(): boolean {
@@ -48,7 +72,7 @@ export class InputState {
   }
 
   private raisePieceChange() {
-    this._selectedPieceChangedSubject.raise(this.selectedPiece);
+    this._selectionChangedSubject.raise(this._selection);
   }
 
   private raiseAcceptingInput() {
@@ -59,8 +83,8 @@ export class InputState {
     this._performMoveSubject.raise([piece, move]);
   }
 
-  public subscribeToSelectedPieceChanges(handler: EventHandler<PieceInfo | null>) {
-    this._selectedPieceChangedSubject.subscribe(handler);
+  public subscribeToSelectionChanges(handler: EventHandler<RSelectionState>) {
+    this._selectionChangedSubject.subscribe(handler);
   }
 
   public subscribeAcceptingInput(handler: EventHandler<boolean>) {

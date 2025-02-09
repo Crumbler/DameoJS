@@ -21,19 +21,20 @@ export class InputHandler {
 
   private registerHandlers() {
     this._container.addEventListener(
-      'click', (event) => this.handleClick(event),
+      'click',
+      (event) => this.handleClick(event),
       true,
     );
 
-    this._undoButton.addEventListener(
-      'click', () => this.handleUndoClick()
-    )
+    this._undoButton.addEventListener('click', () => this.handleUndoClick());
 
-    this._restartButton.addEventListener(
-      'click', () => this.handleResetClick()
+    this._restartButton.addEventListener('click', () =>
+      this.handleResetClick(),
     );
 
-    this._inputState.subscribeAcceptingInput((param) => this.onAcceptingInputChanged(param));
+    this._inputState.subscribeAcceptingInput((param) =>
+      this.onAcceptingInputChanged(param),
+    );
 
     this._game.registerEventHandler((event) => this.handleGameEvent(event));
   }
@@ -53,7 +54,7 @@ export class InputHandler {
 
     this._game.performMove(this._pieceToMove, this._moveToPerform);
 
-    this._inputState.selectedPiece = null;
+    this._inputState.deselectPiece();
 
     this._pieceToMove = null;
     this._moveToPerform = null;
@@ -74,14 +75,18 @@ export class InputHandler {
     this._inputState.raisePerformMove(piece, move);
   }
 
-  private tryMoveToCell(piece: PieceInfo, cellX: number, cellY: number): boolean {
+  private tryMoveToCell(
+    piece: PieceInfo,
+    cellX: number,
+    cellY: number,
+  ): boolean {
     const moves = this._game.findPieceMoves(piece);
 
     if (moves === null) {
       return false;
     }
 
-    const move = moves.find(mv => {
+    const move = moves.find((mv) => {
       const lastPoint = mv.lastPoint;
 
       return lastPoint.x === cellX && lastPoint.y === cellY;
@@ -105,7 +110,8 @@ export class InputHandler {
 
     const currentPiece = this._inputState.selectedPiece;
 
-    if (currentPiece !== null &&
+    if (
+      currentPiece !== null &&
       this.tryMoveToCell(currentPiece, cellX, cellY)
     ) {
       return;
@@ -116,14 +122,22 @@ export class InputHandler {
       return;
     }
 
+    let pieceMoves: ReadonlyArray<Move> | null = null;
+
     // If clicked on other player's piece or own piece without moves, deselect
-    if (piece !== null &&
-      this._game.findPieceMoves(piece) === null) {
-      this._inputState.selectedPiece = null;
-      return;
+    if (piece !== null) {
+      pieceMoves = this._game.findPieceMoves(piece);
+      if (pieceMoves === null) {
+        this._inputState.deselectPiece();
+        return;
+      }
     }
 
-    this._inputState.selectedPiece = piece;
+    this._inputState.setSelection(
+      piece,
+      pieceMoves,
+      pieceMoves !== null && pieceMoves[0].toRemove !== null ? 0 : null,
+    );
   }
 
   private handleClick(event: MouseEvent) {
@@ -159,17 +173,20 @@ export class InputHandler {
 
     if (restart) {
       this._game.reset();
-      this._inputState.selectedPiece = null;
+      this._inputState.deselectPiece();
     }
   }
 
   private handleGameEvent(event: GameEvent) {
     if (event.isGameResetEvent()) {
-      this._inputState.selectedPiece = null;
+      this._inputState.deselectPiece();
     }
   }
 
-  public constructor(game: GameInfo & GameInteractable, inputState: InputState) {
+  public constructor(
+    game: GameInfo & GameInteractable,
+    inputState: InputState,
+  ) {
     this._game = game;
 
     this._inputState = inputState;
