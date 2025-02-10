@@ -209,8 +209,7 @@ export class MoveCalculator {
 
       // If not empty cell
       if (cell2 !== null) {
-        pos.sub(direction);
-        pos.sub(direction);
+        pos.sub(direction).sub(direction);
         continue;
       }
 
@@ -221,6 +220,8 @@ export class MoveCalculator {
 
       path.pop();
       toRemove.pop();
+
+      pos.sub(direction).sub(direction);
     }
   }
 
