@@ -98,6 +98,14 @@ button {
     font-size: 30cqh;
     color: white;
   }
+
+  &:not(.can-undo) > .header-button.undo-dependent,
+  &.moving > .header-button.moving-dependent,
+  &:not(.cycling) > .header-button.cycle-dependent {
+    background-color: rgb(150, 150, 150);
+    cursor: auto;
+    pointer-events: none;
+  }
 }
 
 .header-button {
@@ -118,12 +126,6 @@ button {
 
   &:last-child {
     margin-right: 20cqh;
-  }
-
-  &:not(.always-clickable):is(:not(.can-undo), .moving) {
-    background-color: rgb(150, 150, 150);
-    cursor: auto;
-    pointer-events: none;
   }
 }
 

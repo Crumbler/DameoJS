@@ -1,19 +1,17 @@
 import { GameInfo } from 'domain/game';
 import { GameEvent } from 'domain/gameEvent';
 import { Elements } from 'interface/elements';
-import { InputState } from 'interface/inputState';
+import { InputState, RSelectionState } from 'interface/inputState';
 
 /**
  * Manages header changes
  */
 export class HeaderManager {
-  private readonly undoButton = Elements.findById('undo-button');
-  private readonly restartButton = Elements.findById('restart-button');
-  private readonly _inputState: InputState;
+  private readonly header = Elements.findById('game-header');
 
   public constructor(game: GameInfo, inputState: InputState) {
-    this._inputState = inputState;
-    this._inputState.subscribeAcceptingInput((val) => this.setButtonsMoving(val));
+    inputState.subscribeAcceptingInput((acceptingInput) => this.setMoving(!acceptingInput));
+    inputState.subscribeToSelectionChanges(selection => this.onSelectionChange(selection));
     game.registerEventHandler((event) => this.onGameEvent(event));
   }
 
@@ -23,33 +21,31 @@ export class HeaderManager {
     }
   }
 
-  private addClass(classname: string) {
-    this.undoButton.classList.add(classname);
-    this.restartButton.classList.add(classname);
+  private setHeaderClass(className: string, isSet: boolean) {
+    if (isSet) {
+      this.header.classList.add(className);
+    } else {
+      this.header.classList.remove(className);
+    }
   }
 
-  private removeClass(classname: string) {
-    this.undoButton.classList.remove(classname);
-    this.restartButton.classList.remove(classname);
+  private onSelectionChange(selection: RSelectionState) {
+    const hasMoreThanOneMove = selection.moves !== null && selection.moves.length > 1;
+    const hasSelectionIndex = selection.selectedMoveIndex !== null;
+    const isCycling = hasMoreThanOneMove && hasSelectionIndex;
+
+    this.setCycling(isCycling);
+  }
+
+  private setCycling(cycling: boolean) {
+    this.setHeaderClass('cycling', cycling);
   }
 
   private setCanUndo(canUndo: boolean) {
-    const canUndoClass = 'can-undo';
-
-    if (canUndo) {
-      this.addClass(canUndoClass);
-    } else {
-      this.removeClass(canUndoClass);
-    }
+    this.setHeaderClass('can-undo', canUndo);
   }
 
-  private setButtonsMoving(moving: boolean) {
-    const movingClass = 'moving';
-
-    if (moving) {
-      this.removeClass(movingClass);
-    } else {
-      this.addClass(movingClass);
-    }
+  private setMoving(moving: boolean) {
+    this.setHeaderClass('moving', moving);
   }
 }

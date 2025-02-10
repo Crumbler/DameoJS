@@ -19,7 +19,7 @@ export class SelectionState implements RSelectionState {
     public selectedPiece: PieceInfo | null,
     public moves: ReadonlyArray<Move> | null,
     public selectedMoveIndex: number | null,
-  ) {}
+  ) { }
 }
 
 /**
@@ -47,6 +47,10 @@ export class InputState {
     return this._selection.selectedPiece;
   }
 
+  public get selection(): RSelectionState {
+    return this._selection;
+  }
+
   public setSelection(
     piece: PieceInfo | null,
     moves: ReadonlyArray<Move> | null,
@@ -55,6 +59,11 @@ export class InputState {
     this._selection.selectedPiece = piece;
     this._selection.moves = moves;
     this._selection.selectedMoveIndex = moveIndex;
+    this.raisePieceChange();
+  }
+
+  public setSelectionindex(index: number) {
+    this._selection.selectedMoveIndex = index;
     this.raisePieceChange();
   }
 

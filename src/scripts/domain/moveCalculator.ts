@@ -127,10 +127,6 @@ export class MoveCalculator {
     return moves;
   }
 
-  private static areOpposite(a: RVector2, b: RVector2): boolean {
-    return a.x === -b.x && a.y === -b.y;
-  }
-
   private static addPawnAttackMovesRec(
     board: BoardInfo,
     moves: Move[],
@@ -232,7 +228,7 @@ export class MoveCalculator {
     board: BoardInfo,
     moves: Move[],
     piece: PieceInfo,
-  ) {}
+  ) { }
 
   /**
    * Calculates all the possible attack moves for a given piece
