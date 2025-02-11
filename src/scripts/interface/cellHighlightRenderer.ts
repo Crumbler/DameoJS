@@ -44,7 +44,7 @@ export class CellHighlightRenderer {
       this.render(selection),
     );
 
-    this.render(null);
+    this.render(inputState.selection);
   }
 
   private renderSelectedPiece(piece: PieceInfo) {
@@ -100,27 +100,30 @@ export class CellHighlightRenderer {
     }
   }
 
-  private renderAttack(move: Move) {
-    const context = this._cellContext;
+  private static renderAttackMoveBegin(
+    context: CanvasRenderingContext2D,
+    move: Move) {
     const cellSize = InterfaceConstants.CellSize;
-
-    context.fillStyle = InterfaceColors.SelectedCell;
     const pos = move.firstPoint.clone();
-
-    context.fillRect(pos.x * cellSize, pos.y * cellSize, cellSize, cellSize);
-
-    context.fillStyle = InterfaceColors.PassedThroughCell;
-
     const secondPos = move.path[1];
     const initialDir = CellHighlightRenderer.getCardinalDirection(
       pos,
       secondPos,
     );
+
     do {
       pos.add(initialDir);
 
       context.fillRect(pos.x * cellSize, pos.y * cellSize, cellSize, cellSize);
     } while (!pos.equals(secondPos));
+  }
+
+  private static renderAttackMoveFull(
+    context: CanvasRenderingContext2D,
+    move: Move
+  ) {
+    const cellSize = InterfaceConstants.CellSize;
+    const pos = new Vector2();
 
     for (let i = 1; i < move.path.length - 1; ++i) {
       pos.x = move.path[i].x;
@@ -141,6 +144,53 @@ export class CellHighlightRenderer {
         pos.add(dir);
       } while (!pos.equals(endPoint));
     }
+  }
+
+  private renderAttackMoves(moves: ReadonlyArray<Move>) {
+    const context = this._cellContext;
+    const cellSize = InterfaceConstants.CellSize;
+
+    context.fillStyle = InterfaceColors.SelectedCell;
+    const initialPos = moves[0].firstPoint.clone();
+
+    context.fillRect(initialPos.x * cellSize, initialPos.y * cellSize, cellSize, cellSize);
+
+    context.fillStyle = InterfaceColors.PassedThroughCell;
+
+    for (const move of moves) {
+      CellHighlightRenderer.renderAttackMoveBegin(context, move);
+
+      CellHighlightRenderer.renderAttackMoveFull(context, move);
+    }
+
+    context.fillStyle = InterfaceColors.ReachableCell;
+
+    for (const move of moves) {
+      const endPos = move.lastPoint;
+
+      context.fillRect(
+        endPos.x * cellSize,
+        endPos.y * cellSize,
+        cellSize,
+        cellSize,
+      );
+    }
+  }
+
+  private renderAttackMove(move: Move) {
+    const context = this._cellContext;
+    const cellSize = InterfaceConstants.CellSize;
+
+    context.fillStyle = InterfaceColors.SelectedCell;
+    const initialPos = move.firstPoint.clone();
+
+    context.fillRect(initialPos.x * cellSize, initialPos.y * cellSize, cellSize, cellSize);
+
+    context.fillStyle = InterfaceColors.PassedThroughCell;
+
+    CellHighlightRenderer.renderAttackMoveBegin(context, move);
+
+    CellHighlightRenderer.renderAttackMoveFull(context, move);
 
     context.fillStyle = InterfaceColors.ReachableCell;
     const endPos = move.lastPoint;
@@ -153,25 +203,24 @@ export class CellHighlightRenderer {
     );
   }
 
-  private render(selection: RSelectionState | null) {
+  private render(selection: RSelectionState) {
     const context = this._cellContext;
     const boardSize = InterfaceConstants.BoardSize;
 
     context.clearRect(0, 0, boardSize, boardSize);
 
-    if (selection === null) {
+    if (selection.selectedPiece === null) {
       this.renderSelectablePieces(null);
-      return;
     }
 
-    const isAttackMove = selection.selectedMoveIndex !== null;
+    const isAttackMove = selection.moves !== null && selection.moves[0].isAttackMove;
 
     if (isAttackMove) {
-      if (selection.moves === null) {
-        throw new Error('Cannot render attack move when moves is null');
+      if (selection.selectedMoveIndex === null) {
+        this.renderAttackMoves(selection.moves!);
+      } else {
+        this.renderAttackMove(selection.moves![selection.selectedMoveIndex]);
       }
-
-      this.renderAttack(selection.moves[selection.selectedMoveIndex as number]);
     } else {
       this.renderSelectablePieces(selection.selectedPiece);
 

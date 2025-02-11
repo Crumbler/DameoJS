@@ -9,9 +9,10 @@ import type { PieceRenderer } from 'interface/pieceRenderer';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export interface RSelectionState {
-  selectedPiece: PieceInfo | null;
-  moves: ReadonlyArray<Move> | null;
-  selectedMoveIndex: number | null;
+  readonly selectedPiece: PieceInfo | null;
+  readonly moves: ReadonlyArray<Move> | null;
+  readonly selectedMoveIndex: number | null;
+  readonly canCycle: boolean;
 }
 
 export class SelectionState implements RSelectionState {
@@ -20,6 +21,13 @@ export class SelectionState implements RSelectionState {
     public moves: ReadonlyArray<Move> | null,
     public selectedMoveIndex: number | null,
   ) { }
+
+  public get canCycle(): boolean {
+    return this.selectedPiece !== null &&
+      this.moves !== null &&
+      this.moves.length > 1 &&
+      this.moves[0].isAttackMove;
+  }
 }
 
 /**

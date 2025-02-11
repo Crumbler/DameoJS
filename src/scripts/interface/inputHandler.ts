@@ -85,7 +85,7 @@ export class InputHandler {
     cellX: number,
     cellY: number,
   ): boolean {
-    const moves = this._game.findPieceMoves(piece);
+    const moves = this._inputState.selection.moves;
 
     if (moves === null) {
       return false;
@@ -97,17 +97,13 @@ export class InputHandler {
 
     // If selection attack move
     if (selection.selectedMoveIndex !== null) {
-      if (selection.moves === null) {
-        throw new Error('Trying to select a move but moves is null');
-      }
+      move = moves[selection.selectedMoveIndex];
 
-      move = selection.moves[selection.selectedMoveIndex];
-
-      // If clicking on endpoint of other move, don't do anything
+      // Make sure we're clicking on the last point of the selected move
       if (move.lastPoint.x !== cellX || move.lastPoint.y !== cellY) {
         return false;
       }
-      // Selection regular move
+      // Selection without an index, find move by last point
     } else {
       move = moves.find((mv) => {
         const lastPoint = mv.lastPoint;
@@ -115,7 +111,7 @@ export class InputHandler {
         return lastPoint.x === cellX && lastPoint.y === cellY;
       }) ?? null;
 
-      if (!move) {
+      if (move === null) {
         return false;
       }
     }
@@ -160,7 +156,7 @@ export class InputHandler {
     this._inputState.setSelection(
       piece,
       pieceMoves,
-      pieceMoves !== null && pieceMoves[0].toRemove !== null ? 0 : null,
+      null
     );
   }
 
@@ -189,15 +185,23 @@ export class InputHandler {
   }
 
   private handleCycleClick() {
+    if (!this._inputState.acceptingInput) {
+      return;
+    }
+
     const selection = this._inputState.selection;
 
-    if (selection.selectedMoveIndex === null ||
-      selection.moves === null ||
+    if (selection.moves === null ||
       selection.moves.length <= 1) {
       return;
     }
 
-    const newIndex = (selection.selectedMoveIndex + 1) % selection.moves.length;
+    let newIndex = 0;
+
+    if (selection.selectedMoveIndex !== null) {
+      newIndex = (selection.selectedMoveIndex + 1) % selection.moves.length;
+    }
+
     this._inputState.setSelectionindex(newIndex);
   }
 

@@ -30,11 +30,7 @@ export class HeaderManager {
   }
 
   private onSelectionChange(selection: RSelectionState) {
-    const hasMoreThanOneMove = selection.moves !== null && selection.moves.length > 1;
-    const hasSelectionIndex = selection.selectedMoveIndex !== null;
-    const isCycling = hasMoreThanOneMove && hasSelectionIndex;
-
-    this.setCycling(isCycling);
+    this.setCycling(selection.canCycle);
   }
 
   private setCycling(cycling: boolean) {
