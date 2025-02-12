@@ -61,7 +61,7 @@ export class CellHighlightRenderer {
     );
   }
 
-  private renderSimpleMoves(moves: ReadonlyArray<Move>) {
+  private renderSimpleMovesForPiece(moves: ReadonlyArray<Move>) {
     const context = this._cellContext;
     const cellSize = InterfaceConstants.CellSize;
 
@@ -146,7 +146,7 @@ export class CellHighlightRenderer {
     }
   }
 
-  private renderAttackMoves(moves: ReadonlyArray<Move>) {
+  private renderAttackMovesForPiece(moves: ReadonlyArray<Move>) {
     const context = this._cellContext;
     const cellSize = InterfaceConstants.CellSize;
 
@@ -209,25 +209,27 @@ export class CellHighlightRenderer {
 
     context.clearRect(0, 0, boardSize, boardSize);
 
-    if (selection.selectedPiece === null) {
-      this.renderSelectablePieces(null);
-    }
+    const hasSelectedPiece = selection.selectedPiece !== null;
 
-    const isAttackMove = selection.moves !== null && selection.moves[0].isAttackMove;
+    const anyAttackMoves = selection.moves !== null && selection.moves[0].isAttackMove;
 
-    if (isAttackMove) {
-      if (selection.selectedMoveIndex === null) {
-        this.renderAttackMoves(selection.moves!);
+    const hasMoveIndex = selection.selectedMoveIndex !== null;
+
+    this.renderSelectablePieces(selection.selectedPiece);
+
+    if (anyAttackMoves) {
+      if (!hasMoveIndex) {
+        this.renderAttackMovesForPiece(selection.moves!);
       } else {
         this.renderAttackMove(selection.moves![selection.selectedMoveIndex]);
       }
-    } else {
-      this.renderSelectablePieces(selection.selectedPiece);
 
-      if (selection.selectedPiece !== null) {
-        this.renderSelectedPiece(selection.selectedPiece);
-        this.renderSimpleMoves(selection.moves!);
-      }
+      return;
+    }
+
+    if (hasSelectedPiece) {
+      this.renderSelectedPiece(selection.selectedPiece);
+      this.renderSimpleMovesForPiece(selection.moves!);
     }
   }
 }

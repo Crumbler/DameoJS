@@ -147,8 +147,12 @@ export class InputHandler {
     // If clicked on other player's piece or own piece without moves, deselect
     if (piece !== null) {
       pieceMoves = this._game.findPieceMoves(piece);
+
       if (pieceMoves === null) {
-        this._inputState.deselectPiece();
+        if (currentPiece !== null) {
+          this._inputState.deselectPiece();
+        }
+
         return;
       }
     }
