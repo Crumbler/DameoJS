@@ -4,7 +4,8 @@ import { RVector2 } from 'math/Vector2';
 export class Move {
   public constructor(
     public readonly path: ReadonlyArray<RVector2>,
-    public readonly toRemove: ReadonlyArray<PieceInfo> | null = null) {
+    public readonly toRemove: ReadonlyArray<PieceInfo> | null = null,
+  ) {
     if (path.length < 2) {
       throw new Error('Path must contain at least 2 points');
     }
@@ -27,6 +28,10 @@ export class Move {
     return this.path[this.path.length - 1];
   }
 
+  public get isAttackMove(): boolean {
+    return this.toRemove !== null;
+  }
+
   public get length() {
     let length = 0;
     for (let i = 0; i < this.path.length - 1; ++i) {
@@ -40,7 +45,7 @@ export class Move {
 export class PieceMovesInfo {
   public constructor(
     public readonly piece: Piece,
-    public readonly moves: ReadonlyArray<Move>,
+    public moves: Move[],
   ) {
     if (moves.length === 0) {
       throw new Error('Moves may not be empty');

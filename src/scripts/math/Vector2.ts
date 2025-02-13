@@ -11,6 +11,7 @@ export interface RVector2 {
 
   distanceTo(v: RVector2): number;
   clone(): Vector2;
+  equals(v: RVector2): boolean;
 }
 
 export class Vector2 extends Array implements RVector2 {
@@ -38,12 +39,16 @@ export class Vector2 extends Array implements RVector2 {
   public toJson(): object {
     return {
       x: this.x,
-      y: this.y
+      y: this.y,
     };
   }
 
   public distanceTo(v: RVector2): number {
     return Vector2.length(this, v);
+  }
+
+  public equals(v: RVector2): boolean {
+    return this.x === v.x && this.y === v.y;
   }
 
   public get x(): number {
@@ -85,6 +90,13 @@ export class Vector2 extends Array implements RVector2 {
   public add(v: RVector2): Vector2 {
     this.x += v.x;
     this.y += v.y;
+
+    return this;
+  }
+
+  public sub(v: RVector2): Vector2 {
+    this.x -= v.x;
+    this.y -= v.y;
 
     return this;
   }

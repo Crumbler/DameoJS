@@ -5,7 +5,7 @@ import { RVector2, Vector2 } from 'math/Vector2';
 
 export interface BoardInfo {
   readonly dataView: ReadonlyMatrix<PieceInfo | null>;
-  getCell(x: number, y: number): PieceInfo | Wall | null
+  getCell(x: number, y: number): PieceInfo | Wall | null;
   getCell(pos: RVector2): PieceInfo | Wall | null;
 }
 
@@ -119,7 +119,7 @@ export class Board implements BoardInfo {
     return this._board[y][x];
   }
 
-  public movePiece(from: RVector2, to: RVector2) {
+  public movePiece(from: RVector2, to: RVector2, isAttackMove = false) {
     Piece.checkCoordinate(from.x, 'fromX');
     Piece.checkCoordinate(from.y, 'fromY');
     Piece.checkCoordinate(to.x, 'toX');
@@ -133,14 +133,14 @@ export class Board implements BoardInfo {
 
     const newCell = this._board[to.y][to.x];
 
-    if (newCell !== null) {
+    if (!isAttackMove && newCell !== null) {
       throw new Error(`Cell at ${to.x} ${to.y} not empty`);
     }
 
-    this._board[to.y][to.x] = piece;
     this._board[from.y][from.x] = null;
+    this._board[to.y][to.x] = piece;
 
-    piece.moveTo(to);
+    piece!.moveTo(to);
   }
 
   public removePiece(from: RVector2) {

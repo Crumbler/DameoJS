@@ -16,24 +16,30 @@ export class InputHandler {
   private readonly _container = Elements.findById('game-container');
   private readonly _undoButton = Elements.findById('undo-button');
   private readonly _restartButton = Elements.findById('restart-button');
+  private readonly _cycleButton = Elements.findById('cycle-button');
   private _pieceToMove: PieceInfo | null = null;
   private _moveToPerform: Move | null = null;
 
   private registerHandlers() {
     this._container.addEventListener(
-      'click', (event) => this.handleClick(event),
+      'click',
+      (event) => this.handleClick(event),
       true,
     );
 
-    this._undoButton.addEventListener(
-      'click', () => this.handleUndoClick()
-    )
+    this._undoButton.addEventListener('click', () => this.handleUndoClick());
 
-    this._restartButton.addEventListener(
-      'click', () => this.handleResetClick()
+    this._restartButton.addEventListener('click', () =>
+      this.handleResetClick(),
     );
 
-    this._inputState.subscribeAcceptingInput((param) => this.onAcceptingInputChanged(param));
+    this._cycleButton.addEventListener('click', () => {
+      this.handleCycleClick();
+    });
+
+    this._inputState.subscribeAcceptingInput((param) =>
+      this.onAcceptingInputChanged(param),
+    );
 
     this._game.registerEventHandler((event) => this.handleGameEvent(event));
   }
@@ -53,7 +59,7 @@ export class InputHandler {
 
     this._game.performMove(this._pieceToMove, this._moveToPerform);
 
-    this._inputState.selectedPiece = null;
+    this._inputState.deselectPiece();
 
     this._pieceToMove = null;
     this._moveToPerform = null;
@@ -74,21 +80,40 @@ export class InputHandler {
     this._inputState.raisePerformMove(piece, move);
   }
 
-  private tryMoveToCell(piece: PieceInfo, cellX: number, cellY: number): boolean {
-    const moves = this._game.findPieceMoves(piece);
+  private tryMoveToCell(
+    piece: PieceInfo,
+    cellX: number,
+    cellY: number,
+  ): boolean {
+    const moves = this._inputState.selection.moves;
 
     if (moves === null) {
       return false;
     }
 
-    const move = moves.find(mv => {
-      const lastPoint = mv.lastPoint;
+    let move: Move | null = null;
 
-      return lastPoint.x === cellX && lastPoint.y === cellY;
-    });
+    const selection = this._inputState.selection;
 
-    if (!move) {
-      return false;
+    // If selection attack move
+    if (selection.selectedMoveIndex !== null) {
+      move = moves[selection.selectedMoveIndex];
+
+      // Make sure we're clicking on the last point of the selected move
+      if (move.lastPoint.x !== cellX || move.lastPoint.y !== cellY) {
+        return false;
+      }
+      // Selection without an index, find move by last point
+    } else {
+      move = moves.find((mv) => {
+        const lastPoint = mv.lastPoint;
+
+        return lastPoint.x === cellX && lastPoint.y === cellY;
+      }) ?? null;
+
+      if (move === null) {
+        return false;
+      }
     }
 
     this.startMove(piece, move);
@@ -105,7 +130,8 @@ export class InputHandler {
 
     const currentPiece = this._inputState.selectedPiece;
 
-    if (currentPiece !== null &&
+    if (
+      currentPiece !== null &&
       this.tryMoveToCell(currentPiece, cellX, cellY)
     ) {
       return;
@@ -116,14 +142,26 @@ export class InputHandler {
       return;
     }
 
+    let pieceMoves: ReadonlyArray<Move> | null = null;
+
     // If clicked on other player's piece or own piece without moves, deselect
-    if (piece !== null &&
-      this._game.findPieceMoves(piece) === null) {
-      this._inputState.selectedPiece = null;
-      return;
+    if (piece !== null) {
+      pieceMoves = this._game.findPieceMoves(piece);
+
+      if (pieceMoves === null) {
+        if (currentPiece !== null) {
+          this._inputState.deselectPiece();
+        }
+
+        return;
+      }
     }
 
-    this._inputState.selectedPiece = piece;
+    this._inputState.setSelection(
+      piece,
+      pieceMoves,
+      null
+    );
   }
 
   private handleClick(event: MouseEvent) {
@@ -150,6 +188,27 @@ export class InputHandler {
     }
   }
 
+  private handleCycleClick() {
+    if (!this._inputState.acceptingInput) {
+      return;
+    }
+
+    const selection = this._inputState.selection;
+
+    if (selection.moves === null ||
+      selection.moves.length <= 1) {
+      return;
+    }
+
+    let newIndex = 0;
+
+    if (selection.selectedMoveIndex !== null) {
+      newIndex = (selection.selectedMoveIndex + 1) % selection.moves.length;
+    }
+
+    this._inputState.setSelectionindex(newIndex);
+  }
+
   private async handleResetClick() {
     if (!this._inputState.acceptingInput) {
       return;
@@ -159,17 +218,20 @@ export class InputHandler {
 
     if (restart) {
       this._game.reset();
-      this._inputState.selectedPiece = null;
+      this._inputState.deselectPiece();
     }
   }
 
   private handleGameEvent(event: GameEvent) {
     if (event.isGameResetEvent()) {
-      this._inputState.selectedPiece = null;
+      this._inputState.deselectPiece();
     }
   }
 
-  public constructor(game: GameInfo & GameInteractable, inputState: InputState) {
+  public constructor(
+    game: GameInfo & GameInteractable,
+    inputState: InputState,
+  ) {
     this._game = game;
 
     this._inputState = inputState;

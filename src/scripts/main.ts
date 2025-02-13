@@ -17,11 +17,13 @@ import { VisibilityMonitor } from 'interface/visibilityMonitor';
 import { AppState } from 'interface/appState';
 import { AppStateLoader } from 'interface/appStateLoader';
 import { AppStateSaver } from 'interface/appStateSaver';
+import { CycleIcon } from 'interface/images/cycleIcon';
 
 function generateImages() {
   new FullscreenIcon().generateAndSet();
   new RestartIcon().generateAndSet();
   new UndoIcon().generateAndSet();
+  new CycleIcon().generateAndSet();
 }
 
 let pieceRenderer: PieceRenderer;
