@@ -315,6 +315,7 @@ export class MoveCalculator {
 
   public static hasAttackMoves(board: BoardInfo, piece: PieceInfo): boolean {
     if (piece.isPromoted) {
+      return false;
       return this.kingHasAttackMoves(board, piece);
     }
 
