@@ -225,11 +225,123 @@ export class MoveCalculator {
     }
   }
 
+  private static addKingAttackMovesRec(
+    board: BoardInfo,
+    moves: Move[],
+    piece: PieceInfo,
+    path: Vector2[],
+    toRemove: PieceInfo[],
+    pos: Vector2,
+  ) {
+    let hasFurtherMoves = false;
+
+    for (const direction of this.cardinalDirections) {
+      pos.add(direction);
+
+      const cell1 = board.getCell(pos);
+
+      // If not enemy piece or removed piece
+      if (
+        cell1 === null ||
+        cell1 === WallCell ||
+        cell1.isWhite === piece.isWhite ||
+        toRemove.includes(cell1)
+      ) {
+        pos.sub(direction);
+        continue;
+      }
+
+      pos.add(direction);
+
+      const cell2 = board.getCell(pos);
+
+      // If not empty cell or self
+      if (cell2 !== null && cell2 !== piece) {
+        pos.sub(direction).sub(direction);
+        continue;
+      }
+
+      hasFurtherMoves = true;
+
+      toRemove.push(cell1);
+      path.push(pos.clone());
+
+      this.addPawnAttackMovesRec(board, moves, piece, path, toRemove, pos);
+
+      path.pop();
+      toRemove.pop();
+
+      pos.sub(direction).sub(direction);
+    }
+
+    if (!hasFurtherMoves) {
+      moves.push(new Move(path.slice(), toRemove.slice()));
+    }
+  }
+
+  private static kingHasAttacksAlongLine() {
+
+  }
+
+  private static tryAddKingAttackInDirection() {
+
+  }
+
   private static addKingAttackMoves(
     board: BoardInfo,
     moves: Move[],
     piece: PieceInfo,
-  ) { }
+  ) {
+    const toRemove: PieceInfo[] = [];
+    const pos = piece.pos;
+    const path: Vector2[] = [pos.clone()];
+
+    for (const direction of this.cardinalDirections) {
+      let cell1: Wall | null | PieceInfo = null;
+
+      let cellsAdvanced = 0;
+
+      do {
+        ++cellsAdvanced;
+        pos.add(direction);
+        cell1 = board.getCell(pos);
+      } while (
+        cell1 === null
+      );
+
+      // If not enemy piece
+      if (
+        cell1 === WallCell ||
+        cell1.isWhite === piece.isWhite
+      ) {
+        pos.x -= direction.x * cellsAdvanced;
+        pos.y -= direction.y * cellsAdvanced;
+        continue;
+      }
+
+      ++cellsAdvanced;
+      pos.add(direction);
+      const cell2 = board.getCell(pos);
+
+      // If not empty cell
+      if (cell2 !== null) {
+        pos.x -= direction.x * cellsAdvanced;
+        pos.y -= direction.y * cellsAdvanced;
+        continue;
+      }
+
+      toRemove.push(cell1);
+      path.push(pos.clone());
+
+      this.addKingAttackMovesRec(board, moves, piece, path, toRemove, pos);
+
+      path.pop();
+      toRemove.pop();
+
+      pos.x -= direction.x * cellsAdvanced;
+      pos.y -= direction.y * cellsAdvanced;
+    }
+  }
 
   /**
    * Calculates all the possible attack moves for a given piece
@@ -315,7 +427,6 @@ export class MoveCalculator {
 
   public static hasAttackMoves(board: BoardInfo, piece: PieceInfo): boolean {
     if (piece.isPromoted) {
-      return false;
       return this.kingHasAttackMoves(board, piece);
     }
 
