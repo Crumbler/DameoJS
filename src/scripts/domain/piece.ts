@@ -41,11 +41,15 @@ export class Piece implements PieceInfo {
     return {
       isWhite: this.isWhite,
       isPromoted: this.isPromoted,
-      pos: this._pos.toJson()
+      pos: this._pos.toJson(),
     };
   }
 
-  public constructor(public readonly isWhite: boolean, pos: RVector2, isPromoted = false) {
+  public constructor(
+    public readonly isWhite: boolean,
+    pos: RVector2,
+    isPromoted = false,
+  ) {
     Piece.checkCoordinate(pos.x, 'X');
     Piece.checkCoordinate(pos.y, 'Y');
 

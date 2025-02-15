@@ -104,6 +104,10 @@ export class MoveCalculator {
     }
   }
 
+  private static areOpposite(a: RVector2, b: RVector2): boolean {
+    return a.x === -b.x && a.y === -b.y;
+  }
+
   /**
    * Calculates all the possible moves for a given piece
    * @returns Move array if there are any available moves, otherwise null
@@ -232,59 +236,282 @@ export class MoveCalculator {
     path: Vector2[],
     toRemove: PieceInfo[],
     pos: Vector2,
+    direction: RVector2,
   ) {
-    let hasFurtherMoves = false;
+    if (!this.kingHasAttacksAlongLine(board, piece, toRemove, pos, direction)) {
+      this.kingAddStopsAlongLine(
+        board,
+        moves,
+        piece,
+        path,
+        toRemove,
+        pos,
+        direction,
+      );
 
-    for (const direction of this.cardinalDirections) {
-      pos.add(direction);
+      return;
+    }
 
-      const cell1 = board.getCell(pos);
+    let cellsAdvanced = 0;
 
-      // If not enemy piece or removed piece
-      if (
-        cell1 === null ||
-        cell1 === WallCell ||
-        cell1.isWhite === piece.isWhite ||
-        toRemove.includes(cell1)
-      ) {
-        pos.sub(direction);
-        continue;
+    let cell1: Wall | PieceInfo | null = null;
+
+    do {
+      for (const dir of this.cardinalDirections) {
+        if (dir === direction || this.areOpposite(dir, direction)) {
+          continue;
+        }
+
+        this.tryAddKingAttackInDirection(
+          board,
+          moves,
+          piece,
+          path,
+          toRemove,
+          pos,
+          dir,
+        );
       }
 
       pos.add(direction);
+      ++cellsAdvanced;
 
-      const cell2 = board.getCell(pos);
+      cell1 = board.getCell(pos);
 
-      // If not empty cell or self
-      if (cell2 !== null && cell2 !== piece) {
-        pos.sub(direction).sub(direction);
-        continue;
-      }
+      // Advance while empty cell or
+      // own piece or
+      // removed piece
+    } while (
+      cell1 === null ||
+      (cell1 !== WallCell && (cell1 === piece || toRemove.includes(cell1)))
+    );
 
-      hasFurtherMoves = true;
+    // Wall or friendly piece
+    if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
+      pos.x -= direction.x * cellsAdvanced;
+      pos.y -= direction.y * cellsAdvanced;
+      return;
+    }
 
+    pos.add(direction);
+    ++cellsAdvanced;
+
+    const cell2 = board.getCell(pos);
+
+    // Free cell
+    const hasAttack =
+      cell2 === null ||
+      (cell2 !== WallCell && (cell2 === piece || toRemove.includes(cell2)));
+
+    if (hasAttack) {
       toRemove.push(cell1);
+
+      this.addKingAttackMovesRec(
+        board,
+        moves,
+        piece,
+        path,
+        toRemove,
+        pos,
+        direction,
+      );
+
+      toRemove.pop();
+    }
+
+    pos.x -= direction.x * cellsAdvanced;
+    pos.y -= direction.y * cellsAdvanced;
+  }
+
+  private static kingHasAttacksAlongLine(
+    board: BoardInfo,
+    piece: PieceInfo,
+    toRemove: ReadonlyArray<PieceInfo>,
+    pos: Vector2,
+    mainDir: RVector2,
+  ): boolean {
+    let cell: Wall | PieceInfo | null = null;
+
+    let cellsAdvanced = 0;
+
+    // While empty cell
+    while (
+      cell === null ||
+      (cell !== WallCell && (cell !== piece || toRemove.includes(cell)))
+    ) {
+      for (const dir of this.cardinalDirections) {
+        if (dir === mainDir || this.areOpposite(dir, mainDir)) {
+          continue;
+        }
+
+        if (this.kingHasAttackInDirection(board, piece, toRemove, pos, dir)) {
+          pos.x -= mainDir.x * cellsAdvanced;
+          pos.y -= mainDir.y * cellsAdvanced;
+
+          return true;
+        }
+      }
+
+      pos.add(mainDir);
+      ++cellsAdvanced;
+      cell = board.getCell(pos);
+    }
+
+    pos.x -= mainDir.x * cellsAdvanced;
+    pos.y -= mainDir.y * cellsAdvanced;
+
+    return false;
+  }
+
+  private static kingHasAttackInDirection(
+    board: BoardInfo,
+    piece: PieceInfo,
+    toRemove: ReadonlyArray<PieceInfo>,
+    pos: Vector2,
+    direction: RVector2,
+  ): boolean {
+    let hasAttack = false;
+    let cellsAdvanced = 0;
+
+    let cell1: Wall | PieceInfo | null = null;
+
+    do {
+      pos.add(direction);
+      ++cellsAdvanced;
+      cell1 = board.getCell(pos);
+
+      // Advance while empty cell or
+      // own piece or
+      // removed piece
+    } while (
+      cell1 === null ||
+      (cell1 !== WallCell && (cell1 === piece || toRemove.includes(cell1)))
+    );
+
+    // Wall or friendly piece
+    if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
+      pos.x -= direction.x * cellsAdvanced;
+      pos.y -= direction.y * cellsAdvanced;
+      return false;
+    }
+
+    pos.add(direction);
+    ++cellsAdvanced;
+    const cell2 = board.getCell(pos);
+
+    // Free cell
+    hasAttack =
+      cell2 === null ||
+      (cell2 !== WallCell && (cell2 === piece || toRemove.includes(cell2)));
+
+    pos.x -= direction.x * cellsAdvanced;
+    pos.y -= direction.y * cellsAdvanced;
+
+    return hasAttack;
+  }
+
+  private static kingAddStopsAlongLine(
+    board: BoardInfo,
+    moves: Move[],
+    piece: PieceInfo,
+    path: Vector2[],
+    toRemove: ReadonlyArray<PieceInfo>,
+    pos: Vector2,
+    direction: RVector2,
+  ) {
+    let cellsAdvanced = 0;
+
+    let cell = board.getCell(pos);
+
+    do {
       path.push(pos.clone());
 
-      this.addPawnAttackMovesRec(board, moves, piece, path, toRemove, pos);
+      moves.push(new Move(path.slice(), toRemove.slice()));
+
+      path.pop();
+
+      ++cellsAdvanced;
+      pos.add(direction);
+
+      cell = board.getCell(pos);
+    } while (
+      cell === null ||
+      (cell !== WallCell && (toRemove.includes(cell) || cell === piece))
+    );
+
+    pos.x -= direction.x * cellsAdvanced;
+    pos.y -= direction.y * cellsAdvanced;
+  }
+
+  private static tryAddKingAttackInDirection(
+    board: BoardInfo,
+    moves: Move[],
+    piece: PieceInfo,
+    path: Vector2[],
+    toRemove: PieceInfo[],
+    pos: Vector2,
+    direction: RVector2,
+  ) {
+    let cellsAdvanced = 0;
+
+    let cell1: Wall | PieceInfo | null = null;
+
+    do {
+      pos.add(direction);
+      ++cellsAdvanced;
+
+      cell1 = board.getCell(pos);
+
+      // Advance while empty cell or
+      // own piece or
+      // removed piece
+    } while (
+      cell1 === null ||
+      (cell1 !== WallCell && (cell1 === piece || toRemove.includes(cell1)))
+    );
+
+    // Wall or friendly piece
+    if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
+      pos.x -= direction.x * cellsAdvanced;
+      pos.y -= direction.y * cellsAdvanced;
+      return;
+    }
+
+    pos.add(direction);
+    ++cellsAdvanced;
+
+    const cell2 = board.getCell(pos);
+
+    // Free cell
+    const hasAttack =
+      cell2 === null ||
+      (cell2 !== WallCell && (cell2 === piece || toRemove.includes(cell2)));
+
+    if (hasAttack) {
+      toRemove.push(cell1);
+
+      const partPos = pos.clone();
+      partPos.x -= direction.x * cellsAdvanced;
+      partPos.y -= direction.y * cellsAdvanced;
+
+      path.push(partPos);
+
+      this.addKingAttackMovesRec(
+        board,
+        moves,
+        piece,
+        path,
+        toRemove,
+        pos,
+        direction,
+      );
 
       path.pop();
       toRemove.pop();
-
-      pos.sub(direction).sub(direction);
     }
 
-    if (!hasFurtherMoves) {
-      moves.push(new Move(path.slice(), toRemove.slice()));
-    }
-  }
-
-  private static kingHasAttacksAlongLine() {
-
-  }
-
-  private static tryAddKingAttackInDirection() {
-
+    pos.x -= direction.x * cellsAdvanced;
+    pos.y -= direction.y * cellsAdvanced;
   }
 
   private static addKingAttackMoves(
@@ -303,24 +530,23 @@ export class MoveCalculator {
 
       do {
         ++cellsAdvanced;
+
         pos.add(direction);
+
         cell1 = board.getCell(pos);
-      } while (
-        cell1 === null
-      );
+      } while (cell1 === null);
 
       // If not enemy piece
-      if (
-        cell1 === WallCell ||
-        cell1.isWhite === piece.isWhite
-      ) {
+      if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
         pos.x -= direction.x * cellsAdvanced;
         pos.y -= direction.y * cellsAdvanced;
         continue;
       }
 
       ++cellsAdvanced;
+
       pos.add(direction);
+
       const cell2 = board.getCell(pos);
 
       // If not empty cell
@@ -331,11 +557,17 @@ export class MoveCalculator {
       }
 
       toRemove.push(cell1);
-      path.push(pos.clone());
 
-      this.addKingAttackMovesRec(board, moves, piece, path, toRemove, pos);
+      this.addKingAttackMovesRec(
+        board,
+        moves,
+        piece,
+        path,
+        toRemove,
+        pos,
+        direction,
+      );
 
-      path.pop();
       toRemove.pop();
 
       pos.x -= direction.x * cellsAdvanced;
