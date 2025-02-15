@@ -271,17 +271,14 @@ export class Game implements GameInfo, GameInteractable {
   }
 
   private onPiecesChanged() {
-    console.log('Raised pieces changed event');
     this.raiseEvent(new PiecesChangedEvent());
   }
 
   private onGameReset() {
-    console.log('Raised game reset event');
     this.raiseEvent(new GameResetEvent());
   }
 
   private onPlayerChanged() {
-    console.log('Raised player changed event');
     this.raiseEvent(new PlayerChangedEvent(this._currentPlayer));
   }
 
