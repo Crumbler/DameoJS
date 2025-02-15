@@ -53,7 +53,6 @@ export class Piece implements PieceInfo {
     Piece.checkCoordinate(pos.x, 'X');
     Piece.checkCoordinate(pos.y, 'Y');
 
-    this.isWhite = isWhite;
     this._isPromoted = isPromoted;
 
     this._pos = pos.clone();
