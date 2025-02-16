@@ -147,6 +147,8 @@ export class MoveCalculator {
       const cell1 = board.getCell(pos);
 
       // If not enemy piece or removed piece
+      // Due to the way pawns attack we cannot encounter
+      // our own piece here
       if (
         cell1 === null ||
         cell1 === WallCell ||
@@ -238,7 +240,7 @@ export class MoveCalculator {
     pos: Vector2,
     direction: RVector2,
   ) {
-    if (!this.kingHasAttacksAlongLine(board, piece, toRemove, pos, direction)) {
+    if (!this.kingHasAttacksAlongLine(board, piece, pos, direction)) {
       this.kingAddStopsAlongLine(
         board,
         moves,
@@ -279,12 +281,8 @@ export class MoveCalculator {
       cell1 = board.getCell(pos);
 
       // Advance while empty cell or
-      // own piece or
-      // removed piece
-    } while (
-      cell1 === null ||
-      (cell1 !== WallCell && (cell1 === piece || toRemove.includes(cell1)))
-    );
+      // own piece
+    } while (cell1 === null || (cell1 !== WallCell && cell1 === piece));
 
     // Wall or friendly piece
     if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
@@ -299,9 +297,7 @@ export class MoveCalculator {
     const cell2 = board.getCell(pos);
 
     // Free cell
-    const hasAttack =
-      cell2 === null ||
-      (cell2 !== WallCell && (cell2 === piece || toRemove.includes(cell2)));
+    const hasAttack = cell2 === null || (cell2 !== WallCell && cell2 === piece);
 
     if (hasAttack) {
       toRemove.push(cell1);
@@ -326,7 +322,6 @@ export class MoveCalculator {
   private static kingHasAttacksAlongLine(
     board: BoardInfo,
     piece: PieceInfo,
-    toRemove: ReadonlyArray<PieceInfo>,
     pos: Vector2,
     mainDir: RVector2,
   ): boolean {
@@ -335,16 +330,13 @@ export class MoveCalculator {
     let cellsAdvanced = 0;
 
     // While empty cell
-    while (
-      cell === null ||
-      (cell !== WallCell && (cell !== piece || toRemove.includes(cell)))
-    ) {
+    while (cell === null || (cell !== WallCell && cell !== piece)) {
       for (const dir of this.cardinalDirections) {
         if (dir === mainDir || this.areOpposite(dir, mainDir)) {
           continue;
         }
 
-        if (this.kingHasAttackInDirection(board, piece, toRemove, pos, dir)) {
+        if (this.kingHasAttackInDirection(board, piece, pos, dir)) {
           pos.x -= mainDir.x * cellsAdvanced;
           pos.y -= mainDir.y * cellsAdvanced;
 
@@ -366,7 +358,6 @@ export class MoveCalculator {
   private static kingHasAttackInDirection(
     board: BoardInfo,
     piece: PieceInfo,
-    toRemove: ReadonlyArray<PieceInfo>,
     pos: Vector2,
     direction: RVector2,
   ): boolean {
@@ -381,12 +372,8 @@ export class MoveCalculator {
       cell1 = board.getCell(pos);
 
       // Advance while empty cell or
-      // own piece or
-      // removed piece
-    } while (
-      cell1 === null ||
-      (cell1 !== WallCell && (cell1 === piece || toRemove.includes(cell1)))
-    );
+      // own piece
+    } while (cell1 === null || (cell1 !== WallCell && cell1 === piece));
 
     // Wall or friendly piece
     if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
@@ -400,9 +387,7 @@ export class MoveCalculator {
     const cell2 = board.getCell(pos);
 
     // Free cell
-    hasAttack =
-      cell2 === null ||
-      (cell2 !== WallCell && (cell2 === piece || toRemove.includes(cell2)));
+    hasAttack = cell2 === null || (cell2 !== WallCell && cell2 === piece);
 
     pos.x -= direction.x * cellsAdvanced;
     pos.y -= direction.y * cellsAdvanced;
@@ -434,10 +419,7 @@ export class MoveCalculator {
       pos.add(direction);
 
       cell = board.getCell(pos);
-    } while (
-      cell === null ||
-      (cell !== WallCell && (toRemove.includes(cell) || cell === piece))
-    );
+    } while (cell === null || (cell !== WallCell && cell === piece));
 
     pos.x -= direction.x * cellsAdvanced;
     pos.y -= direction.y * cellsAdvanced;
@@ -463,15 +445,16 @@ export class MoveCalculator {
       cell1 = board.getCell(pos);
 
       // Advance while empty cell or
-      // own piece or
-      // removed piece
-    } while (
-      cell1 === null ||
-      (cell1 !== WallCell && (cell1 === piece || toRemove.includes(cell1)))
-    );
+      // own piece
+    } while (cell1 === null || (cell1 !== WallCell && cell1 === piece));
 
     // Wall or friendly piece
-    if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
+    // or removed piece
+    if (
+      cell1 === WallCell ||
+      cell1.isWhite === piece.isWhite ||
+      toRemove.includes(cell1)
+    ) {
       pos.x -= direction.x * cellsAdvanced;
       pos.y -= direction.y * cellsAdvanced;
       return;
@@ -483,9 +466,7 @@ export class MoveCalculator {
     const cell2 = board.getCell(pos);
 
     // Free cell
-    const hasAttack =
-      cell2 === null ||
-      (cell2 !== WallCell && (cell2 === piece || toRemove.includes(cell2)));
+    const hasAttack = cell2 === null || (cell2 !== WallCell && cell2 === piece);
 
     if (hasAttack) {
       toRemove.push(cell1);
