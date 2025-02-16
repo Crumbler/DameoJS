@@ -6,6 +6,8 @@ export interface PieceInfo {
   readonly isPromoted: boolean;
   readonly isWhite: boolean;
   readonly shouldBePromoted: boolean;
+
+  toJson(): object;
 }
 
 /**
@@ -79,6 +81,14 @@ export class Piece implements PieceInfo {
     }
 
     this._isPromoted = true;
+  }
+
+  public demote() {
+    if (!this._isPromoted) {
+      throw new Error('Piece cannot be demoted further');
+    }
+
+    this._isPromoted = false;
   }
 
   public get shouldBePromoted(): boolean {

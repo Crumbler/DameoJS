@@ -59,8 +59,6 @@ export class InputHandler {
 
     this._game.performMove(this._pieceToMove, this._moveToPerform);
 
-    this._inputState.deselectPiece();
-
     this._pieceToMove = null;
     this._moveToPerform = null;
   }
@@ -105,11 +103,12 @@ export class InputHandler {
       }
       // Selection without an index, find move by last point
     } else {
-      move = moves.find((mv) => {
-        const lastPoint = mv.lastPoint;
+      move =
+        moves.find((mv) => {
+          const lastPoint = mv.lastPoint;
 
-        return lastPoint.x === cellX && lastPoint.y === cellY;
-      }) ?? null;
+          return lastPoint.x === cellX && lastPoint.y === cellY;
+        }) ?? null;
 
       if (move === null) {
         return false;
@@ -157,11 +156,7 @@ export class InputHandler {
       }
     }
 
-    this._inputState.setSelection(
-      piece,
-      pieceMoves,
-      null
-    );
+    this._inputState.setSelection(piece, pieceMoves, null);
   }
 
   private handleClick(event: MouseEvent) {
@@ -186,6 +181,8 @@ export class InputHandler {
     if (!this._inputState.acceptingInput) {
       return;
     }
+
+    this._game.undoMove();
   }
 
   private handleCycleClick() {
@@ -195,8 +192,7 @@ export class InputHandler {
 
     const selection = this._inputState.selection;
 
-    if (selection.moves === null ||
-      selection.moves.length <= 1) {
+    if (selection.moves === null || selection.moves.length <= 1) {
       return;
     }
 
@@ -224,6 +220,10 @@ export class InputHandler {
 
   private handleGameEvent(event: GameEvent) {
     if (event.isGameResetEvent()) {
+      this._inputState.deselectPiece();
+    }
+
+    if (event.isPiecesChangedEvent()) {
       this._inputState.deselectPiece();
     }
   }

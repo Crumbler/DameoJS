@@ -84,7 +84,7 @@ function getState(): AppState {
   return {
     version: appStateVersion,
     gameState: game.state,
-    elapsedTime: game.state.canUndo ? GameTimer.getElapsedTime() : 0,
+    elapsedTime: game.canUndo ? GameTimer.getElapsedTime() : 0,
   };
 }
 

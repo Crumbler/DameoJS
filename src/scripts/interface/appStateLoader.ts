@@ -10,7 +10,7 @@ export class AppStateLoader {
 
     const state = JSON.parse(stateString) as AppState;
 
-    if (state.version !== appStateVersion) {
+    if (state?.version !== appStateVersion) {
       return null;
     }
 
