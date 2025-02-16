@@ -1,4 +1,4 @@
-import { Piece, PieceInfo, WallCell } from 'domain/piece';
+import { Piece, PieceInfo } from 'domain/piece';
 import { Player } from 'domain/player';
 import {
   CanUndoChangedEvent,
