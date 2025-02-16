@@ -13,9 +13,11 @@ import { MoveCalculator } from 'domain/moveCalculator';
 import { Board, BoardInfo } from 'domain/board';
 import { Subject } from 'misc/subject';
 import { GameState } from 'domain/gameState';
+import { MoveRecord } from 'domain/moveRecord';
 
 export interface GameInteractable {
   performMove(pieceToMove: PieceInfo, move: Move): void;
+  undoMove(): void;
   reset(): void;
 }
 
@@ -40,7 +42,7 @@ export class Game implements GameInfo, GameInteractable {
    */
   private _pieces: Array<Piece> = [];
 
-  private _canUndo = false;
+  private _moveRecords: MoveRecord[] = [];
 
   private _currentPlayer: Player;
   private _moveInfos: Array<PieceMovesInfo> = [];
@@ -134,7 +136,11 @@ export class Game implements GameInfo, GameInteractable {
     }
   }
 
-  private fillPieces(pieces: ReadonlyArray<PieceInfo>) {
+  private resetMoveRecords() {
+    this._moveRecords.length = 0;
+  }
+
+  private fillPiecesFromJson(pieces: ReadonlyArray<PieceInfo>) {
     this._pieces = pieces.map((p) => Piece.fromJson(p));
   }
 
@@ -153,8 +159,10 @@ export class Game implements GameInfo, GameInteractable {
       this.resetPieces();
     } else {
       this._currentPlayer = state.currentPlayer;
-      this._canUndo = state.canUndo;
-      this.fillPieces(state.pieces);
+      this._moveRecords = state.moveRecords.map((mr) =>
+        MoveRecord.fromJson(mr),
+      );
+      this.fillPiecesFromJson(state.pieces);
       this._board.fillBoard(this._pieces);
     }
 
@@ -178,7 +186,7 @@ export class Game implements GameInfo, GameInteractable {
   }
 
   public get canUndo(): boolean {
-    return false;
+    return this._moveRecords.length !== 0;
   }
 
   public fireInitialEvents() {
@@ -198,10 +206,49 @@ export class Game implements GameInfo, GameInteractable {
     return null;
   }
 
+  public undoMove() {
+    const moveRecord = this._moveRecords.pop();
+
+    if (moveRecord === undefined) {
+      throw new Error('No moves to undo');
+    }
+
+    const piece = this._board.data[moveRecord.to.y][moveRecord.to.x];
+
+    if (piece === null) {
+      throw new Error('Piece to move not found when trying to undo move');
+    }
+
+    this._board.movePiece(moveRecord.to, moveRecord.from);
+
+    if (moveRecord.removed !== null) {
+      this._board.fillBoard(moveRecord.removed as ReadonlyArray<Piece>);
+      for (const pieceInfo of moveRecord.removed) {
+        this._pieces.push(pieceInfo as Piece);
+      }
+    }
+
+    if (moveRecord.promotion) {
+      piece.demote();
+    }
+
+    this.swapPlayer();
+
+    this.calculateMoves();
+
+    this.onPiecesChanged();
+
+    // When move records is empty
+    if (this._moveRecords.length === 0) {
+      this.onCanUndoChanged();
+    }
+  }
+
   public performMove(pieceToMoveInfo: PieceInfo, move: Move) {
     const pieceMoveInfo = this._moveInfos.find(
       (mi) => mi.piece === pieceToMoveInfo,
     );
+
     if (!pieceMoveInfo) {
       throw new Error('Unable to find moves for piece ' + pieceToMoveInfo);
     }
@@ -217,9 +264,20 @@ export class Game implements GameInfo, GameInteractable {
 
     this._board.movePiece(pieceToMove.pos, move.lastPoint, move.isAttackMove);
 
-    if (pieceToMove.shouldBePromoted) {
+    const isPromoting = pieceToMove.shouldBePromoted;
+
+    if (isPromoting) {
       pieceToMove.promote();
     }
+
+    const moveRecord = new MoveRecord(
+      move.firstPoint,
+      move.lastPoint,
+      move.toRemove,
+      isPromoting,
+    );
+
+    this._moveRecords.push(moveRecord);
 
     if (move.toRemove !== null) {
       const piecesToRemove = move.toRemove;
@@ -232,19 +290,21 @@ export class Game implements GameInfo, GameInteractable {
 
     this.swapPlayer();
 
-    this.onPiecesChanged();
-
     this.calculateMoves();
 
-    this._canUndo = true;
-    this.onCanUndoChanged();
+    this.onPiecesChanged();
+
+    // When move records got first record
+    if (this._moveRecords.length === 1) {
+      this.onCanUndoChanged();
+    }
   }
 
   public reset() {
     this._currentPlayer = Player.White;
-    this._canUndo = false;
 
     this._board.reset();
+    this.resetMoveRecords();
     this.resetPieces();
     this.calculateMoves();
 
@@ -261,7 +321,7 @@ export class Game implements GameInfo, GameInteractable {
   public get state(): GameState {
     return {
       pieces: this._pieces.map((p) => p.toJson() as PieceInfo),
-      canUndo: this._canUndo,
+      moveRecords: this._moveRecords.map((mr) => mr.toJson() as MoveRecord),
       currentPlayer: this._currentPlayer,
     };
   }
@@ -271,21 +331,18 @@ export class Game implements GameInfo, GameInteractable {
   }
 
   private onPiecesChanged() {
-    console.log('Raised pieces changed event');
     this.raiseEvent(new PiecesChangedEvent());
   }
 
   private onGameReset() {
-    console.log('Raised game reset event');
     this.raiseEvent(new GameResetEvent());
   }
 
   private onPlayerChanged() {
-    console.log('Raised player changed event');
     this.raiseEvent(new PlayerChangedEvent(this._currentPlayer));
   }
 
   private onCanUndoChanged() {
-    this.raiseEvent(new CanUndoChangedEvent(this._canUndo));
+    this.raiseEvent(new CanUndoChangedEvent(this.canUndo));
   }
 }

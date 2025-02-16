@@ -1,4 +1,4 @@
-import { AppState, appStateKey } from 'interface/appState';
+import { AppState, appStateKey, appStateVersion } from 'interface/appState';
 
 export class AppStateLoader {
   public loadState(): AppState | null {
@@ -8,6 +8,12 @@ export class AppStateLoader {
       return null;
     }
 
-    return JSON.parse(stateString) as AppState;
+    const state = JSON.parse(stateString) as AppState;
+
+    if (state?.version !== appStateVersion) {
+      return null;
+    }
+
+    return state;
   }
 }

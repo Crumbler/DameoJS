@@ -14,7 +14,7 @@ import { InputState } from 'interface/inputState';
 import { Wake } from 'interface/wake';
 import { HeaderManager } from 'interface/headerManager';
 import { VisibilityMonitor } from 'interface/visibilityMonitor';
-import { AppState } from 'interface/appState';
+import { AppState, appStateVersion } from 'interface/appState';
 import { AppStateLoader } from 'interface/appStateLoader';
 import { AppStateSaver } from 'interface/appStateSaver';
 import { CycleIcon } from 'interface/images/cycleIcon';
@@ -51,13 +51,19 @@ function onLoad() {
 
   Input.registerOnFullscreen(Fullscreen.toggle);
 
-  const appState = appStateLoader.loadState();
+  let appState = appStateLoader.loadState();
+
+  try {
+    game = new Game(appState?.gameState ?? null);
+  } catch {
+    console.error('Failed to initialize game from saved state');
+    game = new Game(null);
+    appState = null;
+  }
 
   if (appState !== null) {
     GameTimer.setElapsedTime(appState.elapsedTime);
   }
-
-  game = new Game(appState?.gameState);
 
   const inputState = new InputState();
 
@@ -76,8 +82,9 @@ function onLoad() {
 
 function getState(): AppState {
   return {
+    version: appStateVersion,
     gameState: game.state,
-    elapsedTime: game.state.canUndo ? GameTimer.getElapsedTime() : 0
+    elapsedTime: game.canUndo ? GameTimer.getElapsedTime() : 0,
   };
 }
 

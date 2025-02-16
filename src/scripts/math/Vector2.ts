@@ -12,6 +12,7 @@ export interface RVector2 {
   distanceTo(v: RVector2): number;
   clone(): Vector2;
   equals(v: RVector2): boolean;
+  toJson(): object;
 }
 
 export class Vector2 extends Array implements RVector2 {
