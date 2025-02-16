@@ -146,7 +146,7 @@ export class MoveCalculator {
 
       const cell1 = board.getCell(pos);
 
-      // If not enemy piece or removed piece
+      // If not enemy piece or removed piece skip direction
       // Due to the way pawns attack we cannot encounter
       // our own piece here
       if (
@@ -240,7 +240,7 @@ export class MoveCalculator {
     pos: Vector2,
     direction: RVector2,
   ) {
-    if (!this.kingHasAttacksAlongLine(board, piece, pos, direction)) {
+    if (!this.kingHasAttacksAlongLine(board, toRemove, piece, pos, direction)) {
       this.kingAddStopsAlongLine(
         board,
         moves,
@@ -284,8 +284,12 @@ export class MoveCalculator {
       // own piece
     } while (cell1 === null || (cell1 !== WallCell && cell1 === piece));
 
-    // Wall or friendly piece
-    if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
+    // Wall or friendly piece or removed piece
+    if (
+      cell1 === WallCell ||
+      cell1.isWhite === piece.isWhite ||
+      toRemove.includes(cell1)
+    ) {
       pos.x -= direction.x * cellsAdvanced;
       pos.y -= direction.y * cellsAdvanced;
       return;
@@ -321,6 +325,7 @@ export class MoveCalculator {
 
   private static kingHasAttacksAlongLine(
     board: BoardInfo,
+    toRemove: ReadonlyArray<PieceInfo>,
     piece: PieceInfo,
     pos: Vector2,
     mainDir: RVector2,
@@ -336,7 +341,7 @@ export class MoveCalculator {
           continue;
         }
 
-        if (this.kingHasAttackInDirection(board, piece, pos, dir)) {
+        if (this.kingHasAttackInDirection(board, toRemove, piece, pos, dir)) {
           pos.x -= mainDir.x * cellsAdvanced;
           pos.y -= mainDir.y * cellsAdvanced;
 
@@ -357,6 +362,7 @@ export class MoveCalculator {
 
   private static kingHasAttackInDirection(
     board: BoardInfo,
+    toRemove: ReadonlyArray<PieceInfo>,
     piece: PieceInfo,
     pos: Vector2,
     direction: RVector2,
@@ -375,8 +381,12 @@ export class MoveCalculator {
       // own piece
     } while (cell1 === null || (cell1 !== WallCell && cell1 === piece));
 
-    // Wall or friendly piece
-    if (cell1 === WallCell || cell1.isWhite === piece.isWhite) {
+    // Wall or friendly piece or removed piece
+    if (
+      cell1 === WallCell ||
+      cell1.isWhite === piece.isWhite ||
+      toRemove.includes(cell1)
+    ) {
       pos.x -= direction.x * cellsAdvanced;
       pos.y -= direction.y * cellsAdvanced;
       return false;
