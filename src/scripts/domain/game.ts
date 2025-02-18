@@ -86,6 +86,11 @@ export class Game implements GameInfo, GameInteractable {
       if (piece.isWhite !== isWhite) {
         continue;
       }
+
+      if (anyAttackMoves && !MoveCalculator.hasAttackMoves(this._board, piece)) {
+        continue;
+      }
+
       this.calculatePieceMoves(this._board, piece, anyAttackMoves);
     }
 

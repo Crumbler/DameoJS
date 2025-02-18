@@ -156,6 +156,14 @@ export class Board implements BoardInfo {
     this._board[from.y][from.x] = null;
   }
 
+  public addPiece(piece: Piece) {
+    if (this._board[piece.pos.y][piece.pos.x] !== null) {
+      throw new Error('Cell at ' + piece.pos + ' already occupied');
+    }
+
+    this._board[piece.pos.y][piece.pos.x] = piece;
+  }
+
   public get data(): ReadonlyMatrix<Piece | null> {
     return this._board;
   }
