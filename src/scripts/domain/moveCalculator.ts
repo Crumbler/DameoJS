@@ -330,6 +330,16 @@ export class MoveCalculator {
     pos: Vector2,
     mainDir: RVector2,
   ): boolean {
+    if (this.kingHasAttackInDirection(
+      board,
+      toRemove,
+      piece,
+      pos,
+      mainDir
+    )) {
+      return true;
+    }
+
     let cell: Wall | PieceInfo | null = null;
 
     let cellsAdvanced = 0;
@@ -581,8 +591,6 @@ export class MoveCalculator {
     } else {
       this.addPawnAttackMoves(board, moves, piece);
     }
-
-    console.log('Found moves: ' + moves.length);
 
     if (moves.length === 0) {
       return null;
