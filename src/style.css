@@ -62,8 +62,6 @@ button {
   @media (max-aspect-ratio: 8 / 9) {
     width: 100%;
     height: auto;
-
-    border: none;
   }
 }
 
