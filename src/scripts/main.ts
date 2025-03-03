@@ -17,7 +17,6 @@ import { AppStateSaver } from 'interface/appStateSaver';
 import { CycleIcon } from 'interface/images/cycleIcon';
 
 function generateImages() {
-  new RestartIcon().generateAndSet();
   new UndoIcon().generateAndSet();
   new CycleIcon().generateAndSet();
 }
@@ -62,7 +61,7 @@ function onLoad() {
   const inputState = new InputState();
 
   pieceRenderer = new PieceRenderer(game, inputState);
-  inputHandler = new InputHandler(game, inputState);
+  inputHandler = new InputHandler(game, inputState, appStateSaver);
   headerManager = new HeaderManager(game, inputState);
 
   cellHighlightRenderer = new CellHighlightRenderer(game, inputState);

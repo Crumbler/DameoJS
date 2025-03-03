@@ -6,6 +6,9 @@ import { GameInfo, GameInteractable } from 'domain/game';
 import { Move } from 'domain/move';
 import { GameEvent } from 'domain/gameEvent';
 import { DialogManager } from 'interface/dialogManager';
+import { ElementIds } from 'interface/elementIds';
+import { Fullscreen } from 'interface/fullscreen';
+import { AppStateSaver } from 'interface/appStateSaver';
 
 /**
  * Handles user input
@@ -13,10 +16,14 @@ import { DialogManager } from 'interface/dialogManager';
 export class InputHandler {
   private readonly _game: GameInfo & GameInteractable;
   private readonly _inputState: InputState;
-  private readonly _container = Elements.findById('game-container');
-  private readonly _undoButton = Elements.findById('undo-button');
-  private readonly _restartButton = Elements.findById('restart-button');
-  private readonly _cycleButton = Elements.findById('cycle-button');
+  private readonly _appStateSaver: AppStateSaver;
+
+  private readonly _container = Elements.findById(ElementIds.gameContainer);
+  private readonly _undoButton = Elements.findById(ElementIds.undoButton);
+  private readonly _cycleButton = Elements.findById(ElementIds.cycleButton);
+  private readonly _dropdownButton = Elements.findById(ElementIds.dropdownButton);
+  private readonly _dropdownDialog = Elements.findById<HTMLDialogElement>(ElementIds.dropdownDialog);
+
   private _pieceToMove: PieceInfo | null = null;
   private _moveToPerform: Move | null = null;
 
@@ -29,13 +36,17 @@ export class InputHandler {
 
     this._undoButton.addEventListener('click', () => this.handleUndoClick());
 
-    this._restartButton.addEventListener('click', () =>
-      this.handleResetClick(),
-    );
-
     this._cycleButton.addEventListener('click', () => {
       this.handleCycleClick();
     });
+
+    document.addEventListener('click', event => {
+      this.outsideDropdownClickListener(event);
+    })
+
+    this._dropdownButton.addEventListener('click', () => this.toggleDropdown());
+
+    this._dropdownDialog.addEventListener('click', event => this.handleDropdownClick(event));
 
     this._inputState.subscribeAcceptingInput((param) =>
       this.onAcceptingInputChanged(param),
@@ -118,6 +129,45 @@ export class InputHandler {
     this.startMove(piece, move);
 
     return true;
+  }
+
+  private outsideDropdownClickListener(event: MouseEvent) {
+    const element = event.target as HTMLElement;
+
+    if (
+      this._dropdownDialog.open &&
+      element.closest(`#${ElementIds.dropdownDialog}`) === null &&
+      element.closest(`#${ElementIds.dropdownButton}`) === null) {
+      DialogManager.closeDropdownDialog();
+    }
+  }
+
+  private handleDropdownClick(event: MouseEvent) {
+    const element = event.target as HTMLElement;
+
+    if (element.tagName !== 'BUTTON') {
+      return;
+    }
+
+    switch (element.dataset['id']) {
+      case 'save':
+        this.handleSaveClick();
+        break;
+
+      case 'settings':
+        this.handleSettingsClick();
+        break;
+
+      case 'fullscreen':
+        Fullscreen.toggle();
+        break;
+
+      case 'restart':
+        this.handleResetClick();
+        break;
+    }
+
+    DialogManager.closeDropdownDialog();
   }
 
   private handleCellClick(cellX: number, cellY: number) {
@@ -218,6 +268,18 @@ export class InputHandler {
     }
   }
 
+  private handleSettingsClick() {
+
+  }
+
+  private handleSaveClick() {
+    this._appStateSaver.save();
+  }
+
+  private toggleDropdown() {
+    DialogManager.toggleDropdownDialog();
+  }
+
   private handleGameEvent(event: GameEvent) {
     if (event.isGameResetEvent()) {
       this._inputState.deselectPiece();
@@ -231,10 +293,13 @@ export class InputHandler {
   public constructor(
     game: GameInfo & GameInteractable,
     inputState: InputState,
+    appStateSaver: AppStateSaver
   ) {
     this._game = game;
 
     this._inputState = inputState;
+
+    this._appStateSaver = appStateSaver;
 
     this.registerHandlers();
   }
