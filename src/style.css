@@ -127,9 +127,27 @@ button {
   }
 }
 
+.header-svg-button {
+  aspect-ratio: 1;
+
+  color: white;
+
+  cursor: pointer;
+
+  transition: color 300ms linear;
+
+  &:hover {
+    color: red;
+  }
+}
+
 @media (hover: hover) {
   .header-button:hover {
     background-color: red;
+  }
+
+  .header-svg-button:hover {
+    color: red;
   }
 }
 
@@ -138,8 +156,16 @@ button {
     transition: background-color 100ms linear;
   }
 
+  .header-svg-button {
+    transition: color 100ms linear;
+  }
+
   .header-button:active {
     background-color: red;
+  }
+
+  .header-svg-button:active {
+    color: red;
   }
 }
 
