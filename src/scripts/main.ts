@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { RestartIcon } from 'interface/images/restartIcon';
-import { UndoIcon } from 'interface/images/undoIcon';
 import { GameTimer } from 'interface/gameTimer';
 import { PieceRenderer } from 'interface/pieceRenderer';
 import { Game } from 'domain/game';
@@ -14,12 +12,6 @@ import { VisibilityMonitor } from 'interface/visibilityMonitor';
 import { AppState, appStateVersion } from 'interface/appState';
 import { AppStateLoader } from 'interface/appStateLoader';
 import { AppStateSaver } from 'interface/appStateSaver';
-import { CycleIcon } from 'interface/images/cycleIcon';
-
-function generateImages() {
-  new UndoIcon().generateAndSet();
-  new CycleIcon().generateAndSet();
-}
 
 let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
@@ -41,8 +33,6 @@ function registerEventHandlers(game: Game) {
 function onLoad() {
   VisibilityMonitor.register();
   Wake.tryStayAwake();
-
-  generateImages();
 
   let appState = appStateLoader.loadState();
 

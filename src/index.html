@@ -16,17 +16,21 @@
           <div id="player-indicator"></div>
           <div id="game-time">0:00</div>
         </div>
-        <div
+        <svg
           id="cycle-button"
-          class="header-button cycle-dependent moving-dependent"
           title="Cycle"
-        ></div>
-        <div
+          class="header-button cycle-dependent moving-dependent"
+        >
+          <use href="svgs/cycle-button.svg#main" />
+        </svg>
+        <svg
           id="undo-button"
-          class="header-button undo-dependent moving-dependent"
           title="Undo"
-        ></div>
-        <svg id="dropdown-button" title="Open menu" class="header-svg-button">
+          class="header-button undo-dependent moving-dependent"
+        >
+          <use href="svgs/undo-button.svg#main" />
+        </svg>
+        <svg id="dropdown-button" title="Open menu" class="header-button">
           <use href="svgs/dropdown-button.svg#main" />
         </svg>
       </div>

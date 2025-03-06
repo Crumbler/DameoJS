@@ -104,35 +104,16 @@ button {
   &:not(.can-undo) > .header-button.undo-dependent,
   &.moving > .header-button.moving-dependent,
   &:not(.cycling) > .header-button.cycle-dependent {
-    background-color: rgb(150, 150, 150);
+    color: rgb(150, 150, 150);
     cursor: auto;
     pointer-events: none;
   }
 }
 
 .header-button {
-  margin: 15cqh;
   aspect-ratio: 1;
 
-  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-
-  background-blend-mode: multiply;
-
-  mask-mode: luminance;
-  mask-size: contain;
-
-  background-color: white;
-
-  transition: background-color 300ms linear;
-
-  &:last-child {
-    margin-right: 20cqh;
-  }
-}
-
-.header-svg-button {
-  aspect-ratio: 1;
 
   color: white;
 
@@ -147,28 +128,16 @@ button {
 
 @media (hover: hover) {
   .header-button:hover {
-    background-color: red;
-  }
-
-  .header-svg-button:hover {
     color: red;
   }
 }
 
 @media (hover: none) {
   .header-button {
-    transition: background-color 100ms linear;
-  }
-
-  .header-svg-button {
     transition: color 100ms linear;
   }
 
   .header-button:active {
-    background-color: red;
-  }
-
-  .header-svg-button:active {
     color: red;
   }
 }
