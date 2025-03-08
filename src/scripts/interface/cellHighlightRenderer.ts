@@ -6,13 +6,15 @@ import { PieceInfo } from 'domain/piece';
 import { GameInfo } from 'domain/game';
 import { Move } from 'domain/move';
 import { RVector2, Vector2 } from 'math/Vector2';
+import { ElementIds } from 'interface/elementIds';
 
 /**
  * Renders cell highlights
  */
 export class CellHighlightRenderer {
-  private readonly _cellContext =
-    Elements.findById<HTMLCanvasElement>('cell-canvas').getContext('2d')!;
+  private readonly _cellContext = Elements.findById<HTMLCanvasElement>(
+    ElementIds.cellCanvas,
+  ).getContext('2d')!;
   private readonly _game: GameInfo;
   private static readonly cardinalDirections: ReadonlyArray<RVector2> = [
     new Vector2(0, 1),
@@ -102,7 +104,8 @@ export class CellHighlightRenderer {
 
   private static renderAttackMoveBegin(
     context: CanvasRenderingContext2D,
-    move: Move) {
+    move: Move,
+  ) {
     const cellSize = InterfaceConstants.CellSize;
     const pos = move.firstPoint.clone();
     const secondPos = move.path[1];
@@ -120,7 +123,7 @@ export class CellHighlightRenderer {
 
   private static renderAttackMoveFull(
     context: CanvasRenderingContext2D,
-    move: Move
+    move: Move,
   ) {
     const cellSize = InterfaceConstants.CellSize;
     const pos = new Vector2();
@@ -153,7 +156,12 @@ export class CellHighlightRenderer {
     context.fillStyle = InterfaceColors.SelectedCell;
     const initialPos = moves[0].firstPoint.clone();
 
-    context.fillRect(initialPos.x * cellSize, initialPos.y * cellSize, cellSize, cellSize);
+    context.fillRect(
+      initialPos.x * cellSize,
+      initialPos.y * cellSize,
+      cellSize,
+      cellSize,
+    );
 
     context.fillStyle = InterfaceColors.PassedThroughCell;
 
@@ -184,7 +192,12 @@ export class CellHighlightRenderer {
     context.fillStyle = InterfaceColors.SelectedCell;
     const initialPos = move.firstPoint.clone();
 
-    context.fillRect(initialPos.x * cellSize, initialPos.y * cellSize, cellSize, cellSize);
+    context.fillRect(
+      initialPos.x * cellSize,
+      initialPos.y * cellSize,
+      cellSize,
+      cellSize,
+    );
 
     context.fillStyle = InterfaceColors.PassedThroughCell;
 
@@ -211,7 +224,8 @@ export class CellHighlightRenderer {
 
     const hasSelectedPiece = selection.selectedPiece !== null;
 
-    const anyAttackMoves = selection.moves !== null && selection.moves[0].isAttackMove;
+    const anyAttackMoves =
+      selection.moves !== null && selection.moves[0].isAttackMove;
 
     const hasMoveIndex = selection.selectedMoveIndex !== null;
 

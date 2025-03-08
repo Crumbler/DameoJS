@@ -7,6 +7,8 @@ body {
 body {
   --background-color-main: #685227;
 
+  overflow-x: clip;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,8 +55,14 @@ button {
   font-family: Verdana, sans-serif;
 }
 
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 #main-container {
   position: relative;
+
+  background-color: var(--background-color-main);
 
   aspect-ratio: 8 / 9;
   height: calc(max(min(100%, 700px), 80%));
@@ -65,6 +73,7 @@ button {
 
   @media (max-aspect-ratio: 8 / 9) {
     width: 100%;
+    border-width: 3px;
     height: auto;
   }
 }
@@ -120,10 +129,6 @@ button {
   cursor: pointer;
 
   transition: color 300ms linear;
-
-  &:hover {
-    color: red;
-  }
 }
 
 @media (hover: hover) {
@@ -133,11 +138,7 @@ button {
 }
 
 @media (hover: none) {
-  .header-button {
-    transition: color 100ms linear;
-  }
-
-  .header-button:active {
+  .header-button.mobile-active {
     color: red;
   }
 }
@@ -182,13 +183,24 @@ dialog {
   display: block;
 
   opacity: 0;
+
+  &:not([open]) {
+    transform: scale(0.8);
+  }
+
   &[open] {
     opacity: 1;
     pointer-events: inherit;
   }
 
+  &:modal {
+    position: absolute;
+  }
+
   pointer-events: none;
-  transition: opacity 0.4s;
+  transition:
+    opacity 0.1s linear,
+    transform 0.1s linear;
 
   font-size: 25px;
 
@@ -243,6 +255,8 @@ dialog {
 
       color: white;
 
+      border: var(--border-width) solid black;
+
       &:focus-visible {
         outline: 2px solid white;
         outline-offset: -2px;
@@ -258,12 +272,12 @@ dialog {
       background-color: #774f38;
 
       &:hover {
-        filter: contrast(140%);
+        background-color: #62351c;
       }
 
       cursor: pointer;
 
-      transition: filter 200ms linear;
+      transition: background-color 200ms linear;
     }
   }
 }
@@ -306,7 +320,7 @@ dialog {
     background-color: var(--background-color-main);
 
     &:hover {
-      filter: contrast(160%);
+      background-color: #62351c;
     }
 
     &:focus-visible {
@@ -330,6 +344,6 @@ dialog {
 
     cursor: pointer;
 
-    transition: filter 200ms linear;
+    transition: background-color 200ms linear;
   }
 }

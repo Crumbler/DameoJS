@@ -2,12 +2,15 @@ import { GameInfo } from 'domain/game';
 import { GameEvent } from 'domain/gameEvent';
 import { Player } from 'domain/player';
 import { Elements } from 'interface/elements';
+import { ElementIds } from 'interface/elementIds';
 
 /**
  * Handles setting the indicator for the current player
  */
 export class PlayerIndicator {
-  private static readonly indicator = Elements.findById('player-indicator');
+  private static readonly indicator = Elements.findById(
+    ElementIds.playerIndicator,
+  );
 
   private static getPlayerString(player: Player): string {
     switch (player) {

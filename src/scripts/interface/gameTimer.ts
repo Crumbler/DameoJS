@@ -2,12 +2,13 @@ import { GameInfo } from 'domain/game';
 import { GameEvent } from 'domain/gameEvent';
 import { Elements } from 'interface/elements';
 import { Format } from 'misc/format';
+import { ElementIds } from 'interface/elementIds';
 
 /**
  * Timer class for setting the game time
  */
 export class GameTimer {
-  private static timerElement = Elements.findById('game-time');
+  private static timerElement = Elements.findById(ElementIds.gameTime);
   private static timeElapsed = 0;
   private static start: number;
   private static interval: number | null = null;

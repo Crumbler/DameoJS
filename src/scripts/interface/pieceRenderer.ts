@@ -8,6 +8,7 @@ import { GameEvent } from 'domain/gameEvent';
 import { InputState } from 'interface/inputState';
 import { MathUtil } from 'math/mathUtil';
 import { Vector2 } from 'math/Vector2';
+import { ElementIds } from 'interface/elementIds';
 
 /**
  * Renders and animates the board pieces using canvas
@@ -15,7 +16,9 @@ import { Vector2 } from 'math/Vector2';
 export class PieceRenderer {
   private readonly _game: GameInfo;
   private readonly _inputState: InputState;
-  private readonly _pieceContext = Elements.findById<HTMLCanvasElement>('piece-canvas').getContext('2d')!;
+  private readonly _pieceContext = Elements.findById<HTMLCanvasElement>(
+    ElementIds.pieceCanvas,
+  ).getContext('2d')!;
   private _animationStart: number | null = null;
   private _animationEnd: number | null = null;
   private _animatedPiece: PieceInfo | null = null;
@@ -216,16 +219,20 @@ export class PieceRenderer {
   }
 
   private onAnimation = () => {
-    if (this._animationStart === null ||
+    if (
+      this._animationStart === null ||
       this._animationEnd === null ||
       this._animatedPiece === null ||
-      this._animatedMove === null) {
+      this._animatedMove === null
+    ) {
       throw new Error('Animation info is not supposed to be null');
     }
 
     const now = performance.now();
 
-    const delta = (now - this._animationStart) / (this._animationEnd - this._animationStart);
+    const delta =
+      (now - this._animationStart) /
+      (this._animationEnd - this._animationStart);
 
     const progress = Math.min(1, MathUtil.smoothStep(delta));
 
@@ -237,12 +244,12 @@ export class PieceRenderer {
     }
 
     window.requestAnimationFrame(this.onAnimation);
-  }
+  };
 
   /**
-  * Renders the animated piece.
-  * @param progress Value from 0 to 1 indicating animation progress.
-  */
+   * Renders the animated piece.
+   * @param progress Value from 0 to 1 indicating animation progress.
+   */
   private renderAnimatedPiece(progress: number) {
     const cellSize = InterfaceConstants.CellSize;
     const context = this._pieceContext;
@@ -320,7 +327,8 @@ export class PieceRenderer {
     const context = this._pieceContext;
 
     context.clearRect(
-      0, 0,
+      0,
+      0,
       InterfaceConstants.BoardSize,
       InterfaceConstants.BoardSize,
     );
@@ -337,7 +345,8 @@ export class PieceRenderer {
     this._animatedMove = moveInfo[1];
 
     this._animationStart = performance.now();
-    this._animationEnd = this._animationStart +
+    this._animationEnd =
+      this._animationStart +
       this._animatedMove.length * InterfaceConstants.MsPerCell;
 
     this._inputState.acceptingInput = false;
@@ -355,6 +364,8 @@ export class PieceRenderer {
 
   private subscribeToEvents() {
     this._game.registerEventHandler((event) => this.handleGameEvent(event));
-    this._inputState.subscribePerformMove((moveInfo) => this.handlePerformMove(moveInfo));
+    this._inputState.subscribePerformMove((moveInfo) =>
+      this.handlePerformMove(moveInfo),
+    );
   }
 }
