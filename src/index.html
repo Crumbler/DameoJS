@@ -16,26 +16,23 @@
           <div id="player-indicator"></div>
           <div id="game-time">0:00</div>
         </div>
-        <div
+        <svg
           id="cycle-button"
-          class="header-button cycle-dependent moving-dependent"
           title="Cycle"
-        ></div>
-        <div
+          class="header-button cycle-dependent moving-dependent"
+        >
+          <use href="svgs/cycle-button.svg#main" />
+        </svg>
+        <svg
           id="undo-button"
-          class="header-button undo-dependent moving-dependent"
           title="Undo"
-        ></div>
-        <div
-          id="fullscreen-button"
-          class="header-button"
-          title="Toggle fullscreen"
-        ></div>
-        <div
-          id="restart-button"
-          class="header-button moving-dependent"
-          title="Restart"
-        ></div>
+          class="header-button undo-dependent moving-dependent"
+        >
+          <use href="svgs/undo-button.svg#main" />
+        </svg>
+        <svg id="dropdown-button" title="Open menu" class="header-button">
+          <use href="svgs/dropdown-button.svg#main" />
+        </svg>
       </div>
       <div id="game-container">
         <div id="game-board"></div>
@@ -43,6 +40,12 @@
         <div id="board-lines"></div>
         <canvas id="piece-canvas" width="600" height="600"></canvas>
       </div>
+      <dialog id="dropdown-dialog">
+        <button data-id="save">Save</button>
+        <button data-id="settings">Settings</button>
+        <button data-id="fullscreen">Fullscreen</button>
+        <button data-id="restart">Restart</button>
+      </dialog>
     </div>
     <dialog id="restart-dialog">
       <p>Are you sure you want to restart?</p>

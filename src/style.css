@@ -5,6 +5,8 @@ body {
 }
 
 body {
+  --background-color-main: #685227;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,6 +54,8 @@ button {
 }
 
 #main-container {
+  position: relative;
+
   aspect-ratio: 8 / 9;
   height: calc(max(min(100%, 700px), 80%));
   border: 5px solid black;
@@ -62,13 +66,11 @@ button {
   @media (max-aspect-ratio: 8 / 9) {
     width: 100%;
     height: auto;
-
-    border: none;
   }
 }
 
 #game-header {
-  background-color: #685227;
+  background-color: var(--background-color-main);
 
   display: flex;
   justify-content: flex-end;
@@ -77,71 +79,66 @@ button {
 
   user-select: none;
 
-  #player-time-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-
-    margin-left: 10cqh;
-    margin-right: auto;
-    padding-left: 15cqh;
-    padding-top: 7cqh;
-    padding-bottom: 7cqh;
-  }
-
-  #player-indicator {
-    font-size: 40cqh;
-    color: white;
-  }
-
-  #game-time {
-    font-size: 30cqh;
-    color: white;
-  }
-
   &:not(.can-undo) > .header-button.undo-dependent,
   &.moving > .header-button.moving-dependent,
   &:not(.cycling) > .header-button.cycle-dependent {
-    background-color: rgb(150, 150, 150);
+    color: rgb(150, 150, 150);
     cursor: auto;
     pointer-events: none;
   }
 }
 
+#player-time-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  margin-left: 10cqh;
+  margin-right: auto;
+  padding-left: 15cqh;
+  padding-top: 7cqh;
+  padding-bottom: 7cqh;
+}
+
+#player-indicator {
+  font-size: 40cqh;
+  color: white;
+}
+
+#game-time {
+  font-size: 30cqh;
+  color: white;
+}
+
 .header-button {
-  margin: 15cqh;
   aspect-ratio: 1;
 
-  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 
-  background-blend-mode: multiply;
+  color: white;
 
-  mask-mode: luminance;
-  mask-size: contain;
+  cursor: pointer;
 
-  background-color: white;
+  transition: color 300ms linear;
 
-  transition: background-color 300ms linear;
-
-  &:last-child {
-    margin-right: 20cqh;
+  &:hover {
+    color: red;
   }
 }
 
 @media (hover: hover) {
   .header-button:hover {
-    background-color: red;
+    color: red;
   }
 }
 
 @media (hover: none) {
   .header-button {
-    transition: background-color 100ms linear;
+    transition: color 100ms linear;
   }
 
   .header-button:active {
-    background-color: red;
+    color: red;
   }
 }
 
@@ -162,7 +159,8 @@ button {
 
 #board-lines {
   --line-width: 3%;
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       to right,
       black 0% var(--line-width),
       transparent var(--line-width) calc(100% - var(--line-width)),
@@ -178,28 +176,50 @@ button {
   background-repeat: repeat;
 }
 
-#restart-dialog {
+dialog {
+  user-select: none;
+
+  display: block;
+
+  opacity: 0;
+  &[open] {
+    opacity: 1;
+    pointer-events: inherit;
+  }
+
+  pointer-events: none;
+  transition: opacity 0.4s;
+
+  font-size: 25px;
+
+  --border-width: 4px;
+
+  @media (max-aspect-ratio: 8 / 9) {
+    font-size: 18px;
+    --border-width: 2px;
+  }
+
+  border-radius: 20px;
   border-color: black;
-  border-width: 3px;
+  border-width: var(--border-width);
   box-sizing: border-box;
+
+  background-color: var(--background-color-main);
+  color: white;
+}
+
+#restart-dialog {
   padding: 0;
 
   max-width: 500px;
 
-  font-size: 25px;
-
-  text-align: center;
-
-  user-select: none;
-
   @media (max-aspect-ratio: 8 / 9) {
-    font-size: 18px;
     max-width: 350px;
   }
 
+  text-align: center;
+
   > p {
-    background-color: #685227;
-    color: white;
     margin: 0;
     padding: 10px;
     font-size: 1.3em;
@@ -223,10 +243,13 @@ button {
 
       color: white;
 
-      outline-color: aqua;
+      &:focus-visible {
+        outline: 2px solid white;
+        outline-offset: -2px;
+      }
 
       font-size: 1em;
-      border-radius: 5px;
+      border-radius: 20px;
       padding-left: var(--padHor);
       padding-right: var(--padHor);
       padding-top: var(--padVer);
@@ -242,5 +265,71 @@ button {
 
       transition: filter 200ms linear;
     }
+  }
+}
+
+#dropdown-dialog {
+  position: absolute;
+
+  left: auto;
+  bottom: auto;
+
+  display: flex;
+
+  padding: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  right: 10px;
+  top: calc(100% / 9 + 10px);
+
+  margin: 0;
+
+  > button {
+    --padHor: 1em;
+    --padVer: 0.4em;
+
+    border: none;
+
+    color: white;
+
+    outline-color: aqua;
+
+    box-sizing: border-box;
+
+    font-size: 1em;
+    padding-left: var(--padHor);
+    padding-right: var(--padHor);
+    padding-top: var(--padVer);
+    padding-bottom: var(--padVer);
+
+    background-color: var(--background-color-main);
+
+    &:hover {
+      filter: contrast(160%);
+    }
+
+    &:focus-visible {
+      outline: 2px solid white;
+      outline-offset: -2px;
+    }
+
+    &:not(:last-child) {
+      border-bottom: var(--border-width) black solid;
+    }
+
+    &:first-child {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    cursor: pointer;
+
+    transition: filter 200ms linear;
   }
 }
