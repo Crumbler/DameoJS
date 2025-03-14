@@ -269,7 +269,7 @@ export class InputHandler {
   }
 
   private handleSettingsClick() {
-
+    DialogManager.openSettingsDialog();
   }
 
   private handleSaveClick() {

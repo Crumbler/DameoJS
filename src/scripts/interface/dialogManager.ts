@@ -4,13 +4,22 @@ import { Elements } from 'interface/elements';
 export class DialogManager {
   private static readonly restartDialog = Elements.findById<HTMLDialogElement>(ElementIds.restartDialog);
   private static readonly dropdownDialog = Elements.findById<HTMLDialogElement>(ElementIds.dropdownDialog);
+  private static readonly settingsDialog = Elements.findById<HTMLDialogElement>(ElementIds.settingsDialog);
 
   static {
-    this.restartDialog.addEventListener('click', event => {
-      if (event.target === this.restartDialog) {
-        this.restartDialog.close('cancel');
+    for (const el of document.getElementsByClassName('modal-dialog')) {
+      const dialog = el as HTMLDialogElement;
+
+      dialog.addEventListener('click', this.clickOutsideDialogListener(dialog));
+    }
+  }
+
+  private static clickOutsideDialogListener(target: HTMLDialogElement) {
+    return (event: MouseEvent) => {
+      if (event.target === target) {
+        target.close('cancel');
       }
-    });
+    }
   }
 
   public static openRestartDialog(): Promise<boolean> {
@@ -26,6 +35,10 @@ export class DialogManager {
         resolve(this.restartDialog.returnValue === 'default');
       });
     });
+  }
+
+  public static openSettingsDialog() {
+    this.settingsDialog.showModal();
   }
 
   public static toggleDropdownDialog() {
