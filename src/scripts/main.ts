@@ -12,6 +12,8 @@ import { VisibilityMonitor } from 'interface/visibilityMonitor';
 import { AppState, appStateVersion } from 'interface/appState';
 import { AppStateLoader } from 'interface/appStateLoader';
 import { AppStateSaver } from 'interface/appStateSaver';
+import { Settings } from 'interface/settings';
+import { GameManager } from 'interface/gameManager';
 
 let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
@@ -23,6 +25,7 @@ const appStateSaver = new AppStateSaver(getState);
 
 function registerEventHandlers(game: Game) {
   PlayerIndicator.registerEventHandler(game);
+  GameManager.registerEventHandler(game);
   GameTimer.registerEventHandler(game);
 
   window.addEventListener('beforeunload', () => {
@@ -33,6 +36,10 @@ function registerEventHandlers(game: Game) {
 function onLoad() {
   VisibilityMonitor.register();
   Wake.tryStayAwake();
+
+  Settings.load();
+  Settings.resetInputs();
+  Settings.applyCurrentSettingsInitial();
 
   let appState = appStateLoader.loadState();
 

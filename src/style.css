@@ -71,13 +71,41 @@ button {
   height: calc(max(min(100%, 700px), 80%));
   border: 5px solid black;
 
-  display: grid;
-  grid-template-rows: calc(100% * 1 / 9) calc(100% * 8 / 9);
+  display: block;
+
+  & > *:nth-child(-n + 2) {
+    width: 100%;
+    position: absolute;
+
+    transition: top 300ms linear;
+  }
+
+  & > *:first-child {
+    height: calc(100% / 9);
+  }
+
+  & > *:nth-child(2) {
+    height: calc(100% * (8 / 9));
+    top: calc(100% / 9);
+  }
 
   @media (max-aspect-ratio: 8 / 9) {
     width: 100%;
     border-width: 3px;
     height: auto;
+  }
+}
+
+body.swap-header.red-player {
+  #main-container {
+    > *:first-child {
+      top: calc(100% * 8 / 9);
+      transform: rotate(180deg);
+    }
+
+    > *:nth-child(2) {
+      top: 0;
+    }
   }
 }
 
@@ -456,5 +484,21 @@ dialog {
     cursor: pointer;
 
     transition: background-color 200ms linear;
+  }
+}
+
+body.swap-header.red-player {
+  dialog {
+    transform: rotate(180deg);
+  }
+}
+
+body.swap-header.red-player {
+  #dropdown-dialog {
+    right: auto;
+    top: auto;
+
+    left: 10px;
+    bottom: calc(100% / 9 + 10px);
   }
 }

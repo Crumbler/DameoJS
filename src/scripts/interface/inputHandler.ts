@@ -9,6 +9,7 @@ import { DialogManager } from 'interface/dialogManager';
 import { ElementIds } from 'interface/elementIds';
 import { Fullscreen } from 'interface/fullscreen';
 import { AppStateSaver } from 'interface/appStateSaver';
+import { Settings } from 'interface/settings';
 
 /**
  * Handles user input
@@ -268,8 +269,15 @@ export class InputHandler {
     }
   }
 
-  private handleSettingsClick() {
-    DialogManager.openSettingsDialog();
+  private async handleSettingsClick() {
+    const changed = await DialogManager.openSettingsDialog();
+
+    if (!changed) {
+      Settings.resetInputs();
+      return;
+    }
+
+    Settings.saveSettings();
   }
 
   private handleSaveClick() {

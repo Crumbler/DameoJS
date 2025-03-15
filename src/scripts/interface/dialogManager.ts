@@ -33,12 +33,22 @@ export class DialogManager {
     return new Promise<boolean>((resolve) => {
       this.restartDialog.addEventListener('close', () => {
         resolve(this.restartDialog.returnValue === 'default');
+      }, {
+        once: true
       });
     });
   }
 
   public static openSettingsDialog() {
     this.settingsDialog.showModal();
+
+    return new Promise<boolean>((resolve) => {
+      this.settingsDialog.addEventListener('close', () => {
+        resolve(this.settingsDialog.returnValue === 'default');
+      }, {
+        once: true
+      });
+    });
   }
 
   public static toggleDropdownDialog() {

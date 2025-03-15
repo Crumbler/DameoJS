@@ -3,6 +3,8 @@ export class ElementIds {
   public static readonly restartDialog = 'restart-dialog';
   public static readonly settingsDialog = 'settings-dialog';
 
+  public static readonly settingsForm = 'settings-form';
+
   public static readonly dropdownButton = 'dropdown-button';
   public static readonly undoButton = 'undo-button';
   public static readonly cycleButton = 'cycle-button';
