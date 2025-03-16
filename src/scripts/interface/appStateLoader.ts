@@ -13,7 +13,7 @@ export class AppStateLoader {
     try {
       state = JSON.parse(stateString) as AppState;
     } catch {
-      console.warn('Failed to parse settings');
+      console.warn('Failed to parse app state');
       return null;
     }
 
