@@ -16,6 +16,7 @@ import { Settings } from 'interface/settings';
  */
 export class InputHandler {
   private readonly _game: GameInfo & GameInteractable;
+  private readonly _settings: Settings;
   private readonly _inputState: InputState;
   private readonly _appStateSaver: AppStateSaver;
 
@@ -273,11 +274,11 @@ export class InputHandler {
     const changed = await DialogManager.openSettingsDialog();
 
     if (!changed) {
-      Settings.resetInputs();
+      this._settings.resetInputs();
       return;
     }
 
-    Settings.saveSettings();
+    this._settings.saveSettings();
   }
 
   private handleSaveClick() {
@@ -301,13 +302,16 @@ export class InputHandler {
   public constructor(
     game: GameInfo & GameInteractable,
     inputState: InputState,
-    appStateSaver: AppStateSaver
+    appStateSaver: AppStateSaver,
+    settings: Settings
   ) {
     this._game = game;
 
     this._inputState = inputState;
 
     this._appStateSaver = appStateSaver;
+
+    this._settings = settings;
 
     this.registerHandlers();
   }

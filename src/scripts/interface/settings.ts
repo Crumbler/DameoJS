@@ -12,15 +12,15 @@ export interface AppSettings {
 }
 
 export class Settings {
-  private static readonly _settingsForm = Elements.findById<HTMLFormElement>(ElementIds.settingsForm);
+  private readonly _settingsForm = Elements.findById<HTMLFormElement>(ElementIds.settingsForm);
 
-  private static _settings: AppSettings = {};
+  private _settings: AppSettings = {};
 
-  public static get current(): RAppSettings {
+  public get current(): RAppSettings {
     return this._settings;
   }
 
-  public static load() {
+  public load() {
     const settingsString = localStorage.getItem('settings');
 
     if (settingsString === null) {
@@ -39,7 +39,7 @@ export class Settings {
     this._settings = settings;
   }
 
-  public static saveSettings() {
+  public saveSettings() {
     const formData = new FormData(this._settingsForm);
 
     const formDataObj = Object.fromEntries(formData.entries());
@@ -56,7 +56,7 @@ export class Settings {
     this.applyCurrentSettings();
   }
 
-  public static resetInputs() {
+  public resetInputs() {
     const elements = this._settingsForm.elements;
 
     const el1 = elements.namedItem('swapHeaderPosition') as HTMLInputElement;
@@ -68,7 +68,7 @@ export class Settings {
     el2.checked = this._settings.flipRedPieces ?? false;
   }
 
-  private static setClass(element: HTMLElement, className: string, value: boolean) {
+  private setClass(element: HTMLElement, className: string, value: boolean) {
     if (value) {
       element.classList.add(className);
     } else {
@@ -76,11 +76,11 @@ export class Settings {
     }
   }
 
-  public static applyCurrentSettingsInitial() {
+  public applyCurrentSettingsInitial() {
     this.setClass(document.body, 'swap-header', this._settings.swapHeaderPosition ?? false);
   }
 
-  private static applyCurrentSettings() {
+  private applyCurrentSettings() {
     this.applyCurrentSettingsInitial();
   }
 }
