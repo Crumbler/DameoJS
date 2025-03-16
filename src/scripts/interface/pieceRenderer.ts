@@ -9,6 +9,7 @@ import { InputState } from 'interface/inputState';
 import { MathUtil } from 'math/mathUtil';
 import { Vector2 } from 'math/Vector2';
 import { ElementIds } from 'interface/elementIds';
+import { Settings } from 'interface/settings';
 
 /**
  * Renders and animates the board pieces using canvas
@@ -16,6 +17,7 @@ import { ElementIds } from 'interface/elementIds';
 export class PieceRenderer {
   private readonly _game: GameInfo;
   private readonly _inputState: InputState;
+  private readonly _settings: Settings;
   private readonly _pieceContext = Elements.findById<HTMLCanvasElement>(
     ElementIds.pieceCanvas,
   ).getContext('2d')!;
@@ -38,8 +40,9 @@ export class PieceRenderer {
 
   private static readonly _crownPath = PieceRenderer.createCrownPath();
 
-  public constructor(game: GameInfo, inputState: InputState) {
+  public constructor(game: GameInfo, inputState: InputState, settings: Settings) {
     this._game = game;
+    this._settings = settings;
     this._inputState = inputState;
 
     this.subscribeToEvents();
@@ -293,12 +296,27 @@ export class PieceRenderer {
 
     context.translate(x * cellSize, y * cellSize);
 
+    this.renderFullPiece(context, piece);
+
+    context.restore();
+  }
+
+  private renderFullPiece(context: CanvasRenderingContext2D, piece: PieceInfo) {
+    const flipPiece = (this._settings.current.flipRedPieces ?? false) && !piece.isWhite;
+
+
+    if (flipPiece) {
+      const cellSize = InterfaceConstants.CellSize;
+
+      context.scale(1, -1);
+      context.translate(0, -cellSize);
+    }
+
     this.renderPiece(piece.isWhite);
+
     if (piece.isPromoted) {
       this.renderCrown();
     }
-
-    context.restore();
   }
 
   private renderNormalPieces() {
@@ -314,10 +332,7 @@ export class PieceRenderer {
 
       context.translate(piece.pos.x * cellSize, piece.pos.y * cellSize);
 
-      this.renderPiece(piece.isWhite);
-      if (piece.isPromoted) {
-        this.renderCrown();
-      }
+      this.renderFullPiece(context, piece);
 
       context.restore();
     }

@@ -12,17 +12,21 @@ import { VisibilityMonitor } from 'interface/visibilityMonitor';
 import { AppState, appStateVersion } from 'interface/appState';
 import { AppStateLoader } from 'interface/appStateLoader';
 import { AppStateSaver } from 'interface/appStateSaver';
+import { Settings } from 'interface/settings';
+import { GameManager } from 'interface/gameManager';
 
 let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
 let headerManager: HeaderManager;
 let cellHighlightRenderer: CellHighlightRenderer;
+let settings: Settings;
 let game: Game;
 const appStateLoader = new AppStateLoader();
 const appStateSaver = new AppStateSaver(getState);
 
 function registerEventHandlers(game: Game) {
   PlayerIndicator.registerEventHandler(game);
+  GameManager.registerEventHandler(game);
   GameTimer.registerEventHandler(game);
 
   window.addEventListener('beforeunload', () => {
@@ -50,8 +54,13 @@ function onLoad() {
 
   const inputState = new InputState();
 
-  pieceRenderer = new PieceRenderer(game, inputState);
-  inputHandler = new InputHandler(game, inputState, appStateSaver);
+  settings = new Settings(game);
+  settings.load();
+  settings.resetInputs();
+  settings.applyCurrentSettingsInitial();
+
+  pieceRenderer = new PieceRenderer(game, inputState, settings);
+  inputHandler = new InputHandler(game, inputState, appStateSaver, settings);
   headerManager = new HeaderManager(game, inputState);
 
   cellHighlightRenderer = new CellHighlightRenderer(game, inputState);

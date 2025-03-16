@@ -335,7 +335,7 @@ export class Game implements GameInfo, GameInteractable {
     this._eventSubject.raise(event);
   }
 
-  private onPiecesChanged() {
+  public onPiecesChanged() {
     this.raiseEvent(new PiecesChangedEvent());
   }
 

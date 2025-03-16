@@ -8,7 +8,14 @@ export class AppStateLoader {
       return null;
     }
 
-    const state = JSON.parse(stateString) as AppState;
+    let state: AppState;
+
+    try {
+      state = JSON.parse(stateString) as AppState;
+    } catch {
+      console.warn('Failed to parse app state');
+      return null;
+    }
 
     if (state?.version !== appStateVersion) {
       return null;

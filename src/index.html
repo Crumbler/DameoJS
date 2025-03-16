@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <style></style>
-  <body>
+  <body id="body">
     <div id="main-container">
       <div id="game-header">
         <div id="player-time-wrapper">
@@ -47,11 +47,29 @@
         <button data-id="restart">Restart</button>
       </dialog>
     </div>
-    <dialog id="restart-dialog">
+    <dialog id="restart-dialog" class="modal-dialog">
       <p>Are you sure you want to restart?</p>
       <form method="dialog">
         <button value="cancel">Cancel</button>
         <button value="default">Restart</button>
+      </form>
+    </dialog>
+    <dialog id="settings-dialog" class="modal-dialog">
+      <form id="settings-form" method="dialog">
+        <div class="settings-block">
+          <label>
+            <input type="checkbox" name="swapHeaderPosition" />
+            Swap header position
+          </label>
+          <label>
+            <input type="checkbox" name="flipRedPieces" />
+            Flip red pieces
+          </label>
+        </div>
+        <div class="buttons">
+          <button value="cancel">Cancel</button>
+          <button value="default">Apply</button>
+        </div>
       </form>
     </dialog>
     <script type="module" src="scripts/main.ts" defer></script>

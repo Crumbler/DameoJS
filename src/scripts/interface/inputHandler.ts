@@ -9,12 +9,14 @@ import { DialogManager } from 'interface/dialogManager';
 import { ElementIds } from 'interface/elementIds';
 import { Fullscreen } from 'interface/fullscreen';
 import { AppStateSaver } from 'interface/appStateSaver';
+import { Settings } from 'interface/settings';
 
 /**
  * Handles user input
  */
 export class InputHandler {
   private readonly _game: GameInfo & GameInteractable;
+  private readonly _settings: Settings;
   private readonly _inputState: InputState;
   private readonly _appStateSaver: AppStateSaver;
 
@@ -268,8 +270,15 @@ export class InputHandler {
     }
   }
 
-  private handleSettingsClick() {
+  private async handleSettingsClick() {
+    const changed = await DialogManager.openSettingsDialog();
 
+    if (!changed) {
+      this._settings.resetInputs();
+      return;
+    }
+
+    this._settings.saveSettings();
   }
 
   private handleSaveClick() {
@@ -293,13 +302,16 @@ export class InputHandler {
   public constructor(
     game: GameInfo & GameInteractable,
     inputState: InputState,
-    appStateSaver: AppStateSaver
+    appStateSaver: AppStateSaver,
+    settings: Settings
   ) {
     this._game = game;
 
     this._inputState = inputState;
 
     this._appStateSaver = appStateSaver;
+
+    this._settings = settings;
 
     this.registerHandlers();
   }

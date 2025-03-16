@@ -6,6 +6,9 @@ body {
 
 body {
   --background-color-main: #685227;
+  --background-color-button: #774f38;
+  --background-color-button-hover: #62351c;
+  --background-color-1: #d6bc9a;
 
   overflow-x: clip;
 
@@ -19,7 +22,7 @@ body {
   --size: var(--baseSize);
 
   --c1: #774f38;
-  --c2: #d6bc9a;
+  --c2: var(--background-color-1);
 
   --g: radial-gradient(
     #0000 60%,
@@ -68,13 +71,41 @@ button {
   height: calc(max(min(100%, 700px), 80%));
   border: 5px solid black;
 
-  display: grid;
-  grid-template-rows: calc(100% * 1 / 9) calc(100% * 8 / 9);
+  display: block;
+
+  & > *:nth-child(-n + 2) {
+    width: 100%;
+    position: absolute;
+
+    transition: top 300ms linear;
+  }
+
+  & > *:first-child {
+    height: calc(100% / 9);
+  }
+
+  & > *:nth-child(2) {
+    height: calc(100% * (8 / 9));
+    top: calc(100% / 9);
+  }
 
   @media (max-aspect-ratio: 8 / 9) {
     width: 100%;
     border-width: 3px;
     height: auto;
+  }
+}
+
+body.swap-header.red-player {
+  #main-container {
+    > *:first-child {
+      top: calc(100% * 8 / 9);
+      transform: rotate(180deg);
+    }
+
+    > *:nth-child(2) {
+      top: 0;
+    }
   }
 }
 
@@ -211,6 +242,16 @@ dialog {
     --border-width: 2px;
   }
 
+  & > *:last-child {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  & > *:first-child {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
   border-radius: 20px;
   border-color: black;
   border-width: var(--border-width);
@@ -220,15 +261,19 @@ dialog {
   color: white;
 }
 
-#restart-dialog {
+.modal-dialog {
   padding: 0;
 
-  max-width: 500px;
+  --dialog-max-width: 500px;
 
   @media (max-aspect-ratio: 8 / 9) {
-    max-width: 350px;
+    --dialog-max-width: 350px;
   }
 
+  max-width: var(--dialog-max-width);
+}
+
+#restart-dialog {
   text-align: center;
 
   > p {
@@ -238,7 +283,7 @@ dialog {
   }
 
   > form {
-    background-color: #d6bc9a;
+    background-color: var(--background-color-1);
 
     padding-top: 10px;
     padding-bottom: 10px;
@@ -269,10 +314,114 @@ dialog {
       padding-top: var(--padVer);
       padding-bottom: var(--padVer);
 
-      background-color: #774f38;
+      background-color: var(--background-color-button);
 
       &:hover {
-        background-color: #62351c;
+        background-color: var(--background-color-button-hover);
+      }
+
+      cursor: pointer;
+
+      transition: background-color 200ms linear;
+    }
+  }
+}
+
+#settings-dialog {
+  --dialog-max-width: 700px;
+
+  @media (max-aspect-ratio: 8 / 9) {
+    --dialog-max-width: 600px;
+  }
+
+  > form {
+    background-color: var(--background-color-1);
+
+    padding: 10px;
+
+    > .settings-block {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      padding-bottom: 20px;
+
+      --form-control-color: black;
+
+      label {
+        color: black;
+        font-weight: bold;
+
+        input[type='checkbox'] {
+          appearance: none;
+          -webkit-appearance: none;
+          /* For iOS < 15 to remove gradient background */
+
+          background-color: #fff;
+
+          margin: 0;
+
+          cursor: pointer;
+
+          font: inherit;
+          color: currentColor;
+          width: 1.15em;
+          height: 1.15em;
+          border: 0.15em solid currentColor;
+          border-radius: 0.15em;
+          transform: translateY(-0.075em);
+
+          display: inline-grid;
+          place-content: center;
+
+          &::before {
+            content: '';
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em var(--form-control-color);
+          }
+
+          &:checked::before {
+            transform: scale(1);
+          }
+        }
+      }
+    }
+
+    > .buttons {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+
+      gap: 10px;
+    }
+
+    button {
+      --padHor: 0.8em;
+      --padVer: 0.4em;
+
+      color: white;
+
+      border: var(--border-width) solid black;
+
+      &:focus-visible {
+        outline: 2px solid white;
+        outline-offset: -2px;
+      }
+
+      font-size: 1em;
+      border-radius: 20px;
+      padding-left: var(--padHor);
+      padding-right: var(--padHor);
+      padding-top: var(--padVer);
+      padding-bottom: var(--padVer);
+
+      background-color: var(--background-color-button);
+
+      &:hover {
+        background-color: var(--background-color-button-hover);
       }
 
       cursor: pointer;
@@ -332,18 +481,24 @@ dialog {
       border-bottom: var(--border-width) black solid;
     }
 
-    &:first-child {
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-    }
-
-    &:last-child {
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
-
     cursor: pointer;
 
     transition: background-color 200ms linear;
+  }
+}
+
+body.swap-header.red-player {
+  dialog {
+    transform: rotate(180deg);
+  }
+}
+
+body.swap-header.red-player {
+  #dropdown-dialog {
+    right: auto;
+    top: auto;
+
+    left: 10px;
+    bottom: calc(100% / 9 + 10px);
   }
 }
