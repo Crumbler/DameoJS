@@ -19,7 +19,7 @@ let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
 let headerManager: HeaderManager;
 let cellHighlightRenderer: CellHighlightRenderer;
-const settings = new Settings();
+let settings: Settings;
 let game: Game;
 const appStateLoader = new AppStateLoader();
 const appStateSaver = new AppStateSaver(getState);
@@ -38,10 +38,6 @@ function onLoad() {
   VisibilityMonitor.register();
   Wake.tryStayAwake();
 
-  settings.load();
-  settings.resetInputs();
-  settings.applyCurrentSettingsInitial();
-
   let appState = appStateLoader.loadState();
 
   try {
@@ -58,7 +54,12 @@ function onLoad() {
 
   const inputState = new InputState();
 
-  pieceRenderer = new PieceRenderer(game, inputState);
+  settings = new Settings(game);
+  settings.load();
+  settings.resetInputs();
+  settings.applyCurrentSettingsInitial();
+
+  pieceRenderer = new PieceRenderer(game, inputState, settings);
   inputHandler = new InputHandler(game, inputState, appStateSaver, settings);
   headerManager = new HeaderManager(game, inputState);
 

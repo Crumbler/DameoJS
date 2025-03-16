@@ -1,3 +1,4 @@
+import { Game } from 'domain/game';
 import { ElementIds } from 'interface/elementIds';
 import { Elements } from 'interface/elements';
 
@@ -13,11 +14,16 @@ export interface AppSettings {
 
 export class Settings {
   private readonly _settingsForm = Elements.findById<HTMLFormElement>(ElementIds.settingsForm);
+  private readonly _game: Game;
 
   private _settings: AppSettings = {};
 
   public get current(): RAppSettings {
     return this._settings;
+  }
+
+  public constructor(game: Game) {
+    this._game = game;
   }
 
   public load() {
@@ -82,5 +88,6 @@ export class Settings {
 
   private applyCurrentSettings() {
     this.applyCurrentSettingsInitial();
+    this._game.onPiecesChanged();
   }
 }
