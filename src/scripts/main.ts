@@ -61,7 +61,7 @@ function onLoad() {
   settings.resetInputs();
   settings.applyCurrentSettingsInitial();
 
-  gameEndHandler = new GameEndHandler(game);
+  gameEndHandler = new GameEndHandler(game, inputState);
   pieceRenderer = new PieceRenderer(game, inputState, settings);
   inputHandler = new InputHandler(game, inputState, appStateSaver, settings);
   headerManager = new HeaderManager(game, inputState);
