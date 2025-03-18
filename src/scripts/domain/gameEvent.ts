@@ -5,7 +5,8 @@ export enum GameEventType {
   PlayerChanged,
   GameReset,
   PiecesChanged,
-  CanUndoChanged
+  CanUndoChanged,
+  GameEnd
 }
 
 export type GameEventHandler = EventHandler<GameEvent>;
@@ -31,6 +32,10 @@ export abstract class GameEvent {
 
   public isCanUndoEvent(): this is CanUndoChangedEvent {
     return this._type === GameEventType.CanUndoChanged;
+  }
+
+  public isGameEndEvent(): this is GameEndEvent {
+    return this._type === GameEventType.GameEnd;
   }
 }
 
@@ -61,5 +66,11 @@ export class PiecesChangedEvent extends GameEvent {
 export class CanUndoChangedEvent extends GameEvent {
   public constructor(public readonly canUndo: boolean) {
     super(GameEventType.CanUndoChanged);
+  }
+}
+
+export class GameEndEvent extends GameEvent {
+  public constructor(public readonly redWon: boolean | null) {
+    super(GameEventType.GameEnd);
   }
 }

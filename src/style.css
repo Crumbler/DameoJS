@@ -273,6 +273,60 @@ dialog {
   max-width: var(--dialog-max-width);
 }
 
+#end-dialog {
+  text-align: center;
+
+  > p {
+    margin: 0;
+    padding: 10px;
+    font-size: 1.3em;
+  }
+
+  > form {
+    background-color: var(--background-color-1);
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    > button {
+      --padHor: 1.7em;
+      --padVer: 0.4em;
+
+      color: white;
+
+      border: var(--border-width) solid black;
+
+      &:focus-visible {
+        outline: 2px solid white;
+        outline-offset: -2px;
+      }
+
+      font-size: 1em;
+      border-radius: 20px;
+      padding-left: var(--padHor);
+      padding-right: var(--padHor);
+      padding-top: var(--padVer);
+      padding-bottom: var(--padVer);
+
+      margin-inline: 10px;
+
+      background-color: var(--background-color-button);
+
+      &:hover {
+        background-color: var(--background-color-button-hover);
+      }
+
+      cursor: pointer;
+
+      transition: background-color 200ms linear;
+    }
+  }
+}
+
 #restart-dialog {
   text-align: center;
 
