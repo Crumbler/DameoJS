@@ -5,6 +5,7 @@ export class DialogManager {
   private static readonly restartDialog = Elements.findById<HTMLDialogElement>(ElementIds.restartDialog);
   private static readonly dropdownDialog = Elements.findById<HTMLDialogElement>(ElementIds.dropdownDialog);
   private static readonly settingsDialog = Elements.findById<HTMLDialogElement>(ElementIds.settingsDialog);
+  private static readonly endDialog = Elements.findById<HTMLDialogElement>(ElementIds.endDialog);
 
   static {
     for (const el of document.getElementsByClassName('modal-dialog')) {
@@ -20,6 +21,25 @@ export class DialogManager {
         target.close('cancel');
       }
     }
+  }
+
+  public static openEndDialog(text: string): Promise<boolean> {
+    this.endDialog.children[0].textContent = text;
+
+    this.endDialog.showModal();
+
+    // Don't focus any element initially
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    return new Promise<boolean>((resolve) => {
+      this.endDialog.addEventListener('close', () => {
+        resolve(this.endDialog.returnValue === 'default');
+      }, {
+        once: true
+      });
+    });
   }
 
   public static openRestartDialog(): Promise<boolean> {

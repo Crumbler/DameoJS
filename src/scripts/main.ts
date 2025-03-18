@@ -14,6 +14,7 @@ import { AppStateLoader } from 'interface/appStateLoader';
 import { AppStateSaver } from 'interface/appStateSaver';
 import { Settings } from 'interface/settings';
 import { GameManager } from 'interface/gameManager';
+import { GameEndHandler } from 'interface/gameEndHandler';
 
 let pieceRenderer: PieceRenderer;
 let inputHandler: InputHandler;
@@ -21,6 +22,7 @@ let headerManager: HeaderManager;
 let cellHighlightRenderer: CellHighlightRenderer;
 let settings: Settings;
 let game: Game;
+let gameEndHandler: GameEndHandler;
 const appStateLoader = new AppStateLoader();
 const appStateSaver = new AppStateSaver(getState);
 
@@ -59,6 +61,7 @@ function onLoad() {
   settings.resetInputs();
   settings.applyCurrentSettingsInitial();
 
+  gameEndHandler = new GameEndHandler(game, inputState);
   pieceRenderer = new PieceRenderer(game, inputState, settings);
   inputHandler = new InputHandler(game, inputState, appStateSaver, settings);
   headerManager = new HeaderManager(game, inputState);

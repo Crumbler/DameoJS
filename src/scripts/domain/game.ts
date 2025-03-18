@@ -2,6 +2,7 @@ import { Piece, PieceInfo } from 'domain/piece';
 import { Player } from 'domain/player';
 import {
   CanUndoChangedEvent,
+  GameEndEvent,
   GameEvent,
   GameEventHandler,
   GameResetEvent,
@@ -199,6 +200,8 @@ export class Game implements GameInfo, GameInteractable {
     this.onGameReset();
     this.onPiecesChanged();
     this.onCanUndoChanged();
+
+    this.tryDetectGameEnd();
   }
 
   public findPieceMoves(piece: PieceInfo): ReadonlyArray<Move> | null {
@@ -303,6 +306,26 @@ export class Game implements GameInfo, GameInteractable {
     if (this._moveRecords.length === 1) {
       this.onCanUndoChanged();
     }
+
+    this.tryDetectGameEnd();
+  }
+
+  private tryDetectGameEnd() {
+    const anyRedPieces = this._pieces.some(piece => !piece.isWhite);
+    const anyWhitePieces = this._pieces.some(piece => piece.isWhite);
+
+    // One of the players ran out of pieces
+    if (!anyRedPieces || !anyWhitePieces) {
+      this.onGameEnd(anyRedPieces);
+      return;
+    }
+
+    // No moves and both have pieces - draw
+    const anyMoves = this._moveInfos.length !== 0;
+
+    if (!anyMoves) {
+      this.onGameEnd(null);
+    }
   }
 
   public reset() {
@@ -341,6 +364,10 @@ export class Game implements GameInfo, GameInteractable {
 
   private onGameReset() {
     this.raiseEvent(new GameResetEvent());
+  }
+
+  private onGameEnd(redWon: boolean | null) {
+    this.raiseEvent(new GameEndEvent(redWon));
   }
 
   private onPlayerChanged() {
