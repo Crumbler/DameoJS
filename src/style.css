@@ -1,7 +1,10 @@
 html,
 body {
   height: 100%;
+  padding: 0;
   margin: 0;
+
+  overflow-x: clip;
 }
 
 body {
@@ -9,8 +12,6 @@ body {
   --background-color-button: #774f38;
   --background-color-button-hover: #62351c;
   --background-color-1: #d6bc9a;
-
-  overflow-x: clip;
 
   display: flex;
   flex-direction: column;
