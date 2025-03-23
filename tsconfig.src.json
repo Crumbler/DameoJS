@@ -18,6 +18,7 @@
   ],
   "exclude": [
     "src/scripts/tests",
+    "src/scripts/serviceWorker.ts",
     "**/out"
   ]
 }

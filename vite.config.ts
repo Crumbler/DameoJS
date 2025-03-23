@@ -9,6 +9,10 @@ export default defineConfig({
     assetsDir: '',
     assetsInlineLimit: Number.MAX_SAFE_INTEGER,
     rollupOptions: {
+      input: [
+        'src/index.html',
+        'src/scripts/serviceWorker.ts'
+      ],
       output: {
         format: 'es',
         assetFileNames: '[name][extname]',

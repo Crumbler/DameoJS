@@ -37,6 +37,17 @@ function registerEventHandlers(game: Game) {
 }
 
 function onLoad() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('./serviceWorker.js')
+      .then(() => {
+        console.log('Service worker registered');
+      })
+      .catch(err => {
+        console.log('Service worker registration failed: ' + err);
+      });
+  }
+
   VisibilityMonitor.register();
   Wake.tryStayAwake();
 

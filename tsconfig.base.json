@@ -16,7 +16,6 @@
     "skipLibCheck": true,
     "useDefineForClassFields": true,
     "moduleResolution": "Bundler",
-    "types": [],
     "allowImportingTsExtensions": false,
     "resolveJsonModule": true,
     "composite": true
